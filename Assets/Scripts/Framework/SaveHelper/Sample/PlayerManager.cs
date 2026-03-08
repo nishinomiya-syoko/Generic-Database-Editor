@@ -24,7 +24,7 @@ namespace GameData
             // 调用生成的 Archive() 方法
             var archive = Data.Archive();
             ArchiveSystem.Save(SAVE_SLOT, archive);
-            Debug.Log($"存档成功: Level={archive.Level}");
+            DebugInfo.Log($"存档成功: Level={archive.Level}");
         }
 
         public void LoadGame()
@@ -33,7 +33,7 @@ namespace GameData
             if (archive != null)
             {
                 Data.Restore(archive);
-                Debug.Log($"读档成功: Level={Data.Level}");
+                DebugInfo.Log($"读档成功: Level={Data.Level}");
             }
             else
             {

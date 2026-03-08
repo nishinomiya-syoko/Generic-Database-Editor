@@ -28,7 +28,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp/bin/Debug/</OutputPath>
-    <DefineConstants>UNITY_2022_3_61;UNITY_2022_3;UNITY_2022;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_2021_1_OR_NEWER;UNITY_2021_2_OR_NEWER;UNITY_2021_3_OR_NEWER;UNITY_2022_1_OR_NEWER;UNITY_2022_2_OR_NEWER;UNITY_2022_3_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_EDITOR_GAME_SERVICES;ENABLE_UNITY_GAME_SERVICES_ANALYTICS_SUPPORT;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_GENERATE_NATIVE_PLUGINS_FOR_ASSEMBLIES_API;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;ENABLE_ACCELERATOR_CLIENT_DEBUGGING;ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION;ENABLE_NAVIGATION_HEIGHTMESH_RUNTIME_SUPPORT;ENABLE_NAVIGATION_UI_REQUIRES_PACKAGE;PLATFORM_STANDALONE;TEXTCORE_1_0_OR_NEWER;PLATFORM_STANDALONE_OSX;UNITY_STANDALONE_OSX;UNITY_STANDALONE;ENABLE_GAMECENTER;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;ENABLE_SPATIALTRACKING;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;ENABLE_MONO;NET_STANDARD_2_0;NET_STANDARD;NET_STANDARD_2_1;NETSTANDARD;NETSTANDARD2_1;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;TEXTCORE_FONT_ENGINE_1_5_OR_NEWER;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>UNITY_2022_3_61;UNITY_2022_3;UNITY_2022;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_2021_1_OR_NEWER;UNITY_2021_2_OR_NEWER;UNITY_2021_3_OR_NEWER;UNITY_2022_1_OR_NEWER;UNITY_2022_2_OR_NEWER;UNITY_2022_3_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_EDITOR_GAME_SERVICES;ENABLE_UNITY_GAME_SERVICES_ANALYTICS_SUPPORT;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_GENERATE_NATIVE_PLUGINS_FOR_ASSEMBLIES_API;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;ENABLE_ACCELERATOR_CLIENT_DEBUGGING;ENABLE_NAVIGATION_PACKAGE_DEBUG_VISUALIZATION;ENABLE_NAVIGATION_HEIGHTMESH_RUNTIME_SUPPORT;ENABLE_NAVIGATION_UI_REQUIRES_PACKAGE;PLATFORM_STANDALONE;TEXTCORE_1_0_OR_NEWER;PLATFORM_STANDALONE_OSX;UNITY_STANDALONE_OSX;UNITY_STANDALONE;ENABLE_GAMECENTER;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;ENABLE_SPATIALTRACKING;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;ENABLE_MONO;NET_STANDARD_2_0;NET_STANDARD;NET_STANDARD_2_1;NETSTANDARD;NETSTANDARD2_1;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;TEXTCORE_FONT_ENGINE_1_5_OR_NEWER;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;DOTWEEN;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169;USG0001</NoWarn>
@@ -64,16 +64,86 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/2022.3.61f1c1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BuildingPlacer.cs" />
+    <Compile Include="Assets/Scripts/Framework/Entity/Enemy.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/ComputeSystem.cs" />
+    <Compile Include="Assets/Scripts/Core/Unit.cs/UnitData.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/CodeGenerater.cs" />
+    <Compile Include="Assets/Scripts/Framework/Entry/GlobalManager.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillCardUI.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillEnum.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/ArchiveSystem.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/UnitMover.cs" />
+    <Compile Include="Assets/Scripts/Core/DataLoader.cs" />
     <Compile Include="Assets/Scripts/Core/DTBasicData.cs" />
+    <Compile Include="Assets/Scripts/Framework/Level/LevelManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/PathPool.cs" />
+    <Compile Include="Assets/Scripts/Framework/Pool/PoolManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/Level/WaveManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/ISkillModifier.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/BinaryDataMgr.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/ConditionData.cs" />
+    <Compile Include="Assets/Scripts/Framework/Debug/DebugInfo.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerData.cs" />
-    <Compile Include="Assets/Scripts/Framework/DataTable/ConfigTool.cs" />
+    <Compile Include="Assets/Scripts/Core/Constant.cs" />
+    <Compile Include="Assets/Scripts/Framework/Entity/EntityBase.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/BstarPathfinder.cs" />
+    <Compile Include="Assets/Scripts/Framework/UI/UIManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestData.cs" />
+    <Compile Include="Assets/Scripts/Framework/UI/UIManager.Extension.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/SavableAttribute.cs" />
-    <Compile Include="Assets/Scripts/Framework/DataTable/ScriptGenerator.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Projectile.cs" />
+    <Compile Include="Assets/Scripts/Framework/UI/UIPanel.cs" />
+    <Compile Include="Assets/Scripts/Framework/Pool/IReference.cs" />
+    <Compile Include="Assets/Scripts/Framework/Level/LevelDatabase.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentDatabase.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldVisualizer.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/ConditionDatabase.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/AreaEffect.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillData.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/DataTableManager.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/DataTable.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/ResourceSystem/ResourceProducer.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/JPSPathfinder.cs" />
+    <Compile Include="Assets/Scripts/Framework/Entity/EntityGererator.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Sample/PlayerCombat.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/ResourceSystem/ResourceManager.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/ArchiveCodeGenerator.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillDatabase.cs" />
+    <Compile Include="Assets/Scripts/Core/Unit.cs/UnitAI.cs" />
+    <Compile Include="Assets/Scripts/Framework/Level/LevelDataSO.cs" />
+    <Compile Include="Assets/Scripts/Framework/Pool/ObjectPool.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentData.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/FlowFieldPathfinder.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/EventSystem/GameEventSystem.cs" />
+    <Compile Include="Assets/Scripts/Core/LiveEntity.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipEnum.cs" />
+    <Compile Include="Assets/Scripts/Framework/Entity/EntityRoot.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Sample/Tower.cs" />
+    <Compile Include="Assets/Scripts/Framework/Level/WaveDataSO.cs" />
+    <Compile Include="Assets/Scripts/Core/Unit.cs/Unit.cs" />
+    <Compile Include="Assets/Scripts/Core/Unit.cs/UnitAI.Search.cs" />
+    <Compile Include="Assets/Scripts/Core/Building.cs/Building.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillInstance.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerData.Archive.gen.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/BFSPathfinder.cs" />
+    <Compile Include="Assets/Scripts/Framework/Level/RewardDataSO.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestDataSO.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BinaryHeapPriorityQueue.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/NativeBinaryHeap.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/QuestSystem/AchievementDataSO.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/QuestSystem/AchievementData.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldJobRunner.cs" />
+    <Compile Include="Assets/Scripts/Framework/Entity/EntityManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/AstarPathfinder.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillSelectionUI.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/GridManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Scripts/Framework/SaveHelper/Readme.txt" />
@@ -457,6 +527,10 @@
     </Reference>
     <Reference Include="ExcelDataReader">
       <HintPath>Assets/Plugins/ExcelDataReaderv3.7.0/ExcelDataReader.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>Assets/Plugins/Demigiant/DOTween/DOTween.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
@@ -1105,6 +1179,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj" />
     <ProjectReference Include="UniTask.Addressables.csproj" />
     <ProjectReference Include="UniTask.Linq.csproj" />
     <ProjectReference Include="Sirenix.OdinInspector.Modules.UnityMathematics.csproj" />

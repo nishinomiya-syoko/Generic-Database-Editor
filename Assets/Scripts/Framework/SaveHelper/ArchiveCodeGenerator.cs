@@ -10,7 +10,7 @@ using System.Reflection;
 public static class ArchiveCodeGenerator 
 {
     private const string OUTPUT_PATH = "Assets/Custom/Archive/";
-    
+
     [MenuItem("Tools/Archive/Generate All Savable Classes")]
     public static void GenerateAll()
     {
@@ -18,7 +18,7 @@ public static class ArchiveCodeGenerator
             Directory.CreateDirectory(OUTPUT_PATH);
 
         int generatedCount = 0;
-        
+
         // 扫描所有程序集
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
@@ -31,9 +31,14 @@ public static class ArchiveCodeGenerator
                 }
             }
         }
-        
+
         AssetDatabase.Refresh();
         Debug.Log($"[ArchiveGenerator] 生成完成: {generatedCount} 个类");
+    }
+
+    public static void OpenFolder()
+    {
+        EditorUtility.RevealInFinder(OUTPUT_PATH);
     }
 
     private static void GenerateForType(Type dataType)
@@ -95,6 +100,9 @@ public static class ArchiveCodeGenerator
         sb.AppendLine();
 
         // Archive() 方法
+        sb.AppendLine($"        /// <summary>");
+        sb.AppendLine($"        /// 生成存档数据。加密的字段会被加密。");
+        sb.AppendLine($"        /// </summary>");
         sb.AppendLine($"        public ArchiveData Archive()");
         sb.AppendLine($"        {{");
         sb.AppendLine($"            var data = new ArchiveData();");
@@ -116,6 +124,9 @@ public static class ArchiveCodeGenerator
         sb.AppendLine();
 
         // Restore() 方法
+        sb.AppendLine($"        /// <summary>");
+        sb.AppendLine($"        /// 恢复存档数据。解密后的字段会被赋值。");
+        sb.AppendLine($"        /// </summary>");
         sb.AppendLine($"        public void Restore(ArchiveData data)");
         sb.AppendLine($"        {{");
         sb.AppendLine($"            if (data == null) return;");
