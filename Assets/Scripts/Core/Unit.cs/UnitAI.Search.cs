@@ -79,17 +79,21 @@ namespace Top
 
         private bool IsPreferredTarget(IDamageable target)
         {
-            switch (unit.data.preferredTarget)
-            {
-                case TargetType.Building:
-                    return target is Building;
-                case TargetType.Unit:
-                    return target is Unit;
-                case TargetType.Resource:
-                    return target is IResourceProducer;
-                default:
-                    return true;
-            }
+            LiveEntity entity = target as LiveEntity;
+            if (entity == null)
+                return false;
+            return entity.PreferredTarget == unit.data.preferredTarget;
+            // switch (unit.data.preferredTarget)
+            // {
+            //     case UnitType.Building:
+            //         return entity.PreferredTarget == UnitType.Building;
+            //     case UnitType.Unit:
+            //         return entity.PreferredTarget == UnitType.Unit;
+            //     case UnitType.Resource:
+            //         return target is IResourceProducer;
+            //     default:
+            //         return true;
+            // }
         }
 
         public Vector3 GetOptimalPosition(Vector3 targetPosition)

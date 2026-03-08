@@ -13,7 +13,7 @@ public class CampData
 }
 
 // 关卡数据
-[CreateAssetMenu(fileName = "LevelData", menuName = "EmpireClash/Level Data")]
+[CreateAssetMenu(fileName = "LevelData", menuName = "Top/Level Data")]
 public class LevelDataSO : ScriptableObject
 {
     [Header("基本信息")]

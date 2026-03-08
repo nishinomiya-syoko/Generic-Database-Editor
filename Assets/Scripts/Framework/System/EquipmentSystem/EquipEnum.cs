@@ -39,62 +39,62 @@ namespace Top
         HOT             // 持续治疗
     }
 
-    // 技能数据
-    [CreateAssetMenu(fileName = "SkillData", menuName = "Top/Skill Data")]
-    public class SkillData : ScriptableObject
-    {
-        [Header("基本信息")]
-        public string id;
-        public string skillName;
-        public string description;
-        public SkillType skillType;
-        public SkillTargetType targetType;
-        public Sprite icon;
-        public GameObject effectPrefab;     // 技能特效预制体
+    // // 技能数据
+    // [CreateAssetMenu(fileName = "SkillData", menuName = "Top/Skill Data")]
+    // public class SkillData : ScriptableObject
+    // {
+    //     [Header("基本信息")]
+    //     public string id;
+    //     public string skillName;
+    //     public string description;
+    //     public SkillType skillType;
+    //     public SkillTargetType targetType;
+    //     public Sprite icon;
+    //     public GameObject effectPrefab;     // 技能特效预制体
 
-        [Header("技能参数")]
-        public float cooldown;              // 冷却时间
-        public float castTime;              // 施法时间
-        public float range;                 // 技能范围
-        public int manaCost;                // 魔法消耗
-        public int energyCost;              // 能量消耗
+    //     [Header("技能参数")]
+    //     public float cooldown;              // 冷却时间
+    //     public float castTime;              // 施法时间
+    //     public float range;                 // 技能范围
+    //     public int manaCost;                // 魔法消耗
+    //     public int energyCost;              // 能量消耗
 
-        [Header("技能效果")]
-        public SkillEffectData[] effects;
+    //     [Header("技能效果")]
+    //     public SkillEffectData[] effects;
 
-        [Header("升级参数")]
-        public int maxLevel = 5;
-        public float[] damagePerLevel;      // 每级伤害
-        public float[] rangePerLevel;       // 每级范围
-        public float[] cooldownPerLevel;    // 每级冷却
+    //     [Header("升级参数")]
+    //     public int maxLevel = 5;
+    //     public float[] damagePerLevel;      // 每级伤害
+    //     public float[] rangePerLevel;       // 每级范围
+    //     public float[] cooldownPerLevel;    // 每级冷却
 
-        private void OnValidate()
-        {
-            if (string.IsNullOrEmpty(id))
-                id = Guid.NewGuid().ToString();
-        }
+    //     private void OnValidate()
+    //     {
+    //         if (string.IsNullOrEmpty(id))
+    //             id = Guid.NewGuid().ToString();
+    //     }
 
-        public float GetDamage(int level)
-        {
-            if (damagePerLevel != null && level > 0 && level <= damagePerLevel.Length)
-                return damagePerLevel[level - 1];
-            return 0f;
-        }
+    //     public float GetDamage(int level)
+    //     {
+    //         if (damagePerLevel != null && level > 0 && level <= damagePerLevel.Length)
+    //             return damagePerLevel[level - 1];
+    //         return 0f;
+    //     }
 
-        public float GetRange(int level)
-        {
-            if (rangePerLevel != null && level > 0 && level <= rangePerLevel.Length)
-                return rangePerLevel[level - 1];
-            return range;
-        }
+    //     public float GetRange(int level)
+    //     {
+    //         if (rangePerLevel != null && level > 0 && level <= rangePerLevel.Length)
+    //             return rangePerLevel[level - 1];
+    //         return range;
+    //     }
 
-        public float GetCooldown(int level)
-        {
-            if (cooldownPerLevel != null && level > 0 && level <= cooldownPerLevel.Length)
-                return cooldownPerLevel[level - 1];
-            return cooldown;
-        }
-    }
+    //     public float GetCooldown(int level)
+    //     {
+    //         if (cooldownPerLevel != null && level > 0 && level <= cooldownPerLevel.Length)
+    //             return cooldownPerLevel[level - 1];
+    //         return cooldown;
+    //     }
+    // }
 
     // BUFF类型
     public enum BuffType

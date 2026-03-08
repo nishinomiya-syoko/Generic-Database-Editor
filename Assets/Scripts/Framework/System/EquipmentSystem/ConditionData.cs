@@ -7,7 +7,7 @@ namespace Top
     /// 技能触发条件
     /// </summary>
     // [Serializable]
-    [CreateAssetMenu(fileName = "New Condition", menuName = "Skill/Condition")]
+    [CreateAssetMenu(fileName = "New Condition", menuName = "Equip/Condition")]
     public class ConditionData : ScriptableObject
     {
         public string id;

@@ -9,6 +9,18 @@ namespace Top
     // 单位基类
     public partial class Unit : LiveEntity
     {
+        [Header("单位信息")]
+        public UnitData data;
+        // public UnitState currentState = UnitState.Idle;
+        public int currentLevel = 1;
+
+        [Header("组件引用")]
+        public Animator animator;
+        public Renderer unitRenderer;
+        // public HealthBar healthBar;
+        public ParticleSystem deathEffect;
+        public ParticleSystem attackEffect;
+        
         // 战斗相关
         private LiveEntity currentTarget;
         private LiveEntity currentBuildingTarget;

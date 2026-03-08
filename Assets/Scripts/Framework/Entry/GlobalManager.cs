@@ -3,8 +3,14 @@ using UnityEngine;
 using Top;
 public class GlobalManager : MonoBehaviour
 {
-    public static GlobalManager Instance;
 
+    public static GlobalManager Instance;
+    [Header("地图系统")]
+    public GridManager GridManager;
+    public MapManager MapManager;
+    public AudioManager AudioManager;
+
+    [Header("关卡系统")]
     public LevelManager LevelManager;
     public EntityManager entityManager;
     public WaveManager waveManager;

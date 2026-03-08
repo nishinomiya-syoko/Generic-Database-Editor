@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BuildingPlacer.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/Enemy.cs" />
+    <Compile Include="Assets/Scripts/Core/Building.cs/BuildingManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ComputeSystem.cs" />
     <Compile Include="Assets/Scripts/Core/Unit.cs/UnitData.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/CodeGenerater.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillEnum.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/ArchiveSystem.cs" />
+    <Compile Include="Assets/Scripts/Core/Camera/CameraHandler.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/UnitMover.cs" />
     <Compile Include="Assets/Scripts/Core/DataLoader.cs" />
     <Compile Include="Assets/Scripts/Core/DTBasicData.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="Assets/Scripts/Framework/DataTable/BinaryDataMgr.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/ConditionData.cs" />
     <Compile Include="Assets/Scripts/Framework/Debug/DebugInfo.cs" />
+    <Compile Include="Assets/Scripts/Core/Camera/CamerHandlerEditor.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerData.cs" />
     <Compile Include="Assets/Scripts/Core/Constant.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityBase.cs" />
@@ -93,7 +96,9 @@
     <Compile Include="Assets/Scripts/Framework/UI/UIManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestData.cs" />
+    <Compile Include="Assets/Scripts/Core/Building.cs/BuildingEnum.cs" />
     <Compile Include="Assets/Scripts/Framework/UI/UIManager.Extension.cs" />
+    <Compile Include="Assets/Scripts/Core/Building.cs/BuildingDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/SavableAttribute.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Projectile.cs" />
     <Compile Include="Assets/Scripts/Framework/UI/UIPanel.cs" />
@@ -107,6 +112,7 @@
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/AreaEffect.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillData.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/DataTableManager.cs" />
+    <Compile Include="Assets/Scripts/Core/Map/MapManager.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/DataTable.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ResourceSystem/ResourceProducer.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/JPSPathfinder.cs" />
@@ -120,13 +126,17 @@
     <Compile Include="Assets/Scripts/Framework/Pool/ObjectPool.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/FlowFieldPathfinder.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EventSystem/GameEventSystem.cs" />
     <Compile Include="Assets/Scripts/Core/LiveEntity.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipEnum.cs" />
+    <Compile Include="Assets/Scripts/Core/Unit.cs/UnitDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityRoot.cs" />
+    <Compile Include="Assets/Scripts/Core/Building.cs/Decoration.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Sample/Tower.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/WaveDataSO.cs" />
     <Compile Include="Assets/Scripts/Core/Unit.cs/Unit.cs" />
+    <Compile Include="Assets/Scripts/Framework/Audio/AudioManager.cs" />
     <Compile Include="Assets/Scripts/Core/Unit.cs/UnitAI.Search.cs" />
     <Compile Include="Assets/Scripts/Core/Building.cs/Building.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillInstance.cs" />
@@ -136,10 +146,12 @@
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BinaryHeapPriorityQueue.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/NativeBinaryHeap.cs" />
+    <Compile Include="Assets/Scripts/Framework/Audio/AudioDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/AchievementDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/AchievementData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldJobRunner.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityManager.cs" />
+    <Compile Include="Assets/Scripts/Core/Building.cs/BuildingData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/AstarPathfinder.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillSelectionUI.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/GridManager.cs" />

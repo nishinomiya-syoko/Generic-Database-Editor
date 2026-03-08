@@ -40,7 +40,9 @@ namespace Top
         public Action OnGameLoaded;
         public Action OnGameSaved;
 
-        //skill
-        public Action<Unit,SkillData> OnSkillUsed;
+        /// <summary>
+        /// target , id
+        /// </summary>
+        public Action<Unit,string> OnSkillUsed;
     }
 }

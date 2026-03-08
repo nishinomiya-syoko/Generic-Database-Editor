@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Top
 {
     // 技能数据库
-    [CreateAssetMenu(fileName = "ConditionDatabase", menuName = "Top/Condition Database")]
+    [CreateAssetMenu(fileName = "ConditionDatabase", menuName = "Equip/Condition Database")]
     public class ConditionDatabase : ScriptableObject
     {
         public List<ConditionData> conditions = new List<ConditionData>();

@@ -3,7 +3,7 @@ using UnityEngine;
 
 // 示例：创建火球术技能
 [CreateAssetMenu]
-public class FireballSkill : SkillData
+public class FireballSkill : SkillDataSO
 {
     private void OnEnable()
     {
