@@ -1,0 +1,34 @@
+{
+    "Id": "5709AB20",
+    "DisplayName": "哥布林的威胁",
+    "Description": "哥布林在骚扰村庄",
+    "IconPath": "",
+    "QuestType": 1,
+    "RequiredLevel": 2,
+    "PrerequisiteQuestId": "",
+    "IsRepeatable": false,
+    "RepeatCooldownHours": 0,
+    "Objectives": [
+        {
+            "ObjectiveId": "obj1",
+            "Type": 0,
+            "TargetId": "",
+            "Description": "消灭8只哥布林",
+            "RequiredAmount": 8,
+            "CurrentAmount": 0,
+            "IsOptional": false,
+            "IsCompleted": false
+        }
+    ],
+    "Reward": {
+        "ItemId": "",
+        "ItemAmount": 0,
+        "Experience": 150,
+        "Gold": 50,
+        "SkillId": ""
+    },
+    "StartNpcId": "村长",
+    "CompleteNpcId": "村长",
+    "HasTimeLimit": false,
+    "TimeLimitMinutes": 0.0
+}

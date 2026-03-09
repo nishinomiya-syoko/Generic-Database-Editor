@@ -1,0 +1,22 @@
+{
+    "Id": "D37C47CB",
+    "DisplayName": "商人",
+    "Description": "四处旅行的商人",
+    "IconPath": "",
+    "CharacterType": 1,
+    "Level": 3,
+    "MaxHealth": 60,
+    "MaxMana": 40,
+    "Strength": 6,
+    "Agility": 10,
+    "Intelligence": 14,
+    "Defense": 4,
+    "MoveSpeed": 4.0,
+    "AttackSpeed": 1.0,
+    "AttackRange": 2.0,
+    "HasAI": false,
+    "DetectionRange": 10.0,
+    "ChaseRange": 15.0,
+    "ExperienceReward": 0,
+    "GoldReward": 0
+}

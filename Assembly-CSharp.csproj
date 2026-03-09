@@ -84,6 +84,7 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/PathPool.cs" />
     <Compile Include="Assets/Scripts/Framework/Pool/PoolManager.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/WaveManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SORuntimeManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/ISkillModifier.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/BinaryDataMgr.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/ConditionData.cs" />
@@ -106,11 +107,16 @@
     <Compile Include="Assets/Scripts/Framework/Level/LevelDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldVisualizer.cs" />
+    <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/ScriptableObjectBase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillManager.cs" />
+    <Compile Include="Assets/Scripts/DataContainer/ItemData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/ConditionDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/AreaEffect.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillData.cs" />
+    <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SOBulkEditor.cs" />
+    <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SOEditorWindow.cs" />
+    <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/CharacterSO.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/DataTableManager.cs" />
     <Compile Include="Assets/Scripts/Core/Map/MapManager.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/DataTable.cs" />
@@ -118,7 +124,9 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/JPSPathfinder.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityGererator.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Sample/PlayerCombat.cs" />
+    <Compile Include="Assets/Scripts/Framework/SO/DataContainer/DataContainerGenerator.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ResourceSystem/ResourceManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SODatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/ArchiveCodeGenerator.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillDatabase.cs" />
     <Compile Include="Assets/Scripts/Core/Unit.cs/UnitAI.cs" />
@@ -133,8 +141,10 @@
     <Compile Include="Assets/Scripts/Core/Unit.cs/UnitDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityRoot.cs" />
     <Compile Include="Assets/Scripts/Core/Building.cs/Decoration.cs" />
+    <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SkillSO.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Sample/Tower.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/WaveDataSO.cs" />
+    <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/QuestSO.cs" />
     <Compile Include="Assets/Scripts/Core/Unit.cs/Unit.cs" />
     <Compile Include="Assets/Scripts/Framework/Audio/AudioManager.cs" />
     <Compile Include="Assets/Scripts/Core/Unit.cs/UnitAI.Search.cs" />
@@ -144,16 +154,19 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/BFSPathfinder.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/RewardDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestDataSO.cs" />
+    <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SOTestDataGenerator.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BinaryHeapPriorityQueue.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/NativeBinaryHeap.cs" />
     <Compile Include="Assets/Scripts/Framework/Audio/AudioDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/AchievementDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/AchievementData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldJobRunner.cs" />
+    <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/ItemSO.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityManager.cs" />
     <Compile Include="Assets/Scripts/Core/Building.cs/BuildingData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/AstarPathfinder.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillSelectionUI.cs" />
+    <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SOExampleUsage.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/GridManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldMap.cs" />
   </ItemGroup>
@@ -493,56 +506,56 @@
       <HintPath>/Applications/Unity/Hub/Editor/2022.3.61f1c1/Unity.app/Contents/Managed/UnityEngine/UnityEditor.UnityConnectModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ReportGeneratorMerged">
-      <HintPath>Library/PackageCache/com.unity.testtools.codecoverage@1.2.6/lib/ReportGenerator/ReportGeneratorMerged.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
-      <HintPath>Library/PackageCache/com.unity.visualscripting@1.9.4/Runtime/VisualScripting.Flow/Dependencies/NCalc/Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Sirenix.Reflection.Editor">
       <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Reflection.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Sirenix.OdinInspector.Attributes">
-      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.OdinInspector.Attributes.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Sirenix.Serialization.Config">
-      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Serialization.Config.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Sirenix.Utilities.Editor">
-      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Utilities.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Sirenix.Utilities">
-      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Utilities.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Sirenix.OdinInspector.Editor">
-      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.OdinInspector.Editor.dll</HintPath>
+    <Reference Include="ReportGeneratorMerged">
+      <HintPath>Library/PackageCache/com.unity.testtools.codecoverage@1.2.6/lib/ReportGenerator/ReportGeneratorMerged.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sirenix.Serialization">
       <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Serialization.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ExcelDataReader.DataSet">
+      <HintPath>Assets/Plugins/ExcelDataReaderv3.7.0/ExcelDataReader.DataSet.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sirenix.Serialization.Config">
+      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Serialization.Config.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>Assets/Plugins/ExcelDataReaderv3.7.0/ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ExcelDataReader.DataSet">
-      <HintPath>Assets/Plugins/ExcelDataReaderv3.7.0/ExcelDataReader.DataSet.dll</HintPath>
+    <Reference Include="Sirenix.OdinInspector.Editor">
+      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.OdinInspector.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sirenix.OdinInspector.Attributes">
+      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.OdinInspector.Attributes.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sirenix.Utilities">
+      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Utilities.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>Assets/Plugins/Demigiant/DOTween/DOTween.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ExcelDataReader">
       <HintPath>Assets/Plugins/ExcelDataReaderv3.7.0/ExcelDataReader.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DOTween">
-      <HintPath>Assets/Plugins/Demigiant/DOTween/DOTween.dll</HintPath>
+    <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
+      <HintPath>Library/PackageCache/com.unity.visualscripting@1.9.4/Runtime/VisualScripting.Flow/Dependencies/NCalc/Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sirenix.Utilities.Editor">
+      <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Utilities.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
@@ -1053,12 +1066,12 @@
       <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Burst.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.Burst">
       <HintPath>Library/ScriptAssemblies/Unity.Burst.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Burst.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Timeline.Editor">
@@ -1085,10 +1098,6 @@
       <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.VisualScripting.Core.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.Core.Editor.dll</HintPath>
       <Private>False</Private>
@@ -1097,8 +1106,16 @@
       <HintPath>Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualEffectGraph.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.VisualEffectGraph.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.Flow">
@@ -1113,10 +1130,6 @@
       <HintPath>Library/ScriptAssemblies/Unity.Mathematics.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.VisualEffectGraph.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.VisualEffectGraph.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.Timeline">
       <HintPath>Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
       <Private>False</Private>
@@ -1125,16 +1138,20 @@
       <HintPath>Library/ScriptAssemblies/Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.RenderPipelines.HighDefinition.Config.Runtime">
       <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.HighDefinition.Config.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Performance.Profile-Analyzer.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.Performance.Profile-Analyzer.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
+      <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.TestTools.CodeCoverage.Editor">
@@ -1147,10 +1164,6 @@
     </Reference>
     <Reference Include="Unity.PlasticSCM.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.PlasticSCM.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
-      <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.State.Editor">

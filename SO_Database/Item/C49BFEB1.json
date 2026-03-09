@@ -1,0 +1,17 @@
+{
+    "Id": "C49BFEB1",
+    "DisplayName": "生命药水",
+    "Description": "恢复少量生命值",
+    "IconPath": "",
+    "ItemType": 2,
+    "MaxStackSize": 99,
+    "BuyPrice": 20,
+    "SellPrice": 10,
+    "IsUsable": true,
+    "IsEquipable": false,
+    "Rarity": 1,
+    "AttackBonus": 0,
+    "DefenseBonus": 0,
+    "HealthBonus": 20,
+    "ManaBonus": 0
+}

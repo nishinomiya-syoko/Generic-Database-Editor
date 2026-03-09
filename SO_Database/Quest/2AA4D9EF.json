@@ -1,0 +1,34 @@
+{
+    "Id": "2AA4D9EF",
+    "DisplayName": "收集铁矿石",
+    "Description": "铁匠需要一些铁矿石",
+    "IconPath": "",
+    "QuestType": 1,
+    "RequiredLevel": 1,
+    "PrerequisiteQuestId": "",
+    "IsRepeatable": false,
+    "RepeatCooldownHours": 0,
+    "Objectives": [
+        {
+            "ObjectiveId": "obj1",
+            "Type": 1,
+            "TargetId": "",
+            "Description": "收集10个铁矿石",
+            "RequiredAmount": 10,
+            "CurrentAmount": 0,
+            "IsOptional": false,
+            "IsCompleted": false
+        }
+    ],
+    "Reward": {
+        "ItemId": "",
+        "ItemAmount": 0,
+        "Experience": 80,
+        "Gold": 30,
+        "SkillId": ""
+    },
+    "StartNpcId": "铁匠",
+    "CompleteNpcId": "铁匠",
+    "HasTimeLimit": false,
+    "TimeLimitMinutes": 0.0
+}

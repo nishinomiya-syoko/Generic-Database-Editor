@@ -1,0 +1,22 @@
+{
+    "Id": "55CFC3BC",
+    "DisplayName": "巨龙",
+    "Description": "传说中的巨龙",
+    "IconPath": "",
+    "CharacterType": 3,
+    "Level": 20,
+    "MaxHealth": 1000,
+    "MaxMana": 500,
+    "Strength": 50,
+    "Agility": 30,
+    "Intelligence": 20,
+    "Defense": 20,
+    "MoveSpeed": 6.0,
+    "AttackSpeed": 0.800000011920929,
+    "AttackRange": 5.0,
+    "HasAI": true,
+    "DetectionRange": 10.0,
+    "ChaseRange": 15.0,
+    "ExperienceReward": 1000,
+    "GoldReward": 500
+}

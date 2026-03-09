@@ -1,0 +1,22 @@
+{
+    "Id": "86461B4C",
+    "DisplayName": "兽人",
+    "Description": "强壮的兽人战士",
+    "IconPath": "",
+    "CharacterType": 2,
+    "Level": 3,
+    "MaxHealth": 80,
+    "MaxMana": 0,
+    "Strength": 15,
+    "Agility": 8,
+    "Intelligence": 3,
+    "Defense": 5,
+    "MoveSpeed": 4.0,
+    "AttackSpeed": 0.800000011920929,
+    "AttackRange": 2.0,
+    "HasAI": true,
+    "DetectionRange": 10.0,
+    "ChaseRange": 15.0,
+    "ExperienceReward": 30,
+    "GoldReward": 15
+}

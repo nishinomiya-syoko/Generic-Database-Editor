@@ -1,0 +1,22 @@
+{
+    "Id": "7F248EEA",
+    "DisplayName": "勇者",
+    "Description": "传说中的勇者",
+    "IconPath": "",
+    "CharacterType": 0,
+    "Level": 1,
+    "MaxHealth": 100,
+    "MaxMana": 50,
+    "Strength": 15,
+    "Agility": 12,
+    "Intelligence": 10,
+    "Defense": 8,
+    "MoveSpeed": 5.0,
+    "AttackSpeed": 1.0,
+    "AttackRange": 2.0,
+    "HasAI": false,
+    "DetectionRange": 10.0,
+    "ChaseRange": 15.0,
+    "ExperienceReward": 0,
+    "GoldReward": 0
+}

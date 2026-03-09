@@ -1,0 +1,22 @@
+{
+    "Id": "1ED0E3FA",
+    "DisplayName": "铁匠",
+    "Description": "技艺精湛的铁匠",
+    "IconPath": "",
+    "CharacterType": 1,
+    "Level": 4,
+    "MaxHealth": 90,
+    "MaxMana": 35,
+    "Strength": 14,
+    "Agility": 8,
+    "Intelligence": 8,
+    "Defense": 8,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "AttackRange": 2.0,
+    "HasAI": false,
+    "DetectionRange": 10.0,
+    "ChaseRange": 15.0,
+    "ExperienceReward": 0,
+    "GoldReward": 0
+}

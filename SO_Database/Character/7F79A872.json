@@ -1,0 +1,22 @@
+{
+    "Id": "7F79A872",
+    "DisplayName": "村长",
+    "Description": "村庄的领导者",
+    "IconPath": "",
+    "CharacterType": 1,
+    "Level": 5,
+    "MaxHealth": 80,
+    "MaxMana": 30,
+    "Strength": 8,
+    "Agility": 8,
+    "Intelligence": 12,
+    "Defense": 5,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "AttackRange": 2.0,
+    "HasAI": false,
+    "DetectionRange": 10.0,
+    "ChaseRange": 15.0,
+    "ExperienceReward": 0,
+    "GoldReward": 0
+}

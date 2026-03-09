@@ -1,0 +1,17 @@
+{
+    "Id": "526DD89E",
+    "DisplayName": "钢剑",
+    "Description": "用优质钢材打造的剑",
+    "IconPath": "",
+    "ItemType": 0,
+    "MaxStackSize": 1,
+    "BuyPrice": 250,
+    "SellPrice": 125,
+    "IsUsable": false,
+    "IsEquipable": true,
+    "Rarity": 2,
+    "AttackBonus": 18,
+    "DefenseBonus": 0,
+    "HealthBonus": 0,
+    "ManaBonus": 0
+}

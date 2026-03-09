@@ -1,0 +1,22 @@
+{
+    "Id": "DADECC2E",
+    "DisplayName": "骷髅兵",
+    "Description": "复活的骷髅战士",
+    "IconPath": "",
+    "CharacterType": 2,
+    "Level": 4,
+    "MaxHealth": 60,
+    "MaxMana": 0,
+    "Strength": 12,
+    "Agility": 6,
+    "Intelligence": 0,
+    "Defense": 4,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "AttackRange": 2.0,
+    "HasAI": true,
+    "DetectionRange": 10.0,
+    "ChaseRange": 15.0,
+    "ExperienceReward": 25,
+    "GoldReward": 12
+}

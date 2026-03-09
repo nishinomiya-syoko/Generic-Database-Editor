@@ -1,0 +1,17 @@
+{
+    "Id": "C8F38E0D",
+    "DisplayName": "魔法铠甲",
+    "Description": "被魔法加持的铠甲",
+    "IconPath": "",
+    "ItemType": 1,
+    "MaxStackSize": 1,
+    "BuyPrice": 800,
+    "SellPrice": 400,
+    "IsUsable": false,
+    "IsEquipable": true,
+    "Rarity": 4,
+    "AttackBonus": 0,
+    "DefenseBonus": 30,
+    "HealthBonus": 50,
+    "ManaBonus": 30
+}

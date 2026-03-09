@@ -1,0 +1,17 @@
+{
+    "Id": "956C19EC",
+    "DisplayName": "高级生命药水",
+    "Description": "恢复大量生命值",
+    "IconPath": "",
+    "ItemType": 2,
+    "MaxStackSize": 99,
+    "BuyPrice": 50,
+    "SellPrice": 25,
+    "IsUsable": true,
+    "IsEquipable": false,
+    "Rarity": 2,
+    "AttackBonus": 0,
+    "DefenseBonus": 0,
+    "HealthBonus": 50,
+    "ManaBonus": 0
+}

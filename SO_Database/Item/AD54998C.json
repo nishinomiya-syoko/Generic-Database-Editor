@@ -1,0 +1,17 @@
+{
+    "Id": "AD54998C",
+    "DisplayName": "传说之剑",
+    "Description": "传说中的神剑",
+    "IconPath": "",
+    "ItemType": 0,
+    "MaxStackSize": 1,
+    "BuyPrice": 2000,
+    "SellPrice": 1000,
+    "IsUsable": false,
+    "IsEquipable": true,
+    "Rarity": 5,
+    "AttackBonus": 50,
+    "DefenseBonus": 0,
+    "HealthBonus": 20,
+    "ManaBonus": 20
+}

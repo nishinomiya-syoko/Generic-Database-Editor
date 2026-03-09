@@ -1,0 +1,22 @@
+{
+    "Id": "7B54E0DB",
+    "DisplayName": "哥布林",
+    "Description": "狡猾的小怪物",
+    "IconPath": "",
+    "CharacterType": 2,
+    "Level": 2,
+    "MaxHealth": 45,
+    "MaxMana": 0,
+    "Strength": 8,
+    "Agility": 4,
+    "Intelligence": 2,
+    "Defense": 3,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.2000000476837159,
+    "AttackRange": 1.5,
+    "HasAI": true,
+    "DetectionRange": 10.0,
+    "ChaseRange": 15.0,
+    "ExperienceReward": 15,
+    "GoldReward": 8
+}

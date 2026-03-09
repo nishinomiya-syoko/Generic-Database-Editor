@@ -1,0 +1,17 @@
+{
+    "Id": "C2F83078",
+    "DisplayName": "魔法水晶",
+    "Description": "蕴含魔法能量的水晶",
+    "IconPath": "",
+    "ItemType": 3,
+    "MaxStackSize": 999,
+    "BuyPrice": 100,
+    "SellPrice": 50,
+    "IsUsable": false,
+    "IsEquipable": false,
+    "Rarity": 3,
+    "AttackBonus": 0,
+    "DefenseBonus": 0,
+    "HealthBonus": 0,
+    "ManaBonus": 0
+}
