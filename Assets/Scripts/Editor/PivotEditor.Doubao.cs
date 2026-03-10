@@ -31,17 +31,7 @@ public class PivotEditor : EditorWindow
 
     private ScriptableObject _selectedSO;
     private SerializedObject _serializedItem;
-
-    // 补充缺失的常量定义（如果你的项目中有Constant类，可删除此部分，直接用项目中的）
-    public static class Constant
-    {
-        public const string BUILDING_PATH = "Assets/Resources/ScriptableObjects/Buildings/";
-        public const string UNIT_PATH = "Assets/Resources/ScriptableObjects/Units/";
-        public const string SKILL_PATH = "Assets/Resources/ScriptableObjects/Skills/";
-        public const string EQUIPMENT_PATH = "Assets/Resources/ScriptableObjects/Equipment/";
-        public const string QUEST_PATH = "Assets/Resources/ScriptableObjects/Quests/";
-    }
-
+    
     [MenuItem("Tools/PivotEditor")]
     public static void ShowWindow()
     {
