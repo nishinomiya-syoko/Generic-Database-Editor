@@ -7,7 +7,7 @@ namespace Top
 {
     // 装备数据
     [CreateAssetMenu(fileName = "EquipmentData", menuName = "Top/Equipment Data")]
-    public class EquipmentData : ScriptableObject
+    public class EquipmentDataSO : ScriptableObject
     {
         [Header("基本信息")]
         public string id;

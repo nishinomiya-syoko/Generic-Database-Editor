@@ -9,19 +9,19 @@ namespace Top
     [CreateAssetMenu(fileName = "EquipmentDatabase", menuName = "Top/Equipment Database")]
     public class EquipmentDatabase : ScriptableObject
     {
-        public List<EquipmentData> equipment = new List<EquipmentData>();
+        public List<EquipmentDataSO> equipment = new List<EquipmentDataSO>();
 
-        public EquipmentData GetEquipmentData(string equipmentId)
+        public EquipmentDataSO GetEquipmentData(string equipmentId)
         {
             return equipment.Find(e => e.id == equipmentId);
         }
 
-        public List<EquipmentData> GetEquipmentByType(EquipmentType type)
+        public List<EquipmentDataSO> GetEquipmentByType(EquipmentType type)
         {
             return equipment.FindAll(e => e.equipmentType == type);
         }
 
-        public List<EquipmentData> GetEquipmentByTypeAndQuality(EquipmentType type, EquipmentQuality quality)
+        public List<EquipmentDataSO> GetEquipmentByTypeAndQuality(EquipmentType type, EquipmentQuality quality)
         {
             return equipment.FindAll(e => e.equipmentType == type && e.quality == quality);
         }

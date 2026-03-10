@@ -1,0 +1,23 @@
+{
+    "Id": "9EC82832",
+    "DisplayName": "asdfasdf",
+    "Description": "",
+    "IconPath": "",
+    "QuestType": 1,
+    "RequiredLevel": 1,
+    "PrerequisiteQuestId": "",
+    "IsRepeatable": false,
+    "RepeatCooldownHours": 0,
+    "Objectives": [],
+    "Reward": {
+        "ItemId": "",
+        "ItemAmount": 0,
+        "Experience": 0,
+        "Gold": 0,
+        "SkillId": ""
+    },
+    "StartNpcId": "",
+    "CompleteNpcId": "",
+    "HasTimeLimit": false,
+    "TimeLimitMinutes": 0.0
+}

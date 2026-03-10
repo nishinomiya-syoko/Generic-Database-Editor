@@ -7,10 +7,16 @@ public static class Constant
     public static string DATA_CONTAINER_PATH = Application.dataPath + "/Scripts/DataTable/Container/";
 
     // 技能
-    public const string SKILL_PATH = "Assets/ConfigData/Resources/SO/Skills/";
+    public const string SKILL_PATH = "Assets/ConfigData/Res/SO/Skills/";
+    public const string BUILDING_PATH = "Assets/ConfigData/Res/SO/Buildings/";
+    public const string UNIT_PATH = "Assets/ConfigData/Res/SO/Units/";
+    public const string EQUIPMENT_PATH = "Assets/ConfigData/Res/SO/Equipments/";
+    public const string TECH_PATH = "Assets/ConfigData/Res/SO/Techs/";
+    public const string ITEM_PATH = "Assets/ConfigData/Res/SO/Items/";
+    public const string QUEST_PATH = "Assets/ConfigData/Res/SO/Quests/";
    
     // 实体
-    public const string ENTITY_PATH = "Assets/ConfigData/Resources/SO/Entities/";
+    public const string ENTITY_PATH = "Assets/ConfigData/Res/SO/Entities/";
 
     public static float DEFAULT_DELTA_TIME = 0.1f;
     public static float LONG_DELTA_TIME = 0.5f;

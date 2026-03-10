@@ -30,13 +30,14 @@ namespace SOEditor.Editor
         private bool _showFilters = false;
         
         // 可用的 SO 类型
-        private readonly string[] _soTypes = new[] { "Item", "Character", "Skill", "Quest" };
+        private readonly string[] _soTypes = new[] { "Item", "Character", "Skill", "Quest","BuildingData" };
         private readonly Dictionary<string, Type> _soTypeMap = new Dictionary<string, Type>
         {
             { "Item", typeof(ItemSO) },
             { "Character", typeof(CharacterSO) },
             { "Skill", typeof(SkillSO) },
-            { "Quest", typeof(QuestSO) }
+            { "Quest", typeof(QuestSO) },
+            { "BuildingData", typeof(Top.BuildingDataSO) },
         };
         
         // 缓存的 SO 列表
@@ -680,6 +681,15 @@ namespace SOEditor.Editor
                         QuestSO quest = ScriptableObject.CreateInstance<QuestSO>();
                         quest.LoadFromSerializableData(data);
                         list.Add(quest);
+                    }
+                    break;
+                case "BuildingData":
+                    var buildingDataList = SODatabase.LoadAllData<Top.BuildingDataSO>(soType);
+                    foreach (var data in buildingDataList)
+                    {
+                        Top.BuildingDataSO buildingData = ScriptableObject.CreateInstance<Top.BuildingDataSO>();
+                        buildingData.LoadFromSerializableData(data);
+                        list.Add(buildingData);
                     }
                     break;
             }

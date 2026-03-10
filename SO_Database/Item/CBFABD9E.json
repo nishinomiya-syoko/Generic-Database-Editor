@@ -1,0 +1,17 @@
+{
+    "Id": "CBFABD9E",
+    "DisplayName": "asdf",
+    "Description": "",
+    "IconPath": "",
+    "ItemType": 5,
+    "MaxStackSize": 99,
+    "BuyPrice": 0,
+    "SellPrice": 0,
+    "IsUsable": false,
+    "IsEquipable": false,
+    "Rarity": 0,
+    "AttackBonus": 0,
+    "DefenseBonus": 0,
+    "HealthBonus": 0,
+    "ManaBonus": 0
+}

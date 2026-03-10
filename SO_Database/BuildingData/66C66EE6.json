@@ -1,0 +1,23 @@
+{
+    "Id": "",
+    "DisplayName": "",
+    "Description": "",
+    "IconPath": "",
+    "buildingType": 0,
+    "size": {
+        "x": 2,
+        "y": 2
+    },
+    "prefabPath": "",
+    "buildTime": 60,
+    "buildCosts": [],
+    "maxLevel": 10,
+    "levelData": [],
+    "hitPoints": 100,
+    "armor": 0,
+    "range": 5.0,
+    "isResourceProducer": false,
+    "producedResource": 0,
+    "productionRates": [],
+    "buildingSkills": []
+}

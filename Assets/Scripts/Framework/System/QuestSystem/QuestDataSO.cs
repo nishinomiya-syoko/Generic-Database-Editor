@@ -9,21 +9,21 @@ namespace Top
     [CreateAssetMenu(fileName = "QuestDatabase", menuName = "Top/Quest Database")]
     public class QuestSO : ScriptableObject
     {
-        public List<QuestData> quests = new List<QuestData>();
+        public List<QuestDataSO> quests = new List<QuestDataSO>();
 
-        public QuestData GetQuestData(string questId)
+        public QuestDataSO GetQuestData(string questId)
         {
             return quests.Find(q => q.id == questId);
         }
 
-        public List<QuestData> GetQuestsByType(QuestType type)
+        public List<QuestDataSO> GetQuestsByType(QuestType type)
         {
             return quests.FindAll(q => q.questType == type);
         }
 
-        public List<QuestData> GetAvailableQuests(int playerLevel, HashSet<string> completedQuests)
+        public List<QuestDataSO> GetAvailableQuests(int playerLevel, HashSet<string> completedQuests)
         {
-            List<QuestData> available = new List<QuestData>();
+            List<QuestDataSO> available = new List<QuestDataSO>();
             foreach (var quest in quests)
             {
                 if (quest.CanAccept(playerLevel, completedQuests))

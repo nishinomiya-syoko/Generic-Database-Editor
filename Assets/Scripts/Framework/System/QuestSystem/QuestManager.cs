@@ -18,9 +18,9 @@ namespace Top
         private Dictionary<string, int> achievementProgress = new Dictionary<string, int>();
 
         // 事件
-        public event Action<QuestData> OnQuestAccepted;
-        public event Action<QuestData> OnQuestCompleted;
-        public event Action<QuestData, QuestReward> OnQuestRewardClaimed;
+        public event Action<QuestDataSO> OnQuestAccepted;
+        public event Action<QuestDataSO> OnQuestCompleted;
+        public event Action<QuestDataSO, QuestReward> OnQuestRewardClaimed;
         public event Action<AchievementData> OnAchievementUnlocked;
 
         void Start()
@@ -414,7 +414,7 @@ namespace Top
         {
             return completedQuests.Contains(questId);
         }
-        public List<QuestData> GetAvailableQuests()
+        public List<QuestDataSO> GetAvailableQuests()
         {
             return questDatabase.quests;
         }
