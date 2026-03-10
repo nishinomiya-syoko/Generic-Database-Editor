@@ -50,7 +50,11 @@ namespace Top
         //     if (string.IsNullOrEmpty(Id))
         //         Id = Guid.NewGuid().ToString();
         // }
-
+        private void OnValidate()
+        {
+            if (string.IsNullOrEmpty(Id))
+            GenerateId();
+        }
         
         public override string GetSOType()
         {
@@ -111,6 +115,7 @@ namespace Top
         public string IconPath;
         public BuildingType buildingType;
         public Vector2Int size = new Vector2Int(2, 2);
+        public GameObject prefab;
         public string prefabPath;
 
         [Header("建造信息")]

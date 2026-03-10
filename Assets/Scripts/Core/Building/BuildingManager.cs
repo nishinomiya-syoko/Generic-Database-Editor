@@ -109,33 +109,33 @@ namespace Top
             if (currentGhost != null)
                 Destroy(currentGhost);
 
-            // if (selectedBuildingData.prefab != null)
-            // {
-            //     currentGhost = Instantiate(selectedBuildingData.prefab);
-            //     currentGhost.name = "PlacementGhost";
+            if (selectedBuildingData.prefab != null)
+            {
+                currentGhost = Instantiate(selectedBuildingData.prefab);
+                currentGhost.name = "PlacementGhost";
 
-            //     // 设置半透明材质
-            //     Renderer[] renderers = currentGhost.GetComponentsInChildren<Renderer>();
-            //     foreach (var renderer in renderers)
-            //     {
-            //         Material[] materials = renderer.materials;
-            //         for (int i = 0; i < materials.Length; i++)
-            //         {
-            //             Color color = materials[i].color;
-            //             color.a = 0.5f;
-            //             materials[i].color = color;
-            //             materials[i].SetFloat("_Mode", 2);
-            //             materials[i].SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            //             materials[i].SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            //             materials[i].SetInt("_ZWrite", 0);
-            //             materials[i].DisableKeyword("_ALPHATEST_ON");
-            //             materials[i].EnableKeyword("_ALPHABLEND_ON");
-            //             materials[i].DisableKeyword("_ALPHAPREMULTIPLY_ON");
-            //             materials[i].renderQueue = 3000;
-            //         }
-            //         renderer.materials = materials;
-            //     }
-            // }
+                // 设置半透明材质
+                Renderer[] renderers = currentGhost.GetComponentsInChildren<Renderer>();
+                foreach (var renderer in renderers)
+                {
+                    Material[] materials = renderer.materials;
+                    for (int i = 0; i < materials.Length; i++)
+                    {
+                        Color color = materials[i].color;
+                        color.a = 0.5f;
+                        materials[i].color = color;
+                        materials[i].SetFloat("_Mode", 2);
+                        materials[i].SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                        materials[i].SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                        materials[i].SetInt("_ZWrite", 0);
+                        materials[i].DisableKeyword("_ALPHATEST_ON");
+                        materials[i].EnableKeyword("_ALPHABLEND_ON");
+                        materials[i].DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                        materials[i].renderQueue = 3000;
+                    }
+                    renderer.materials = materials;
+                }
+            }
         }
 
         private void UpdatePlacementGhost()

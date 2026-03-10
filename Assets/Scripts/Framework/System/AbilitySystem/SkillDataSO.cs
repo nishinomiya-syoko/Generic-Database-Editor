@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 /// <summary>
 /// 技能数据配置（ScriptableObject）
 /// </summary>
@@ -7,7 +8,7 @@ using UnityEngine;
 public class SkillDataSO : ScriptableObject
 {
     [Header("基础信息")]
-    public string skillId;
+    public string Id;
     public string skillName;
     public string description;
     public Sprite icon;
@@ -31,13 +32,18 @@ public class SkillDataSO : ScriptableObject
     
     [Header("标签")]
     public List<string> tags = new List<string>(); // Fire, Ice, Lightning等
-    
+
     public string GetDescription(int level)
     {
         float currentDamage = baseDamage + damagePerLevel * (level - 1);
         return description.Replace("{damage}", currentDamage.ToString("F0"))
                          .Replace("{level}", level.ToString());
     }
+    private void OnValidate()
+        {
+            if (string.IsNullOrEmpty(Id))
+                Id = Guid.NewGuid().ToString("N").Substring(0, 8).ToUpper();
+        }
 }
 
 /// <summary>

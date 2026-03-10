@@ -38,7 +38,9 @@ namespace Top
         private void OnValidate()
         {
             if (string.IsNullOrEmpty(id))
-                id = Guid.NewGuid().ToString();
+                // id = Guid.NewGuid().ToString();
+            id = Guid.NewGuid().ToString("N").Substring(0, 8).ToUpper();
+
         }
 
         public Color GetQualityColor()

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: New Building
   m_EditorClassIdentifier: Assembly-CSharp:Top:BuildingDataSO
-  _id: 
-  _displayName: 
+  _id: 2140A34A
+  _displayName: "\u662F\u662F\u662F"
   _description: 
   _icon: {fileID: 0}
   buildingType: 0

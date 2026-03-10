@@ -65,7 +65,7 @@ public class SkillInstance
     {
         foreach (var evo in Data.evolutions)
         {
-            var requiredSkill = ownedSkills.Find(s => s.Data.skillId == evo.requiredSkillId);
+            var requiredSkill = ownedSkills.Find(s => s.Data.Id == evo.requiredSkillId);
             if (requiredSkill != null && requiredSkill.CurrentLevel >= evo.requiredLevel)
             {
                 return true;

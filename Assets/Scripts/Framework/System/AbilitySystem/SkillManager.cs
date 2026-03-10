@@ -53,9 +53,9 @@ public class SkillManager : MonoBehaviour
         }
 
         // 2. 提供新技能
-        var ownedIds = new HashSet<string>(acquiredSkills.Select(s => s.Data.skillId));
+        var ownedIds = new HashSet<string>(acquiredSkills.Select(s => s.Data.Id));
         var newSkills = allSkills
-            .Where(s => !ownedIds.Contains(s.skillId) && s.rarity >= minRarity)
+            .Where(s => !ownedIds.Contains(s.Id) && s.rarity >= minRarity)
             .OrderBy(_ => Random.value)
             .Take(count - available.Count);
 
@@ -86,7 +86,7 @@ public class SkillManager : MonoBehaviour
     public SkillInstance AcquireSkill(SkillDataSO data)
     {
         // 检查是否已有此技能
-        var existing = acquiredSkills.Find(s => s.Data.skillId == data.skillId);
+        var existing = acquiredSkills.Find(s => s.Data.Id == data.Id);
         if (existing != null)
         {
             existing.LevelUp();

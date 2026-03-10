@@ -7,7 +7,7 @@ public class FireballSkill : SkillDataSO
 {
     private void OnEnable()
     {
-        skillId = "fireball";
+        Id = "fireball";
         skillName = "火球术";
         description = "发射火球造成 {damage} 点火焰伤害";
         rarity = SkillRarity.Common;
