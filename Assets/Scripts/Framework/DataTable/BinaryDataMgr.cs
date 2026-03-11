@@ -35,7 +35,7 @@ namespace DataCenter
         /// 二进制数据表文件根路径（StreamingAssets/Bianry/）
         /// 注：Bianry为自定义目录名，注意拼写
         /// </summary>
-        public static string DATA_BINARY_PATH = Application.streamingAssetsPath + "/Bianry/";
+        public static string DATA_BINARY_PATH = Constant.DATA_BINARY_PATH;
 
         public static string CUSTOM_NAME_END = ".pve";
 
@@ -46,7 +46,7 @@ namespace DataCenter
         public void LoadTable<T>()
         {
             // 拼接Row前缀的数据结构类型名（例如 DTBasicData -> RowDTBasicData）
-            string RowTableName = "Row" + typeof(T).Name;
+            string RowTableName = "DR" + typeof(T).Name;
             
             // 打开对应名称的二进制文件（.pve为自定义后缀）
             using (FileStream fs = File.Open(DATA_BINARY_PATH + typeof(T).Name + ".pve", FileMode.Open, FileAccess.Read))

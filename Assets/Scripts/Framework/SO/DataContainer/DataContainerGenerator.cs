@@ -7,10 +7,10 @@ using System;
 
 public class DataContainerGenerator : EditorWindow
 {
-    private const string TEMPLATE_PATH = "Assets/Scripts/DataContainer/";
+    private static readonly string TEMPLATE_PATH = Constant.DATA_CONTAINER_PATH; // 生成的数据容器存放路径
     private MonoScript _targetSOScript; // 选中的 SO 脚本
 
-    [MenuItem("Tools/Generate Data Container")]
+    [MenuItem("Tools/Generate SO to DataClass")]
     public static void ShowWindow()
     {
         GetWindow<DataContainerGenerator>("生成数据容器");
@@ -48,12 +48,13 @@ public class DataContainerGenerator : EditorWindow
 
         // 生成代码内容
         StringBuilder code = new StringBuilder();
-        code.AppendLine("using UnityEngine;");
-        code.AppendLine("using System;");
+        code.AppendLine("namespace Top\n{\n");
+        code.AppendLine(" using UnityEngine;");
+        code.AppendLine(" using System;");
         code.AppendLine();
-        code.AppendLine($"[Serializable]");
-        code.AppendLine($"public class {dataClassName}");
-        code.AppendLine("{");
+        code.AppendLine( "[Serializable]");
+        code.AppendLine($" public class {dataClassName}");
+        code.AppendLine(" {");
 
         // 遍历 SO 的字段，生成数据容器字段
         foreach (FieldInfo field in soType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public))
@@ -88,7 +89,7 @@ public class DataContainerGenerator : EditorWindow
         }
         code.AppendLine("    }");
 
-        code.AppendLine("}");
+        code.AppendLine("}\n}");
 
         // 写入文件
         File.WriteAllText(outputPath, code.ToString(), Encoding.UTF8);

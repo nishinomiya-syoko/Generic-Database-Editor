@@ -1,4 +1,5 @@
 using UnityEngine;
+using Top;
 
 /// <summary>
 /// 负责在格子上放置占格建筑（可在编辑器或运行时调用）
@@ -29,19 +30,20 @@ public class BuildingPlacer : MonoBehaviour
 
         // 实例化视觉对象（中心对齐）
         Vector3 worldPos = GridManager.Instance.GetWorldPosition(gridX + size.x / 2, gridY + size.y / 2);
-        var go = Instantiate(buildingPrefab, worldPos, Quaternion.identity);
-        var b = go.AddComponent<Tower>(); // 添加辅助组件用于后续移除
-        b.gridX = gridX; b.gridY = gridY; b.size = size;
+        // var go = Instantiate(buildingPrefab, worldPos, Quaternion.identity);
+        // var b = go.AddComponent<Tower>(); // 添加辅助组件用于后续移除
+        // b.gridX = gridX; b.gridY = gridY; b.size = size;
+        var go = GlobalManager.Instance.poolManager.Spawn("Tower", worldPos);
         return go;
     }
 
-    public void RemoveBuilding(Tower b)
-    {
-        if (b == null) return;
-        GridManager.Instance.SetRegionPlaced(b.gridX, b.gridY, b.size.x, b.size.y, false);
-        GridManager.Instance.SetRegionBlocked(b.gridX, b.gridY, b.size.x, b.size.y, false);
-        Destroy(b.gameObject);
-    }
+    // public void RemoveBuilding(Block b)
+    // {
+    //     if (b == null) return;
+    //     GridManager.Instance.SetRegionPlaced(b.gridX, b.gridY, b.size.x, b.size.y, false);
+    //     GridManager.Instance.SetRegionBlocked(b.gridX, b.gridY, b.size.x, b.size.y, false);
+    //     Destroy(b.gameObject);
+    // }
 
     void Update()
     {

@@ -25,4 +25,8 @@ public static class SOTExcelMenu
         string soSavePath = Path.Combine(Application.dataPath, "Resources/Buildings");
         // SOTExcelTool.LoadSOFromExcel<Moon>(soSavePath);
     }
+    [MenuItem("Tools/SO Excel/Generate Moon Excel")]
+    public static void GenerateMoonExcel()
+    {
+    }
 }

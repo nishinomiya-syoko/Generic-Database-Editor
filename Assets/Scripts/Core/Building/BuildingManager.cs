@@ -35,12 +35,12 @@ namespace Top
 
         void Start()
         {
-            // if (buildingDatabase == null)
-            // {
-            //     buildingDatabase = Resources.Load<BuildingDataCollection>("BuildingDatabase");
-            // }
+            // GlobalManager.Instance.EventManager.AddListener<Building>(EventType.BuildingPlaced, OnBuildingPlaced);
+            GlobalManager.Instance.EventManager.OnBuildingPlaced += OnBuildingPlaced;
+            GlobalManager.Instance.EventManager.OnBuildingUpgraded += OnBuildingUpgraded;
+            GlobalManager.Instance.EventManager.OnBuildingDestroyed += OnBuildingDestroyed;
         }
-
+       
         void Update()
         {
             HandleBuildingPlacement();
@@ -109,34 +109,11 @@ namespace Top
             if (currentGhost != null)
                 Destroy(currentGhost);
 
-            if (selectedBuildingData.prefab != null)
+            if (selectedBuildingData != null)
             {
-                // currentGhost = Instantiate(selectedBuildingData.prefab);
                 currentGhost = PoolManager.Instance.Spawn(selectedBuildingData.Id, transform.position);
 
                 currentGhost.name = "PlacementGhost";
-
-                // 设置半透明材质
-                Renderer[] renderers = currentGhost.GetComponentsInChildren<Renderer>();
-                foreach (var renderer in renderers)
-                {
-                    Material[] materials = renderer.materials;
-                    for (int i = 0; i < materials.Length; i++)
-                    {
-                        Color color = materials[i].color;
-                        color.a = 0.5f;
-                        materials[i].color = color;
-                        materials[i].SetFloat("_Mode", 2);
-                        materials[i].SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                        materials[i].SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                        materials[i].SetInt("_ZWrite", 0);
-                        materials[i].DisableKeyword("_ALPHATEST_ON");
-                        materials[i].EnableKeyword("_ALPHABLEND_ON");
-                        materials[i].DisableKeyword("_ALPHAPREMULTIPLY_ON");
-                        materials[i].renderQueue = 3000;
-                    }
-                    renderer.materials = materials;
-                }
             }
         }
 
@@ -247,20 +224,20 @@ namespace Top
             }
         }
 
-        // public void DestroyBuilding(Building building)
-        // {
-        //     if (building == null || building.IsDestroyed)
-        //         return;
+        public void RemoveBuilding(Building building)
+        {
+            if (building == null)
+                return;
 
-        //     // 从地图系统中移除
-        //     GlobalManager.Instance?.MapManager?.RemoveBuilding(building.data,building);
+            // 从地图系统中移除
+            GlobalManager.Instance?.MapManager?.RemoveBuilding(building.data,building.transform.position);
 
-        //     // 从建筑列表中移除
-        //     placedBuildings.Remove(building);
+            // 从建筑列表中移除
+            placedBuildings.Remove(building);
 
-        //     // 销毁建筑对象
-        //     Destroy(building.gameObject);
-        // }
+            // 销毁建筑对象
+            Destroy(building.gameObject);
+        }
 
         public List<Building> GetBuildingsOfType(BuildingType type)
         {

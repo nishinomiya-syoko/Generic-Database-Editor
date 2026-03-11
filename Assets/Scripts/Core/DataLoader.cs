@@ -13,7 +13,7 @@ public class DataLoader : MonoBehaviour
             //LoadTable<PlayerInfo1Container, PlayerInfo1>();
             //LoadTable<TestInfoContainer, TestInfo>();
             //LoadTable<BasicDataContainer, BasicData>();
-            BinaryDataMgr.Instance.LoadTable<DTBasicData>();
-            Debug.Log("数据加载完成");
+            // BinaryDataMgr.Instance.LoadTable<DTBasicData>();
+            // Debug.Log("数据加载完成");
         }
 }

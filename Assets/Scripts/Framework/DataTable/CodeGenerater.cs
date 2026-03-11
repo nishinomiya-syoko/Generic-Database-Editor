@@ -32,12 +32,14 @@ namespace DataCenter
         /// </summary>
         //public static string DATA_BINARY_PATH = Application.streamingAssetsPath + "/Bianry/";
 
+        public static string CUSTOM_NAME_END = ".pve";
+
         /// <summary>
         /// 真正内容开始行号
         /// </summary>
         public static int BEGIN_INDEX = 4;
 
-        [MenuItem("Tools/GenerateExcelTable")]
+        [MenuItem("Tools/Generate Excel to Binary Class")]
         private static void GenerateExcelInfo()
         {
             //加载指定路径中的所有Excel文件 用于生成对应的3个文件
@@ -97,7 +99,10 @@ namespace DataCenter
 
             //如果我们要生成对应的数据结构类脚本 其实就是通过代码进行字符串拼接 然后存进文件就行了
             //DR = DataRow
-            string str = "namespace DataCenter\n{\n";
+            string str = "// 自动生成代码\n";
+            str += "// Generate Time " + DateTime.Now.ToString() + "\n";
+            str += "// 无需手动修改\n\n";
+            str = "namespace DataCenter\n{\n";
             str += "\t/// <summary>单行数据 " + table.TableName + "</summary>\n";
             str += "\tpublic class DR" + table.TableName + "\n\t{\n";
 
@@ -181,7 +186,7 @@ namespace DataCenter
                 File.Delete(file);
             }
             //创建一个2进制文件进行写入
-            using (FileStream fs = new FileStream(BinaryDataMgr.DATA_BINARY_PATH + table.TableName + ".zhou", FileMode.OpenOrCreate, FileAccess.Write))
+            using (FileStream fs = new FileStream(BinaryDataMgr.DATA_BINARY_PATH + table.TableName + CUSTOM_NAME_END, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 //存储具体的Excel对应的2进制信息
                 //1.先要存储需要写的行数
@@ -274,6 +279,11 @@ namespace DataCenter
         {
             return table.Rows[1];
         }
+        /// <summary>
+        /// 获取变量注释所在行
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
         private static DataRow GetVariableCommentRow(System.Data.DataTable table)
         {
             return table.Rows[2];

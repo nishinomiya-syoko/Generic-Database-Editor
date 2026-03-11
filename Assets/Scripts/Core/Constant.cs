@@ -2,9 +2,10 @@ using UnityEngine;
 public static class Constant
 {
     // 数据表路径
-    public static string EXCEL_PATH = Application.dataPath + "/Data/Excel/";
-    public static string DATA_CLASS_PATH = Application.dataPath + "/Scripts/DataTable/DataClass/";
-    public static string DATA_CONTAINER_PATH = Application.dataPath + "/Scripts/DataTable/Container/";
+    public static readonly string EXCEL_PATH = Application.dataPath + "/Data/Excel/";
+    public static readonly string DATA_CLASS_PATH = Application.dataPath + "/Scripts/Generate/DataTable/";
+    public static readonly string DATA_CONTAINER_PATH = Application.dataPath + "/Scripts/Generate/DataTable/Container/";
+    public static readonly string DATA_BINARY_PATH = Application.streamingAssetsPath + "/Bianry/";
 
     // 技能
     public const string SKILL_PATH = "Assets/Res/SO/Skills/";
