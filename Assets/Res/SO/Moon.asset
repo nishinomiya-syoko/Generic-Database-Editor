@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Moon
   m_EditorClassIdentifier: 
   Id: 
-  DisplayName: 
-  buildingType: 0
+  DisplayName: ssf
+  buildingType: 1
   size: {x: 2, y: 2}
   buildTime: 60
   range: 5

@@ -60,20 +60,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="/Users/yoaha/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.1.3/Analyzers/Microsoft.Unity.Analyzers.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/pt-BR/System.Text.Json.SourceGeneration.resources.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/zh-Hans/System.Text.Json.SourceGeneration.resources.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/es/System.Text.Json.SourceGeneration.resources.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/fr/System.Text.Json.SourceGeneration.resources.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/de/System.Text.Json.SourceGeneration.resources.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/ja/System.Text.Json.SourceGeneration.resources.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/zh-Hant/System.Text.Json.SourceGeneration.resources.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/it/System.Text.Json.SourceGeneration.resources.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/ru/System.Text.Json.SourceGeneration.resources.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/tr/System.Text.Json.SourceGeneration.resources.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/pl/System.Text.Json.SourceGeneration.resources.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/cs/System.Text.Json.SourceGeneration.resources.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/System.Text.Json.SourceGeneration.dll" />
-    <Analyzer Include="/Users/yoaha/project/Rebuild20260308/Assets/Packages/System.Text.Json.8.0.5/analyzers/dotnet/roslyn4.0/cs/ko/System.Text.Json.SourceGeneration.resources.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/2022.3.61f1c1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/2022.3.61f1c1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
@@ -448,20 +434,16 @@
       <HintPath>/Applications/Unity/Hub/Editor/2022.3.61f1c1/Unity.app/Contents/Managed/UnityEngine/UnityEditor.UnityConnectModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Security.Principal.Windows">
-      <HintPath>Assets/Packages/System.Security.Principal.Windows.5.0.0/lib/netstandard2.0/System.Security.Principal.Windows.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Configuration">
+      <HintPath>Assets/Packages/Microsoft.Extensions.Configuration.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sirenix.Reflection.Editor">
       <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Reflection.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Configuration.FileExtensions">
-      <HintPath>Assets/Packages/Microsoft.Extensions.Configuration.FileExtensions.8.0.1/lib/netstandard2.0/Microsoft.Extensions.Configuration.FileExtensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.ComponentModel.Annotations">
-      <HintPath>Assets/Packages/System.ComponentModel.Annotations.5.0.0/lib/netstandard2.1/System.ComponentModel.Annotations.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.FileSystemGlobbing">
+      <HintPath>Assets/Packages/Microsoft.Extensions.FileSystemGlobbing.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ReportGeneratorMerged">
@@ -472,24 +454,16 @@
       <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Serialization.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Configuration">
-      <HintPath>Assets/Packages/Microsoft.Extensions.Configuration.8.0.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.dll</HintPath>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces">
+      <HintPath>Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Security.AccessControl">
-      <HintPath>Assets/Packages/System.Security.AccessControl.6.0.0/lib/netstandard2.0/System.Security.AccessControl.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="EPPlus.Interfaces">
-      <HintPath>Assets/Packages/EPPlus.Interfaces.8.4.0/lib/netstandard2.1/EPPlus.Interfaces.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>Assets/Packages/System.Runtime.CompilerServices.Unsafe.4.7.0/lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ExcelDataReader.DataSet">
       <HintPath>Assets/Plugins/ExcelDataReaderv3.7.0/ExcelDataReader.DataSet.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Cng">
-      <HintPath>Assets/Packages/System.Security.Cryptography.Cng.5.0.0/lib/netstandard2.1/System.Security.Cryptography.Cng.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sirenix.Serialization.Config">
@@ -500,96 +474,88 @@
       <HintPath>Assets/Plugins/ExcelDataReaderv3.7.0/ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.IO.RecyclableMemoryStream">
-      <HintPath>Assets/Packages/Microsoft.IO.RecyclableMemoryStream.3.0.1/lib/netstandard2.1/Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Sirenix.OdinInspector.Editor">
       <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.OdinInspector.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Primitives">
-      <HintPath>Assets/Packages/Microsoft.Extensions.Primitives.8.0.0/lib/netstandard2.0/Microsoft.Extensions.Primitives.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
+      <HintPath>Assets/Packages/Microsoft.Extensions.Configuration.Abstractions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Abstractions">
+      <HintPath>Assets/Packages/Microsoft.Extensions.FileProviders.Abstractions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Drawing.Common">
+      <HintPath>Assets/Packages/System.Drawing.Common.4.7.0/lib/netstandard2.0/System.Drawing.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web">
+      <HintPath>Assets/Packages/System.Text.Encodings.Web.4.7.0/lib/netstandard2.1/System.Text.Encodings.Web.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Text.Encoding.CodePages">
+      <HintPath>Assets/Packages/System.Text.Encoding.CodePages.4.7.0/lib/netstandard2.0/System.Text.Encoding.CodePages.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.FileExtensions">
+      <HintPath>Assets/Packages/Microsoft.Extensions.Configuration.FileExtensions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.FileExtensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sirenix.OdinInspector.Attributes">
       <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.OdinInspector.Attributes.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Security.Cryptography.Xml">
-      <HintPath>Assets/Packages/System.Security.Cryptography.Xml.8.0.2/lib/netstandard2.0/System.Security.Cryptography.Xml.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Primitives">
+      <HintPath>Assets/Packages/Microsoft.Extensions.Primitives.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Primitives.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.XPath.XmlDocument">
+      <HintPath>Assets/Packages/System.Xml.XPath.XmlDocument.4.3.0/lib/netstandard1.3/System.Xml.XPath.XmlDocument.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sirenix.Utilities">
       <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Utilities.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
-      <HintPath>Assets/Packages/Microsoft.Extensions.Configuration.Abstractions.8.0.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Formats.Asn1">
-      <HintPath>Assets/Packages/System.Formats.Asn1.8.0.1/lib/netstandard2.0/System.Formats.Asn1.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="DOTween">
       <HintPath>Assets/Plugins/Demigiant/DOTween/DOTween.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Cng">
+      <HintPath>Assets/Packages/System.Security.Cryptography.Cng.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Cng.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ExcelDataReader">
       <HintPath>Assets/Plugins/ExcelDataReaderv3.7.0/ExcelDataReader.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Text.Json">
-      <HintPath>Assets/Packages/System.Text.Json.8.0.5/lib/netstandard2.0/System.Text.Json.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.FileProviders.Physical">
+      <HintPath>Assets/Packages/Microsoft.Extensions.FileProviders.Physical.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileProviders.Physical.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Json">
+      <HintPath>Assets/Packages/Microsoft.Extensions.Configuration.Json.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
       <HintPath>Library/PackageCache/com.unity.visualscripting@1.9.4/Runtime/VisualScripting.Flow/Dependencies/NCalc/Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Configuration.Json">
-      <HintPath>Assets/Packages/Microsoft.Extensions.Configuration.Json.8.0.1/lib/netstandard2.1/Microsoft.Extensions.Configuration.Json.dll</HintPath>
+    <Reference Include="System.Text.Json">
+      <HintPath>Assets/Packages/System.Text.Json.4.7.0/lib/netstandard2.0/System.Text.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces">
-      <HintPath>Assets/Packages/Microsoft.Bcl.AsyncInterfaces.8.0.0/lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Text.Encodings.Web">
-      <HintPath>Assets/Packages/System.Text.Encodings.Web.8.0.0/lib/netstandard2.0/System.Text.Encodings.Web.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.FileProviders.Abstractions">
-      <HintPath>Assets/Packages/Microsoft.Extensions.FileProviders.Abstractions.8.0.0/lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
+    <Reference Include="EPPlus">
+      <HintPath>Assets/Packages/EPPlus.4.5.3.3/lib/netstandard2.1/EPPlus.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sirenix.Utilities.Editor">
       <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Utilities.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Extensions.FileProviders.Physical">
-      <HintPath>Assets/Packages/Microsoft.Extensions.FileProviders.Physical.8.0.0/lib/netstandard2.0/Microsoft.Extensions.FileProviders.Physical.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="EPPlus">
-      <HintPath>Assets/Packages/EPPlus.8.5.0/lib/netstandard2.1/EPPlus.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Text.Encoding.CodePages">
-      <HintPath>Assets/Packages/System.Text.Encoding.CodePages.8.0.0/lib/netstandard2.0/System.Text.Encoding.CodePages.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Assets/Packages/System.Runtime.CompilerServices.Unsafe.6.0.0/lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Security.Cryptography.Pkcs">
-      <HintPath>Assets/Packages/System.Security.Cryptography.Pkcs.8.0.1/lib/netstandard2.1/System.Security.Cryptography.Pkcs.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.FileSystemGlobbing">
-      <HintPath>Assets/Packages/Microsoft.Extensions.FileSystemGlobbing.8.0.0/lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll</HintPath>
+      <HintPath>Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Pkcs.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">

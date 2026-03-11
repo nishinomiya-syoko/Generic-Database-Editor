@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using Top;
 
 public static class SOTExcelMenu
 {
@@ -8,7 +9,12 @@ public static class SOTExcelMenu
     [MenuItem("Tools/SO Excel/Generate Building Excel")]
     public static void GenerateBuildingExcel()
     {
-        SOTExcelTool.GenerateExcelFromSO<Moon>();
+        SOTExcelTool.GenerateExcelFromSO<BuildingDataSO>();
+        // SOTExcelTool.GenerateExcelFromSO<UnitDataSO>();
+        // SOTExcelTool.GenerateExcelFromSO
+        // SOTExcelTool.GenerateExcelFromSO
+        // SOTExcelTool.GenerateExcelFromSO
+        // SOTExcelTool.GenerateExcelFromSO
     }
 
     // 从Excel加载数据到BuildingDataSO
@@ -17,6 +23,6 @@ public static class SOTExcelMenu
     {
         // SO保存路径（可自定义）
         string soSavePath = Path.Combine(Application.dataPath, "Resources/Buildings");
-        SOTExcelTool.LoadSOFromExcel<Moon>(soSavePath);
+        // SOTExcelTool.LoadSOFromExcel<Moon>(soSavePath);
     }
 }

@@ -5,18 +5,20 @@ using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
 using OfficeOpenXml;
+using SOEditor;
 
 public static class SOTExcelTool
 {
     // Excel文件保存根路径（可自定义）
-    private static readonly string ExcelRootPath = Path.Combine(Application.dataPath, "ExcelData");
+    // private static readonly string ExcelRootPath = Path.Combine(Application.dataPath, "ExcelData");
+    private static readonly string ExcelRootPath = Constant.EXCEL_PATH;
 
     #region 1. 从SO子类生成Excel文件
     /// <summary>
     /// 生成指定类型SO的Excel文件（包含所有该类型SO实例的数据）
     /// </summary>
-    /// <typeparam name="T">SO子类（继承ExcelableSO）</typeparam>
-    public static void GenerateExcelFromSO<T>() where T : ExcelableSO
+    /// <typeparam name="T">SO子类（继承ScriptableObjectBase）</typeparam>
+    public static void GenerateExcelFromSO<T>() where T : ScriptableObjectBase
     {
         // 1. 检查路径
         if (!Directory.Exists(ExcelRootPath))
@@ -33,7 +35,8 @@ public static class SOTExcelTool
         }
 
         // 3. 创建Excel包
-        string excelPath = Path.Combine(ExcelRootPath, soList[0].GetExcelFileName());
+        string excelPath = Path.Combine(ExcelRootPath, soList[0].GetType().ToString());
+        // string excelPath = Path.Combine(ExcelRootPath, soList[0].GetExcelFileName());
         FileInfo excelFile = new FileInfo(excelPath);
         if (excelFile.Exists) excelFile.Delete(); // 覆盖旧文件
         using (ExcelPackage package = new ExcelPackage(excelFile))
@@ -75,9 +78,9 @@ public static class SOTExcelTool
     /// <summary>
     /// 从Excel加载数据，更新/创建SO实例
     /// </summary>
-    /// <typeparam name="T">SO子类（继承ExcelableSO）</typeparam>
+    /// <typeparam name="T">SO子类（继承ScriptableObjectBase）</typeparam>
     /// <param name="soSavePath">SO保存的路径（如 "Assets/Resources/Buildings/"）</param>
-    public static void LoadSOFromExcel<T>(string soSavePath) where T : ExcelableSO
+    public static void LoadSOFromExcel<T>(string soSavePath) where T : ScriptableObjectBase
     {
         // 1. 检查路径
         if (!Directory.Exists(ExcelRootPath))
@@ -88,7 +91,9 @@ public static class SOTExcelTool
 
         // 2. 获取Excel文件
         T tempSO = ScriptableObject.CreateInstance<T>();
-        string excelPath = Path.Combine(ExcelRootPath, tempSO.GetExcelFileName());
+        // string excelPath = Path.Combine(ExcelRootPath, tempSO.GetExcelFileName());
+        string excelPath = Path.Combine(ExcelRootPath, tempSO.GetType().ToString());
+        
         ScriptableObject.DestroyImmediate(tempSO); // 临时SO销毁
 
         if (!File.Exists(excelPath))
@@ -172,7 +177,7 @@ public static class SOTExcelTool
     /// <summary>
     /// 获取SO的可序列化字段（排除m_Script等内置字段）
     /// </summary>
-    private static List<FieldInfo> GetSerializableFields<T>() where T : ExcelableSO
+    private static List<FieldInfo> GetSerializableFields<T>() where T : ScriptableObjectBase
     {
         List<FieldInfo> fields = new List<FieldInfo>();
         // 获取所有公共字段 + 带[SerializeField]的私有/保护字段
@@ -283,7 +288,7 @@ public static class SOTExcelTool
     /// <summary>
     /// 加载指定类型的所有SO实例
     /// </summary>
-    private static List<T> LoadAllSOOfType<T>() where T : ExcelableSO
+    private static List<T> LoadAllSOOfType<T>() where T : ScriptableObjectBase
     {
         List<T> soList = new List<T>();
         string[] guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}");
@@ -299,7 +304,7 @@ public static class SOTExcelTool
     /// <summary>
     /// 根据Id查找SO实例
     /// </summary>
-    private static T FindSOById<T>(string path, string id) where T : ExcelableSO
+    private static T FindSOById<T>(string path, string id) where T : ScriptableObjectBase
     {
         string[] guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}", new[] { path });
         foreach (string guid in guids)

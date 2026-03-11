@@ -7,7 +7,7 @@ using UnityEngine.AI;
 namespace Top
 {
     // 单位基类
-    public partial class Unit : LiveEntity
+    public partial class Unit : LiveEntity,IDamageable
     {
         [Header("单位信息")]
         public UnitDataSO data;

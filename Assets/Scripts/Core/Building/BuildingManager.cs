@@ -111,7 +111,9 @@ namespace Top
 
             if (selectedBuildingData.prefab != null)
             {
-                currentGhost = Instantiate(selectedBuildingData.prefab);
+                // currentGhost = Instantiate(selectedBuildingData.prefab);
+                currentGhost = PoolManager.Instance.Spawn(selectedBuildingData.Id, transform.position);
+
                 currentGhost.name = "PlacementGhost";
 
                 // 设置半透明材质

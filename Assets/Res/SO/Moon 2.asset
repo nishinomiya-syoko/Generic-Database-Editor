@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 041f973c35eab46c1a431c0401b004b7, type: 3}
   m_Name: Moon 2
   m_EditorClassIdentifier: 
-  Id: 
-  DisplayName: 
-  buildingType: 0
+  Id: 1
+  DisplayName: 22
+  buildingType: 2
   size: {x: 2, y: 2}
   buildTime: 60
-  range: 5
+  range: 4

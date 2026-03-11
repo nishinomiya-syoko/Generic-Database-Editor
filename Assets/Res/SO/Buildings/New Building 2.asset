@@ -10,11 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: BuildingData
-  m_EditorClassIdentifier: Assembly-CSharp::BuildingDataSO
-  Id: 
-  DisplayName: 
+  m_Name: New Building 2
+  m_EditorClassIdentifier: Assembly-CSharp:Top:BuildingDataSO
+  _id: FE48C602
+  _displayName: ss
+  _description: 
+  _icon: {fileID: 0}
   buildingType: 0
   size: {x: 2, y: 2}
+  prefabPath: 
   buildTime: 60
+  buildCosts: []
+  maxLevel: 10
+  levelData: []
+  hitPoints: 100
+  armor: 0
   range: 5
+  isResourceProducer: 0
+  producedResource: 0
+  productionRates: 
+  buildingSkills: []
