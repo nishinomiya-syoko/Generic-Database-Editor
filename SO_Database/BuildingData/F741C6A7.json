@@ -8,6 +8,9 @@
         "x": 2,
         "y": 2
     },
+    "prefab": {
+        "instanceID": 0
+    },
     "prefabPath": "",
     "buildTime": 60,
     "buildCosts": [],

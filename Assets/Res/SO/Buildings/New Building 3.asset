@@ -9,12 +9,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 041f973c35eab46c1a431c0401b004b7, type: 3}
-  m_Name: Moon 1
+  m_Script: {fileID: 11500000, guid: dda5300d538524d3fb476fdc1eae251b, type: 3}
+  m_Name: New Building 3
   m_EditorClassIdentifier: 
-  Id: 
-  DisplayName: 
+  _id: 
+  _displayName: 
+  _description: 
+  _icon: {fileID: 0}
   buildingType: 0
   size: {x: 2, y: 2}
+  prefabPath: 
   buildTime: 60
+  buildCosts: []
+  maxLevel: 10
+  levelData: []
+  hitPoints: 100
+  armor: 0
   range: 5
+  isResourceProducer: 0
+  producedResource: 0
+  productionRates: 
+  buildingSkills: []

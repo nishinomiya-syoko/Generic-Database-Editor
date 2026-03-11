@@ -8,17 +8,10 @@ namespace Top
 {
     // 建筑数据
     [CreateAssetMenu(fileName = "BuildingData", menuName = "Top/Building Data")]
-    // [System.Serializable]   
     public class BuildingDataSO : ScriptableObjectBase
     {
-        // [Header("基本信息")]
-        // public string Id;
-        // public string buildingName;
-        // public string description;
         public BuildingType buildingType;
         public Vector2Int size = new Vector2Int(2, 2);
-        // public Sprite icon;
-        // public GameObject prefab;
         public string prefabPath;
 
         [Header("建造信息")]
@@ -30,7 +23,6 @@ namespace Top
         public BuildingLevelData[] levelData;
 
         [Header("特殊属性")]
-        // public bool canBeAttacked = true;
         public int hitPoints = 100;
         public int armor = 0;
         public float range = 5f;
@@ -41,15 +33,7 @@ namespace Top
 
         [Header("建筑技能")]
         public string[] buildingSkills;         // 建筑技能
-        // public bool hasAuraEffect = false;      // 是否有光环效果
-        // public float auraRadius = 5f;           // 光环范围
-        // public string auraSkillId;              // 光环技能ID
-
-        // private void OnValidate()
-        // {
-        //     if (string.IsNullOrEmpty(Id))
-        //         Id = Guid.NewGuid().ToString();
-        // }
+       
         private void OnValidate()
         {
             if (string.IsNullOrEmpty(Id))
@@ -88,12 +72,12 @@ namespace Top
                 SetId(buildingData.Id);
                 SetDisplayName(buildingData.DisplayName);
                 SetDescription(buildingData.Description);
-                buildingType = buildingData.buildingType;
+                // buildingType = buildingData.buildingType;
                 size = buildingData.size;
                 // prefab = buildingData.prefab;
                 prefabPath = buildingData.prefabPath;
                 buildTime = buildingData.buildTime;
-                buildCosts = buildingData.buildCosts;
+                // buildCosts = buildingData.buildCosts;
                 maxLevel = buildingData.maxLevel;
                 levelData = buildingData.levelData;
                 hitPoints = buildingData.hitPoints;
@@ -115,7 +99,7 @@ namespace Top
         public string IconPath;
         public BuildingType buildingType;
         public Vector2Int size = new Vector2Int(2, 2);
-        public GameObject prefab;
+        // public GameObject prefab;
         public string prefabPath;
 
         [Header("建造信息")]

@@ -5,28 +5,20 @@ using Top;
 
 public static class SOTExcelMenu
 {
-    // 生成BuildingDataSO的Excel
-    [MenuItem("Tools/SO Excel/Generate Building Excel")]
-    public static void GenerateBuildingExcel()
-    {
-        SOTExcelTool.GenerateExcelFromSO<BuildingDataSO>();
-        // SOTExcelTool.GenerateExcelFromSO<UnitDataSO>();
-        // SOTExcelTool.GenerateExcelFromSO
-        // SOTExcelTool.GenerateExcelFromSO
-        // SOTExcelTool.GenerateExcelFromSO
-        // SOTExcelTool.GenerateExcelFromSO
-    }
-
     // 从Excel加载数据到BuildingDataSO
-    [MenuItem("Tools/SO Excel/Load Building From Excel")]
-    public static void LoadBuildingFromExcel()
+    [MenuItem("Tools/SO Excel/Load SO From Excel")]
+    public static void LoadSOFromExcel()
     {
         // SO保存路径（可自定义）
-        string soSavePath = Path.Combine(Application.dataPath, "Resources/Buildings");
+        // string soSavePath = Path.Combine(Application.dataPath, "Resources/Buildings");
         // SOTExcelTool.LoadSOFromExcel<Moon>(soSavePath);
+        string SOpath = Constant.SO_PATH + "Moon";
+        SOTExcelTool.LoadSOFromExcel<Moon>(SOpath);
     }
     [MenuItem("Tools/SO Excel/Generate Moon Excel")]
     public static void GenerateMoonExcel()
     {
+        SOTExcelTool.GenerateExcelFromSO<Moon>();
+        
     }
 }

@@ -8,10 +8,13 @@ namespace Top
     // 资源类型枚举
     public enum ResourceType
     {
+        Block,
+        Screw,
+        Crystal,
+        Plastic,
         Gold,
-        Elixir,
-        DarkElixir,
-        Gems
+        Exploit,    //
+        AtkPoint,
     }
 
     // 资源成本结构
@@ -32,79 +35,30 @@ namespace Top
     [System.Serializable]
     public class ResourceData
     {
-        public int gold = 1000;
-        public int elixir = 1000;
-        public int darkElixir = 0;
-        public int gems = 100;
-        public int maxGold = 5000;
-        public int maxElixir = 5000;
-        public int maxDarkElixir = 1000;
+        public int gold => customResources[ResourceType.Gold];
+        
+        public Dictionary<ResourceType, int> customResources = new Dictionary<ResourceType, int>();
+        public Dictionary<ResourceType, int> maxInventory = new Dictionary<ResourceType, int>();
+
 
         public int GetResource(ResourceType type)
         {
-            switch (type)
-            {
-                case ResourceType.Gold:
-                    return gold;
-                case ResourceType.Elixir:
-                    return elixir;
-                case ResourceType.DarkElixir:
-                    return darkElixir;
-                case ResourceType.Gems:
-                    return gems;
-                default:
-                    return 0;
-            }
+            return customResources.ContainsKey(type) ? customResources[type] : 0;
         }
 
         public int GetMaxResource(ResourceType type)
         {
-            switch (type)
-            {
-                case ResourceType.Gold:
-                    return maxGold;
-                case ResourceType.Elixir:
-                    return maxElixir;
-                case ResourceType.DarkElixir:
-                    return maxDarkElixir;
-                default:
-                    return int.MaxValue;
-            }
+           return maxInventory.ContainsKey(type) ? maxInventory[type] : 0;
         }
 
         public void SetResource(ResourceType type, int value)
         {
-            switch (type)
-            {
-                case ResourceType.Gold:
-                    gold = Mathf.Clamp(value, 0, maxGold);
-                    break;
-                case ResourceType.Elixir:
-                    elixir = Mathf.Clamp(value, 0, maxElixir);
-                    break;
-                case ResourceType.DarkElixir:
-                    darkElixir = Mathf.Clamp(value, 0, maxDarkElixir);
-                    break;
-                case ResourceType.Gems:
-                    gems = Mathf.Max(value, 0);
-                    break;
-            }
+            customResources[type] = value;
         }
 
         public void SetMaxResource(ResourceType type, int value)
         {
-            switch (type)
-            {
-                case ResourceType.Gold:
-                    maxGold = Mathf.Max(value, 0);
-                    break;
-                case ResourceType.Elixir:
-                    maxElixir = Mathf.Max(value, 0);
-                    break;
-                case ResourceType.DarkElixir:
-                    maxDarkElixir = Mathf.Max(value, 0);
-                    break;
-            }
+            maxInventory[type] = value;
         }
     }
 
@@ -345,13 +299,7 @@ namespace Top
 
         public void ResetResources()
         {
-            resources.gold = initialGold;
-            resources.elixir = initialElixir;
-            resources.darkElixir = initialDarkElixir;
-            resources.gems = initialGems;
-            resources.maxGold = initialMaxGold;
-            resources.maxElixir = initialMaxElixir;
-            resources.maxDarkElixir = initialMaxDarkElixir;
+            resources = new ResourceData();
         }
 
         #endregion
@@ -362,19 +310,14 @@ namespace Top
         public void AddTestResources()
         {
             AddResource(ResourceType.Gold, 1000);
-            AddResource(ResourceType.Elixir, 1000);
-            AddResource(ResourceType.DarkElixir, 100);
-            AddResource(ResourceType.Gems, 50);
+           
         }
 
         [ContextMenu("Reset All Resources")]
         public void DebugResetResources()
         {
             ResetResources();
-            OnResourceChanged?.Invoke(ResourceType.Gold, resources.gold);
-            OnResourceChanged?.Invoke(ResourceType.Elixir, resources.elixir);
-            OnResourceChanged?.Invoke(ResourceType.DarkElixir, resources.darkElixir);
-            OnResourceChanged?.Invoke(ResourceType.Gems, resources.gems);
+            OnResourceChanged?.Invoke(ResourceType.Gold, resources.GetResource(ResourceType.Gold));
         }
 
         #endregion

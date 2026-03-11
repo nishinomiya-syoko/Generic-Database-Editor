@@ -15,6 +15,8 @@ public static class Constant
     public const string TECH_PATH = "Assets/Res/SO/Techs/";
     public const string ITEM_PATH = "Assets/Res/SO/Items/";
     public const string QUEST_PATH = "Assets/Res/SO/Quests/";
+    public static readonly string SO_PATH = "Assets/Res/SO/";
+
    
     // 实体
     public const string ENTITY_PATH = "Assets/Res/SO/Entities/";

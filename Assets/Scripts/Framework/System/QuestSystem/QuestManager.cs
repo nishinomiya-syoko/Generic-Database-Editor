@@ -131,7 +131,7 @@ namespace Top
                 // 发放宝石奖励
                 if (reward.gemReward > 0)
                 {
-                    resourceManager.AddResource(ResourceType.Gems, reward.gemReward);
+                    resourceManager.AddResource(ResourceType.Gold, reward.gemReward);
                 }
             }
 
