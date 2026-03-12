@@ -81,6 +81,7 @@
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillEnum.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/ArchiveSystem.cs" />
     <Compile Include="Assets/Scripts/Core/Camera/CameraHandler.cs" />
+    <Compile Include="Assets/Scripts/Core/Building/BuildingData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/UnitMover.cs" />
     <Compile Include="Assets/Scripts/EditorWindow/PivotEditor.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitDatabase.cs" />

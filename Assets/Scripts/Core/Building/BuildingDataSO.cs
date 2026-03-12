@@ -48,21 +48,21 @@ namespace Top
         {
             return new BuildingData
             {
-                buildingType = buildingType,
-                size = size,
-                // prefab = prefab,
-                prefabPath = prefabPath,
-                buildTime = buildTime,
-                buildCosts = buildCosts,
-                maxLevel = maxLevel,
-                levelData = levelData,
-                hitPoints = hitPoints,
-                armor = armor,
-                range = range,
-                isResourceProducer = isResourceProducer,
-                producedResource = producedResource,
-                productionRates = productionRates,
-                buildingSkills = buildingSkills
+                // buildingType = buildingType,
+                // size = size,
+                // // prefab = prefab,
+                // prefabPath = prefabPath,
+                // buildTime = buildTime,
+                // buildCosts = buildCosts,
+                // maxLevel = maxLevel,
+                // levelData = levelData,
+                // hitPoints = hitPoints,
+                // armor = armor,
+                // range = range,
+                // isResourceProducer = isResourceProducer,
+                // producedResource = producedResource,
+                // productionRates = productionRates,
+                // buildingSkills = buildingSkills
             };
         }
         public override void LoadFromSerializableData(object data)
@@ -90,77 +90,77 @@ namespace Top
             }
         }
     }
-    [System.Serializable]
-    public class BuildingData
-    {
-        public string Id;
-        public string DisplayName;
-        public string Description;
-        public string IconPath;
-        public BuildingType buildingType;
-        public Vector2Int size = new Vector2Int(2, 2);
-        // public GameObject prefab;
-        public string prefabPath;
+    // [System.Serializable]
+    // public class BuildingData
+    // {
+    //     public string Id;
+    //     public string DisplayName;
+    //     public string Description;
+    //     public string IconPath;
+    //     public BuildingType buildingType;
+    //     public Vector2Int size = new Vector2Int(2, 2);
+    //     // public GameObject prefab;
+    //     public string prefabPath;
 
-        [Header("建造信息")]
-        public int buildTime = 60; // 秒
-        public ResourceCost[] buildCosts;
+    //     [Header("建造信息")]
+    //     public int buildTime = 60; // 秒
+    //     public ResourceCost[] buildCosts;
 
-        [Header("升级信息")]
-        public int maxLevel = 10;
-        public BuildingLevelData[] levelData;
+    //     [Header("升级信息")]
+    //     public int maxLevel = 10;
+    //     public BuildingLevelData[] levelData;
 
-        [Header("特殊属性")]
-        public int hitPoints = 100;
-        public int armor = 0;
-        public float range = 5f;
+    //     [Header("特殊属性")]
+    //     public int hitPoints = 100;
+    //     public int armor = 0;
+    //     public float range = 5f;
 
-        public bool isResourceProducer = false;
-        public ResourceType producedResource;
-        public int[] productionRates;
+    //     public bool isResourceProducer = false;
+    //     public ResourceType producedResource;
+    //     public int[] productionRates;
 
-        [Header("建筑技能")]
-        public string[] buildingSkills;
-        public BuildingLevelData GetLevelData(int level)
-        {
-            if (levelData != null && level > 0 && level <= levelData.Length)
-            {
-                return levelData[level - 1];
-            }
-            return null;
-        }
+    //     [Header("建筑技能")]
+    //     public string[] buildingSkills;
+    //     public BuildingLevelData GetLevelData(int level)
+    //     {
+    //         if (levelData != null && level > 0 && level <= levelData.Length)
+    //         {
+    //             return levelData[level - 1];
+    //         }
+    //         return null;
+    //     }
 
-        public int GetProductionRate(int level)
-        {
-            if (isResourceProducer && productionRates != null && level > 0 && level <= productionRates.Length)
-            {
-                return productionRates[level - 1];
-            }
-            return 0;
-        }
-    }
-    // 建筑等级数据
-    [System.Serializable]
-    public class BuildingLevelData
-    {
-        public int level;
-        public int hitPoints;
-        public ResourceCost[] upgradeCosts;
-        public int upgradeTime;
-        public BuildingStats stats;
-    }
+    //     public int GetProductionRate(int level)
+    //     {
+    //         if (isResourceProducer && productionRates != null && level > 0 && level <= productionRates.Length)
+    //         {
+    //             return productionRates[level - 1];
+    //         }
+    //         return 0;
+    //     }
+    // }
+    // // 建筑等级数据
+    // [System.Serializable]
+    // public class BuildingLevelData
+    // {
+    //     public int level;
+    //     public int hitPoints;
+    //     public ResourceCost[] upgradeCosts;
+    //     public int upgradeTime;
+    //     public BuildingStats stats;
+    // }
 
-    // 建筑属性
-    [System.Serializable]
-    public class BuildingStats
-    {
-        public int damage = 0;
-        public float attackSpeed = 1f;
-        public float attackRange = 5f;
-        public int productionRate = 0;
-        public int storageCapacity = 0;
-        public int troopCapacity = 0;
-        public float buildSpeed = 1f;
-        public float researchSpeed = 1f;
-    }
+    // // 建筑属性
+    // [System.Serializable]
+    // public class BuildingStats
+    // {
+    //     public int damage = 0;
+    //     public float attackSpeed = 1f;
+    //     public float attackRange = 5f;
+    //     public int productionRate = 0;
+    //     public int storageCapacity = 0;
+    //     public int troopCapacity = 0;
+    //     public float buildSpeed = 1f;
+    //     public float researchSpeed = 1f;
+    // }
 }

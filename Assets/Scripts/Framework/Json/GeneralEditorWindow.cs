@@ -426,8 +426,12 @@ private void ImportAllInstancesFromExcel()
         // Unity常用类型
         else if (fieldType == typeof(Vector2))
             newValue = EditorGUILayout.Vector2Field("", (Vector2)value);
+        else if (fieldType == typeof(Vector2Int))
+            newValue = EditorGUILayout.Vector2IntField("", (Vector2Int)value);
         else if (fieldType == typeof(Vector3))
             newValue = EditorGUILayout.Vector3Field("", (Vector3)value);
+        else if (fieldType == typeof(Vector3Int))
+            newValue = EditorGUILayout.Vector3IntField("", (Vector3Int)value);
         else if (fieldType == typeof(Vector4))
             newValue = EditorGUILayout.Vector4Field("", (Vector4)value);
         else if (fieldType == typeof(Color))
