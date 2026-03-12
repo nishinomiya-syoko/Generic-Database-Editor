@@ -1,375 +1,436 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using UnityEditor;
-using UnityEngine;
+// using System;
+// using System.Collections.Generic;
+// using System.IO;
+// using System.Linq;
+// using System.Reflection;
+// using UnityEditor;
+// using UnityEngine;
 
-/// <summary>
-/// 通用数据编辑器窗口（支持任意标记[EditableData]的普通类）
-/// </summary>
-public class GenericDataEditorWindow : EditorWindow
-{
-    // 当前选中的可编辑类类型
-    private Type _selectedDataType;
-    // 当前编辑的数据实例
-    private object _currentDataInstance;
-    // 实例名（支持多实例）
-    private string _instanceName = "Default";
-    // 滚动位置
-    private Vector2 _scrollPos;
-    // 缓存所有标记[EditableData]的类
-    private List<Type> _editableDataTypes;
+// public class GenericDataEditorWindow : EditorWindow
+// {
+//     // 核心数据
+//     private Type _selectedDataType;
+//     private object _currentDataInstance;
+//     private string _instanceName = "Default";
+//     private List<Type> _editableDataTypes;
 
-    // 打开编辑器窗口
-    [MenuItem("Tools/通用数据编辑器/打开编辑器")]
-    public static void OpenWindow()
-    {
-        GenericDataEditorWindow window = GetWindow<GenericDataEditorWindow>("通用数据编辑器");
-        window.minSize = new Vector2(500, 400);
-        window.Show();
-        window.Init();
-    }
+//     // 布局相关
+//     private Vector2 _typeButtonScrollPos; 
+//     private Vector2 _instanceListScrollPos; 
+//     private Vector2 _editAreaScrollPos; 
+//     private string _newInstanceName = "NewInstance"; 
 
-    // 初始化：扫描所有标记[EditableData]的类
-    private void Init()
-    {
-        _editableDataTypes = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(asm => asm.GetTypes())
-            .Where(t => t.GetCustomAttribute<EditableDataAttribute>() != null && !t.IsAbstract && !t.IsInterface)
-            .ToList();
+//     [MenuItem("Tools/通用数据编辑器/打开编辑器")]
+//     public static void OpenWindow()
+//     {
+//         GenericDataEditorWindow window = GetWindow<GenericDataEditorWindow>("通用数据编辑器");
+//         window.minSize = new Vector2(800, 600);
+//         window.Show();
+//         window.Init();
+//     }
 
-        // 默认选中第一个可编辑类
-        if (_editableDataTypes.Count > 0)
-        {
-            _selectedDataType = _editableDataTypes[0];
-            LoadCurrentInstance();
-        }
-    }
+//     private void Init()
+//     {
+//         _editableDataTypes = AppDomain.CurrentDomain.GetAssemblies()
+//             .SelectMany(asm => asm.GetTypes())
+//             .Where(t => t.GetCustomAttribute<EditableDataAttribute>() != null && !t.IsAbstract && !t.IsInterface)
+//             .ToList();
 
-    // 绘制编辑器UI
-    private void OnGUI()
-    {
-        // 1. 顶部：选择可编辑类
-        DrawTypeSelector();
+//         if (_editableDataTypes.Count > 0)
+//         {
+//             _selectedDataType = _editableDataTypes[0];
+//             LoadCurrentInstance();
+//         }
+//     }
 
-        // 无可用类时提示
-        if (_selectedDataType == null)
-        {
-            EditorGUILayout.HelpBox("未找到标记[EditableData]的类，请先给普通类添加该特性", MessageType.Info);
-            return;
-        }
+//     private void OnGUI()
+//     {
+//         // ========== 上半部分：操作按钮区 ==========
+//         EditorGUILayout.BeginVertical("Box");
+//         EditorGUILayout.BeginHorizontal();
 
-        // 2. 实例名选择/输入
-        DrawInstanceSelector();
+//         // 左侧：数据类型按钮组
+//         EditorGUILayout.BeginVertical(GUILayout.Width(400));
+//         EditorGUILayout.LabelField("数据类型", EditorStyles.boldLabel);
+//         _typeButtonScrollPos = EditorGUILayout.BeginScrollView(_typeButtonScrollPos, GUILayout.Height(60));
+//         DrawDataTypeButtons();
+//         EditorGUILayout.EndScrollView();
+//         EditorGUILayout.EndVertical();
 
-        EditorGUILayout.Space(10);
+//         // 右侧：功能按钮组（新增删除按钮）
+//         EditorGUILayout.BeginVertical();
+//         EditorGUILayout.LabelField("操作", EditorStyles.boldLabel);
+//         DrawFunctionButtons();
+//         EditorGUILayout.EndVertical();
 
-        // 3. 按钮区域（保存/加载/重置）
-        DrawActionButtons();
+//         EditorGUILayout.EndHorizontal();
+//         EditorGUILayout.EndVertical();
 
-        EditorGUILayout.Space(10);
+//         // ========== 下半部分：数据列表+编辑区 ==========
+//         if (_selectedDataType == null)
+//         {
+//             EditorGUILayout.HelpBox("请先选择左侧的数据类型", MessageType.Info);
+//             return;
+//         }
 
-        // 4. 自动绘制数据编辑区域
-        DrawDataFields();
-    }
+//         EditorGUILayout.BeginHorizontal();
 
-    #region UI绘制逻辑
-    // 绘制类选择下拉框
-    private void DrawTypeSelector()
-    {
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("选择数据类：", GUILayout.Width(100));
+//         // 左侧：实例列表 + 新建按钮
+//         EditorGUILayout.BeginVertical("Box", GUILayout.Width(250));
+//         EditorGUILayout.LabelField($"{GetDataTypeDisplayName()} - 实例列表", EditorStyles.boldLabel);
+//         DrawNewInstanceButton();
+//         GUILayout.FlexibleSpace();
+//         DrawInstanceList();
+//         EditorGUILayout.EndVertical();
 
-        // 构建类名列表（显示自定义名称或类名）
-        var typeNames = _editableDataTypes.Select(t =>
-        {
-            var attr = t.GetCustomAttribute<EditableDataAttribute>();
-            return string.IsNullOrEmpty(attr.DisplayName) ? t.Name : attr.DisplayName;
-        }).ToArray();
+//         // 右侧：字段编辑窗口
+//         EditorGUILayout.BeginVertical("Box");
+//         EditorGUILayout.LabelField($"编辑：{_instanceName}", EditorStyles.boldLabel);
+//         _editAreaScrollPos = EditorGUILayout.BeginScrollView(_editAreaScrollPos);
+//         DrawDataFields();
+//         EditorGUILayout.EndScrollView();
+//         EditorGUILayout.EndVertical();
 
-        // 当前选中索引
-        int currentIndex = _editableDataTypes.IndexOf(_selectedDataType);
-        int newIndex = EditorGUILayout.Popup(currentIndex, typeNames);
+//         EditorGUILayout.EndHorizontal();
+//     }
 
-        // 切换类时重置实例
-        if (newIndex != currentIndex && newIndex >= 0)
-        {
-            _selectedDataType = _editableDataTypes[newIndex];
-            _instanceName = "Default";
-            LoadCurrentInstance();
-        }
+//     #region 布局组件绘制
+//     private void DrawDataTypeButtons()
+//     {
+//         EditorGUILayout.BeginHorizontal();
+//         int buttonIndex = 0;
+//         foreach (var dataType in _editableDataTypes)
+//         {
+//             string displayName = GetDataTypeDisplayName(dataType);
+//             bool isSelected = dataType == _selectedDataType;
+//             Color originalColor = GUI.backgroundColor;
+//             if (isSelected)
+//                 GUI.backgroundColor = Color.cyan;
 
-        EditorGUILayout.EndHorizontal();
-    }
+//             if (GUILayout.Button(displayName, GUILayout.Width(120), GUILayout.Height(40)))
+//             {
+//                 _selectedDataType = dataType;
+//                 _instanceName = "Default";
+//                 LoadCurrentInstance();
+//             }
 
-    // 绘制实例名选择/输入框
-    private void DrawInstanceSelector()
-    {
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("实例名：", GUILayout.Width(100));
+//             GUI.backgroundColor = originalColor;
+//             buttonIndex++;
 
-        // 获取该类的所有实例名
-        MethodInfo getInstanceNamesMethod = typeof(GenericDataPersistence).GetMethod("GetAllInstanceNames")
-            .MakeGenericMethod(_selectedDataType);
-        string[] instanceNames = (string[])getInstanceNamesMethod.Invoke(null, null);
+//             if (buttonIndex % 3 == 0)
+//             {
+//                 EditorGUILayout.EndHorizontal();
+//                 EditorGUILayout.BeginHorizontal();
+//             }
+//         }
+//         EditorGUILayout.EndHorizontal();
+//     }
 
-        // 实例名下拉框
-        int instanceIndex = Array.IndexOf(instanceNames, _instanceName);
-        instanceIndex = instanceIndex < 0 ? 0 : instanceIndex;
-        instanceIndex = EditorGUILayout.Popup(instanceIndex, instanceNames, GUILayout.Width(150));
+//     // 核心修改：新增删除按钮
+//     private void DrawFunctionButtons()
+//     {
+//         EditorGUILayout.BeginHorizontal();
 
-        // 自定义实例名输入
-        string newInstanceName = EditorGUILayout.TextField(_instanceName);
-        if (newInstanceName != _instanceName)
-        {
-            _instanceName = newInstanceName.Trim();
-            if (string.IsNullOrEmpty(_instanceName))
-                _instanceName = "Default";
-            LoadCurrentInstance();
-        }
+//         if (GUILayout.Button("读取数据", GUILayout.Width(120), GUILayout.Height(30)))
+//         {
+//             LoadCurrentInstance();
+//             EditorUtility.DisplayDialog("提示", "当前实例数据读取完成", "确定");
+//         }
 
-        EditorGUILayout.EndHorizontal();
-    }
+//         if (GUILayout.Button("保存数据", GUILayout.Width(120), GUILayout.Height(30)))
+//         {
+//             bool success = SaveCurrentInstance();
+//             EditorUtility.DisplayDialog(success ? "成功" : "失败", 
+//                 success ? "当前实例数据保存完成" : "当前实例数据保存失败", "确定");
+//         }
 
-    // 绘制操作按钮
-    // private void DrawActionButtons()
-    // {
-    //     EditorGUILayout.BeginHorizontal();
+//         // 新增：删除当前选中实例按钮（红色背景警示）
+//         Color originalColor = GUI.backgroundColor;
+//         GUI.backgroundColor = Color.red;
+//         if (GUILayout.Button("删除当前实例", GUILayout.Width(120), GUILayout.Height(30)))
+//         {
+//             DeleteCurrentInstance();
+//         }
+//         GUI.backgroundColor = originalColor;
 
-    //     if (GUILayout.Button("加载数据", GUILayout.Width(100)))
-    //     {
-    //         LoadCurrentInstance();
-    //         EditorUtility.DisplayDialog("提示", "数据加载完成", "确定");
-    //     }
+//         EditorGUILayout.EndHorizontal();
 
-    //     if (GUILayout.Button("保存数据", GUILayout.Width(100)))
-    //     {
-    //         bool success = SaveCurrentInstance();
-    //         if (success)
-    //             EditorUtility.DisplayDialog("成功", "数据保存完成", "确定");
-    //         else
-    //             EditorUtility.DisplayDialog("失败", "数据保存失败", "确定");
-    //     }
+//         EditorGUILayout.BeginHorizontal();
 
-    //     if (GUILayout.Button("重置数据", GUILayout.Width(100)))
-    //     {
-    //         if (EditorUtility.DisplayDialog("确认", "是否重置为默认值？", "是", "否"))
-    //         {
-    //             _currentDataInstance = Activator.CreateInstance(_selectedDataType);
-    //         }
-    //     }
+//         if (GUILayout.Button("导出所有实例到Excel", GUILayout.Width(120), GUILayout.Height(30)))
+//         {
+//             ExportAllInstancesToExcel();
+//         }
 
-    //     EditorGUILayout.EndHorizontal();
-    // }
-    // 绘制操作按钮
-    private void DrawActionButtons()
-    {
-        EditorGUILayout.BeginHorizontal();
+//         if (GUILayout.Button("从Excel导入所有实例", GUILayout.Width(120), GUILayout.Height(30)))
+//         {
+//             ImportAllInstancesFromExcel();
+//         }
 
-        if (GUILayout.Button("加载数据", GUILayout.Width(100)))
-        {
-            LoadCurrentInstance();
-            // EditorUtility.DisplayDialog("提示", "数据加载完成", "确定");
-            Debug.Log("数据加载完成");
-        }
+//         EditorGUILayout.EndHorizontal();
+//     }
 
-        if (GUILayout.Button("保存数据", GUILayout.Width(100)))
-        {
-            bool success = SaveCurrentInstance();
-            if (success)
-                // EditorUtility.DisplayDialog("成功", "数据保存完成", "确定");
-                Debug.Log("数据保存完成");
-            else
-                // EditorUtility.DisplayDialog("失败", "数据保存失败", "确定");
-                Debug.Log("数据保存失败");
-        }
+//     private void DrawNewInstanceButton()
+//     {
+//         EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
+//         _newInstanceName = EditorGUILayout.TextField("新实例名", _newInstanceName);
 
-        if (GUILayout.Button("重置数据", GUILayout.Width(100)))
-        {
-            if (EditorUtility.DisplayDialog("确认", "是否重置为默认值？", "是", "否"))
-            {
-                _currentDataInstance = Activator.CreateInstance(_selectedDataType);
-            }
-        }
+//         if (GUILayout.Button("新建", GUILayout.Width(60)))
+//         {
+//             if (string.IsNullOrEmpty(_newInstanceName.Trim()))
+//             {
+//                 EditorUtility.DisplayDialog("提示", "实例名不能为空", "确定");
+//                 return;
+//             }
 
-        // ====== 新增Excel导出按钮 ======
-        if (GUILayout.Button("导出Excel", GUILayout.Width(100)))
-        {
-            ExportCurrentDataToExcel();
-        }
+//             string newName = _newInstanceName.Trim();
+//             _instanceName = newName;
+//             _currentDataInstance = Activator.CreateInstance(_selectedDataType);
+            
+//             bool saveSuccess = SaveCurrentInstance();
+//             if (saveSuccess)
+//             {
+//                 EditorUtility.DisplayDialog("提示", $"已创建并保存新实例：{newName}", "确定");
+//                 _newInstanceName = "NewInstance";
+//             }
+//             else
+//             {
+//                 EditorUtility.DisplayDialog("失败", $"创建新实例失败：保存失败", "确定");
+//             }
+//         }
 
-        // ====== 新增Excel导入按钮 ======
-        if (GUILayout.Button("导入Excel", GUILayout.Width(100)))
-        {
-            ImportDataFromExcel();
-        }
+//         EditorGUILayout.EndHorizontal();
+//         EditorGUILayout.Space(5);
+//     }
 
-        // EditorUtility.DisplayDialog("成功", "数据保存完成", "确定");
-        // Debug.Log("数据保存完成");
-        EditorGUILayout.EndHorizontal();
-    }
+//     private void DrawInstanceList()
+//     {
+//         _instanceListScrollPos = EditorGUILayout.BeginScrollView(
+//             _instanceListScrollPos, 
+//             GUILayout.ExpandHeight(true),
+//             GUILayout.MinHeight(100)
+//         );
 
-    // 新增：导出当前数据到Excel
-    private void ExportCurrentDataToExcel()
-    {
-        if (_currentDataInstance == null || _selectedDataType == null)
-        {
-            // EditorUtility.DisplayDialog("提示", "无数据可导出", "确定");
-            Debug.Log("无数据可导出");
-            return;
-        }
+//         MethodInfo getInstanceNamesMethod = typeof(GenericDataPersistence).GetMethod("GetAllInstanceNames")
+//             .MakeGenericMethod(_selectedDataType);
+//         string[] instanceNames = (string[])getInstanceNamesMethod.Invoke(null, null);
 
-        // 选择保存路径
-        string defaultFileName = $"{_selectedDataType.Name}_{_instanceName}";
-        string excelPath = ExcelDataUtility.SelectExcelSavePath(defaultFileName);
-        if (string.IsNullOrEmpty(excelPath))
-            return;
+//         foreach (string name in instanceNames)
+//         {
+//             bool isSelected = name == _instanceName;
+//             Color originalColor = GUI.backgroundColor;
+//             if (isSelected)
+//                 GUI.backgroundColor = Color.green;
 
-        // 调用导出方法（反射适配泛型）
-        MethodInfo exportMethod = typeof(ExcelDataUtility).GetMethod("ExportToExcel")
-            .MakeGenericMethod(_selectedDataType);
-        bool success = (bool)exportMethod.Invoke(null, new[] { _currentDataInstance, excelPath, _instanceName });
+//             if (GUILayout.Button(name, GUILayout.Height(30), GUILayout.ExpandWidth(true)))
+//             {
+//                 _instanceName = name;
+//                 LoadCurrentInstance();
+//             }
 
-        if (success)
-            // EditorUtility.DisplayDialog("成功", $"Excel导出成功：\n{excelPath}", "确定");
-            Debug.Log($"Excel导出成功：\n{excelPath}");
-        else
-            // EditorUtility.DisplayDialog("失败", "Excel导出失败", "确定");
-            Debug.Log("Excel导出失败");
-    }
+//             GUI.backgroundColor = originalColor;
+//         }
 
-    // 新增：从Excel导入数据
-    private void ImportDataFromExcel()
-    {
-        if (_selectedDataType == null)
-        {
-            // EditorUtility.DisplayDialog("提示", "请先选择数据类", "确定");
-            Debug.Log("请先选择数据类");
+//         EditorGUILayout.EndScrollView();
+//     }
 
-            return;
-        }
+//     private void DrawDataFields()
+//     {
+//         if (_currentDataInstance == null) return;
 
-        // 选择Excel文件
-        string excelPath = ExcelDataUtility.SelectExcelLoadPath();
-        if (string.IsNullOrEmpty(excelPath))
-            return;
+//         FieldInfo[] fields = _selectedDataType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+//             .Where(f => !f.IsStatic && (f.IsPublic || f.GetCustomAttribute<SerializeField>() != null))
+//             .Where(f => !f.Name.Contains("<") && !f.Name.Contains(">"))
+//             .ToArray();
 
-        // 调用导入方法（反射适配泛型）
-        MethodInfo importMethod = typeof(ExcelDataUtility).GetMethod("ImportFromExcel")
-            .MakeGenericMethod(_selectedDataType);
-        _currentDataInstance = importMethod.Invoke(null, new[] { excelPath, _instanceName });
+//         foreach (var field in fields)
+//         {
+//             object value = field.GetValue(_currentDataInstance);
+//             object newValue = DrawFieldControl(field.Name, field.FieldType, value);
 
-        // EditorUtility.DisplayDialog("成功", "Excel数据导入完成", "确定");
-        Debug.Log("Excel数据导入完成");
-    }
+//             if (!Equals(newValue, value))
+//             {
+//                 field.SetValue(_currentDataInstance, newValue);
+//             }
+//         }
+//     }
 
-    // 自动绘制数据字段（核心：反射+编辑器控件）
-    private void DrawDataFields()
-    {
-        if (_currentDataInstance == null) return;
+//     private object DrawFieldControl(string label, Type fieldType, object value)
+//     {
+//         EditorGUILayout.BeginHorizontal();
+//         EditorGUILayout.LabelField(label, GUILayout.Width(150));
 
-        _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
+//         object newValue = value;
 
-        // 获取所有可序列化的字段（非静态、公共字段，或标记[SerializeField]的私有字段）
-        FieldInfo[] fields = _selectedDataType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-            .Where(f =>
-            {
-                // 排除静态字段
-                if (f.IsStatic) return false;
-                // 公共字段 或 标记[SerializeField]的私有字段
-                return f.IsPublic || f.GetCustomAttribute<SerializeField>() != null;
-            }).ToArray();
+//         if (fieldType == typeof(string))
+//             newValue = EditorGUILayout.TextField((string)value);
+//         else if (fieldType == typeof(int))
+//             newValue = EditorGUILayout.IntField((int)value);
+//         else if (fieldType == typeof(float))
+//             newValue = EditorGUILayout.FloatField((float)value);
+//         else if (fieldType == typeof(bool))
+//             newValue = EditorGUILayout.Toggle((bool)value);
+//         else if (fieldType == typeof(double))
+//             newValue = EditorGUILayout.DoubleField((double)value);
+//         else if (fieldType == typeof(long))
+//             newValue = EditorGUILayout.LongField((long)value);
+//         else if (fieldType == typeof(Vector2))
+//             newValue = EditorGUILayout.Vector2Field("", (Vector2)value);
+//         else if (fieldType == typeof(Vector3))
+//             newValue = EditorGUILayout.Vector3Field("", (Vector3)value);
+//         else if (fieldType == typeof(Vector4))
+//             newValue = EditorGUILayout.Vector4Field("", (Vector4)value);
+//         else if (fieldType == typeof(Color))
+//             newValue = EditorGUILayout.ColorField("", (Color)value);
+//         else if (fieldType == typeof(Rect))
+//             newValue = EditorGUILayout.RectField("", (Rect)value);
+//         else if (fieldType == typeof(Bounds))
+//             newValue = EditorGUILayout.BoundsField("", (Bounds)value);
+//         else if (fieldType == typeof(Quaternion))
+//             newValue = Quaternion.Euler(EditorGUILayout.Vector3Field("", ((Quaternion)value).eulerAngles));
+//         else if (fieldType.IsEnum)
+//             newValue = EditorGUILayout.EnumPopup((Enum)value);
+//         else
+//             EditorGUILayout.LabelField($"不支持的类型：{fieldType.Name}", GUILayout.Width(200));
 
-        // 遍历字段并绘制编辑器控件
-        foreach (var field in fields)
-        {
-            // 跳过编译器自动生成的字段
-            if (field.Name.Contains("<") || field.Name.Contains(">"))
-                continue;
+//         EditorGUILayout.EndHorizontal();
+//         return newValue;
+//     }
+//     #endregion
 
-            // 获取字段当前值
-            object value = field.GetValue(_currentDataInstance);
+//     #region 新增：删除当前选中实例的核心逻辑
+//     private void DeleteCurrentInstance()
+//     {
+//         if (_selectedDataType == null || string.IsNullOrEmpty(_instanceName))
+//         {
+//             EditorUtility.DisplayDialog("提示", "请先选择要删除的实例", "确定");
+//             return;
+//         }
 
-            // 根据字段类型绘制对应的编辑器控件
-            object newValue = DrawFieldControl(field.Name, field.FieldType, value);
+//         // 防误删确认
+//         bool confirm = EditorUtility.DisplayDialog(
+//             "确认删除", 
+//             $"是否永久删除实例：{_instanceName}？\n此操作不可恢复！", 
+//             "删除", 
+//             "取消"
+//         );
 
-            // 值变化时更新
-            if (!Equals(newValue, value))
-            {
-                field.SetValue(_currentDataInstance, newValue);
-            }
-        }
+//         if (!confirm) return;
 
-        EditorGUILayout.EndScrollView();
-    }
+//         try
+//         {
+//             // 获取实例的保存路径
+//             MethodInfo getSavePathMethod = typeof(GenericDataPersistence).GetMethod("GetSavePath")
+//                 .MakeGenericMethod(_selectedDataType);
+//             string savePath = (string)getSavePathMethod.Invoke(null, new object[] { _instanceName });
 
-    // 根据类型绘制对应的编辑器控件（支持常见Unity类型）
-    private object DrawFieldControl(string label, Type fieldType, object value)
-    {
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField(label, GUILayout.Width(150));
+//             // 删除文件
+//             if (File.Exists(savePath))
+//             {
+//                 File.Delete(savePath);
+//                 AssetDatabase.Refresh();
 
-        object newValue = value;
+//                 // 重置实例：优先选Default，无则选第一个实例，无则新建空实例
+//                 MethodInfo getInstanceNamesMethod = typeof(GenericDataPersistence).GetMethod("GetAllInstanceNames")
+//                     .MakeGenericMethod(_selectedDataType);
+//                 string[] remainingInstances = (string[])getInstanceNamesMethod.Invoke(null, null);
 
-        // 基础类型
-        if (fieldType == typeof(string))
-            newValue = EditorGUILayout.TextField((string)value);
-        else if (fieldType == typeof(int))
-            newValue = EditorGUILayout.IntField((int)value);
-        else if (fieldType == typeof(float))
-            newValue = EditorGUILayout.FloatField((float)value);
-        else if (fieldType == typeof(bool))
-            newValue = EditorGUILayout.Toggle((bool)value);
-        else if (fieldType == typeof(double))
-            newValue = EditorGUILayout.DoubleField((double)value);
-        else if (fieldType == typeof(long))
-            newValue = EditorGUILayout.LongField((long)value);
+//                 if (remainingInstances.Length > 0)
+//                 {
+//                     _instanceName = remainingInstances.Contains("Default") ? "Default" : remainingInstances[0];
+//                 }
+//                 else
+//                 {
+//                     _instanceName = "Default";
+//                     _currentDataInstance = Activator.CreateInstance(_selectedDataType);
+//                 }
 
-        // Unity常用类型
-        else if (fieldType == typeof(Vector2))
-            newValue = EditorGUILayout.Vector2Field("", (Vector2)value);
-        else if (fieldType == typeof(Vector3))
-            newValue = EditorGUILayout.Vector3Field("", (Vector3)value);
-        else if (fieldType == typeof(Vector4))
-            newValue = EditorGUILayout.Vector4Field("", (Vector4)value);
-        else if (fieldType == typeof(Color))
-            newValue = EditorGUILayout.ColorField("", (Color)value);
-        else if (fieldType == typeof(Rect))
-            newValue = EditorGUILayout.RectField("", (Rect)value);
-        else if (fieldType == typeof(Bounds))
-            newValue = EditorGUILayout.BoundsField("", (Bounds)value);
-        else if (fieldType == typeof(Quaternion))
-            newValue = EditorGUILayout.Vector4Field("", ((Quaternion)value).eulerAngles);
+//                 // 重新加载实例
+//                 LoadCurrentInstance();
+//                 EditorUtility.DisplayDialog("成功", $"实例 {_instanceName} 已删除", "确定");
+//             }
+//             else
+//             {
+//                 EditorUtility.DisplayDialog("提示", "实例文件不存在，无需删除", "确定");
+//             }
+//         }
+//         catch (Exception e)
+//         {
+//             EditorUtility.DisplayDialog("失败", $"删除实例失败：{e.Message}", "确定");
+//             Debug.LogError($"删除实例 {_instanceName} 失败：{e}");
+//         }
+//     }
+//     #endregion
 
-        // 暂不支持的类型（显示文本）
-        else
-        {
-            EditorGUILayout.LabelField($"不支持的类型：{fieldType.Name}", GUILayout.Width(200));
-        }
+//     #region 其他核心方法（无修改）
+//     private string GetDataTypeDisplayName(Type type = null)
+//     {
+//         type ??= _selectedDataType;
+//         if (type == null) return "";
 
-        EditorGUILayout.EndHorizontal();
-        return newValue;
-    }
-    #endregion
+//         var attr = type.GetCustomAttribute<EditableDataAttribute>();
+//         return string.IsNullOrEmpty(attr.DisplayName) ? type.Name : attr.DisplayName;
+//     }
 
-    #region 数据加载/保存
-    // 加载当前选中类+实例名的数据
-    private void LoadCurrentInstance()
-    {
-        MethodInfo loadMethod = typeof(GenericDataPersistence).GetMethod("LoadData")
-            .MakeGenericMethod(_selectedDataType);
-        _currentDataInstance = loadMethod.Invoke(null, new object[] { _instanceName });
-    }
+//     private void LoadCurrentInstance()
+//     {
+//         if (_selectedDataType == null) return;
 
-    // 保存当前编辑的数据
-    private bool SaveCurrentInstance()
-    {
-        MethodInfo saveMethod = typeof(GenericDataPersistence).GetMethod("SaveData")
-            .MakeGenericMethod(_selectedDataType);
-        bool success = (bool)saveMethod.Invoke(null, new[] { _currentDataInstance, _instanceName });
-        AssetDatabase.Refresh(); // 刷新资源库
-        return success;
-    }
-    #endregion
-}
+//         MethodInfo loadMethod = typeof(GenericDataPersistence).GetMethod("LoadData")
+//             .MakeGenericMethod(_selectedDataType);
+//         _currentDataInstance = loadMethod.Invoke(null, new object[] { _instanceName });
+//     }
+
+//     private bool SaveCurrentInstance()
+//     {
+//         if (_selectedDataType == null || _currentDataInstance == null) return false;
+
+//         MethodInfo saveMethod = typeof(GenericDataPersistence).GetMethod("SaveData")
+//             .MakeGenericMethod(_selectedDataType);
+//         bool success = (bool)saveMethod.Invoke(null, new[] { _currentDataInstance, _instanceName });
+//         AssetDatabase.Refresh();
+//         return success;
+//     }
+
+//     private void ExportAllInstancesToExcel()
+//     {
+//         if (_selectedDataType == null)
+//         {
+//             EditorUtility.DisplayDialog("提示", "请先选择数据类型", "确定");
+//             return;
+//         }
+
+//         string excelPath = ExcelDataUtility.SelectExcelSavePathForClass(_selectedDataType);
+//         if (string.IsNullOrEmpty(excelPath))
+//             return;
+
+//         MethodInfo exportMethod = typeof(ExcelDataUtility).GetMethod("ExportAllInstancesToExcel")
+//             .MakeGenericMethod(_selectedDataType);
+//         bool success = (bool)exportMethod.Invoke(null, new[] { excelPath });
+
+//         EditorUtility.DisplayDialog(success ? "成功" : "失败",
+//             success ? $"[{GetDataTypeDisplayName()}] 所有实例导出到Excel成功\n路径：{excelPath}" : "导出失败", "确定");
+//     }
+
+//     private void ImportAllInstancesFromExcel()
+//     {
+//         if (_selectedDataType == null)
+//         {
+//             EditorUtility.DisplayDialog("提示", "请先选择数据类型", "确定");
+//             return;
+//         }
+
+//         string excelPath = ExcelDataUtility.SelectExcelLoadPath();
+//         if (string.IsNullOrEmpty(excelPath))
+//             return;
+
+//         MethodInfo importMethod = typeof(ExcelDataUtility).GetMethod("ImportAllInstancesFromExcel")
+//             .MakeGenericMethod(_selectedDataType);
+//         bool success = (bool)importMethod.Invoke(null, new[] { excelPath });
+
+//         LoadCurrentInstance();
+//         EditorUtility.DisplayDialog(success ? "成功" : "失败",
+//             success ? $"[{GetDataTypeDisplayName()}] 从Excel导入所有实例成功" : "导入失败（无有效实例或文件错误）", "确定");
+//     }
+//     #endregion
+// }

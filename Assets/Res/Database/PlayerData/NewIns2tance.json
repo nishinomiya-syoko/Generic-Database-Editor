@@ -1,0 +1,21 @@
+{
+  "playerName": "默认玩家",
+  "level": 2,
+  "maxHP": 100.0,
+  "isVIP": false,
+  "spawnPos": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "magnitude": 0.0,
+    "sqrMagnitude": 0.0
+  },
+  "playerColor": {
+    "r": 0.0,
+    "g": 0.0,
+    "b": 1.0,
+    "a": 1.0,
+    "grayscale": 0.114,
+    "maxColorComponent": 1.0
+  }
+}

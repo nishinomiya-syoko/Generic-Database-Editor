@@ -1,164 +1,192 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Collections.Generic;
+using System.Linq;
 using OfficeOpenXml;
 using UnityEditor;
 using UnityEngine;
-using System.Linq;
 
 /// <summary>
-/// Excel数据导入导出工具（第一行：变量名 | 第二行：变量类型 | 第三行：注释）
+/// Excel 工具：同一类所有数据 → 同一个 Sheet，一行 = 一条实例
+/// 格式：
+/// 行1：实例名 | 字段1名 | 字段2名 | 字段3名 ...
+/// 行2：string  | 字段1类型| 字段2类型| ...
+/// 行3：注释    | 字段1注释| 字段2注释| ...
+/// 行4~：实例1  | 值1 | 值2 | ...
 /// </summary>
 public static class ExcelDataUtility
 {
-    // // 设置EPPlus许可证（必须）
     // static ExcelDataUtility()
     // {
-    //     ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // 非商用授权
+    //     ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
     // }
 
-    /// <summary>
-    /// 将数据类实例导出为Excel
-    /// </summary>
-    public static bool ExportToExcel<T>(T dataInstance, string excelPath, string instanceName = "Default") where T : class, new()
+    #region 核心：导出一个类的所有实例 → 同一个Sheet，一行一条数据
+    public static bool ExportAllInstancesToExcel<T>(string excelPath) where T : class, new()
     {
         try
         {
-            if (dataInstance == null)
+            Type dataType = typeof(T);
+            string[] instanceNames = GenericDataPersistence.GetAllInstanceNames<T>();
+
+            if (instanceNames == null || instanceNames.Length == 0)
             {
-                Debug.LogError("导出失败：数据实例为空");
+                Debug.LogWarning("没有可导出的实例");
                 return false;
             }
 
-            // 创建目录
-            string directory = Path.GetDirectoryName(excelPath);
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
+            // 拿到所有可序列化字段
+            var fields = GetSerializableFields(dataType);
 
-            // 创建Excel包
             using (var package = new ExcelPackage())
             {
-                // 创建工作表（以实例名命名）
-                var worksheet = package.Workbook.Worksheets.Add(instanceName);
+                // 只建一个 Sheet，用类名命名
+                var ws = package.Workbook.Worksheets.Add(dataType.Name);
 
-                // 获取数据类的所有可序列化字段
-                FieldInfo[] fields = typeof(T).GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                    .Where(f => !f.IsStatic && (f.IsPublic || f.GetCustomAttribute<SerializeField>() != null))
-                    .Where(f => !f.Name.Contains("<") && !f.Name.Contains(">"))
-                    .ToArray();
-
-                // 填充Excel内容
-                for (int col = 0; col < fields.Length; col++)
+                // ========== 1. 表头行：实例名 | 字段名1 | 字段名2 ... ==========
+                ws.Cells[1, 1].Value = "实例名";
+                for (int c = 0; c < fields.Count; c++)
                 {
-                    FieldInfo field = fields[col];
-                    int columnIndex = col + 1; // EPPlus列从1开始
-
-                    // 第一行：变量名
-                    worksheet.Cells[1, columnIndex].Value = field.Name;
-                    worksheet.Cells[1, columnIndex].Style.Font.Bold = true; // 加粗
-
-                    // 第二行：变量类型（简化显示）
-                    string typeName = GetFriendlyTypeName(field.FieldType);
-                    worksheet.Cells[2, columnIndex].Value = typeName;
-
-                    // 第三行：注释（优先取Header特性，无则空）
-                    string comment = field.GetCustomAttribute<HeaderAttribute>()?.header ?? "";
-                    worksheet.Cells[3, columnIndex].Value = comment;
-
-                    // 第四行：变量值
-                    object value = field.GetValue(dataInstance);
-                    worksheet.Cells[4, columnIndex].Value = ConvertValueToExcelCompatible(value);
+                    ws.Cells[1, 2 + c].Value = fields[c].Name;
                 }
 
-                // 自动调整列宽
-                // worksheet.Cells.AutoFitColumns();
+                // ========== 2. 类型行 ==========
+                ws.Cells[2, 1].Value = "string";
+                for (int c = 0; c < fields.Count; c++)
+                {
+                    ws.Cells[2, 2 + c].Value = GetFriendlyTypeName(fields[c].FieldType);
+                }
 
-                // 保存Excel文件
+                // ========== 3. 注释行 ==========
+                ws.Cells[3, 1].Value = "实例名称";
+                for (int c = 0; c < fields.Count; c++)
+                {
+                    ws.Cells[3, 2 + c].Value = fields[c].GetCustomAttribute<HeaderAttribute>()?.header ?? "";
+                }
+
+                // ========== 4. 数据行：一行 = 一个实例 ==========
+                for (int rowIdx = 0; rowIdx < instanceNames.Length; rowIdx++)
+                {
+                    string instName = instanceNames[rowIdx];
+                    var data = GenericDataPersistence.LoadData<T>(instName);
+
+                    // 第1列：实例名
+                    ws.Cells[4 + rowIdx, 1].Value = instName;
+
+                    // 第2列开始：字段值
+                    for (int colIdx = 0; colIdx < fields.Count; colIdx++)
+                    {
+                        object value = fields[colIdx].GetValue(data);
+                        ws.Cells[4 + rowIdx, 2 + colIdx].Value = ConvertValueToExcelCompatible(value);
+                    }
+                }
+
+                // ws.Cells.AutoFitColumns();
+
+                // 保存
+                var dir = Path.GetDirectoryName(excelPath);
+                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
                 package.SaveAs(new FileInfo(excelPath));
             }
 
             AssetDatabase.Refresh();
-            Debug.Log($"Excel导出成功：{excelPath}");
+            Debug.Log($"导出成功：{excelPath}");
             return true;
         }
         catch (Exception e)
         {
-            Debug.LogError($"Excel导出失败：{e.Message}\n{e.StackTrace}");
+            Debug.LogError($"导出失败：{e}");
             return false;
         }
     }
+    #endregion
 
-    /// <summary>
-    /// 从Excel导入数据到类实例
-    /// </summary>
-    public static T ImportFromExcel<T>(string excelPath, string instanceName = "Default") where T : class, new()
+    #region 核心：从一个Sheet导入所有行 → 所有实例
+    public static bool ImportAllInstancesFromExcel<T>(string excelPath) where T : class, new()
     {
         try
         {
             if (!File.Exists(excelPath))
             {
-                Debug.LogError($"导入失败：Excel文件不存在 {excelPath}");
-                return new T();
+                Debug.LogError("文件不存在");
+                return false;
             }
 
-            T dataInstance = new T();
             Type dataType = typeof(T);
 
             using (var package = new ExcelPackage(new FileInfo(excelPath)))
             {
-                // 获取指定名称的工作表（无则取第一个）
-                var worksheet = package.Workbook.Worksheets[instanceName] ?? package.Workbook.Worksheets.FirstOrDefault();
-                if (worksheet == null)
+                var ws = package.Workbook.Worksheets.First(); // 只认第一个Sheet
+                if (ws == null || ws.Dimension == null) return false;
+
+                // 读取表头：第1行是字段名
+                Dictionary<string, int> fieldNameToCol = new Dictionary<string, int>();
+                for (int c = 1; c <= ws.Dimension.End.Column; c++)
                 {
-                    Debug.LogError($"导入失败：未找到工作表 {instanceName}");
-                    return dataInstance;
+                    string name = ws.Cells[1, c].Text.Trim();
+                    if (!string.IsNullOrEmpty(name))
+                        fieldNameToCol[name] = c;
                 }
 
-                // 遍历Excel列（第一行是变量名）
-                for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
+                if (!fieldNameToCol.ContainsKey("实例名"))
                 {
-                    // 第一行：变量名
-                    string fieldName = worksheet.Cells[1, col].Text?.Trim();
-                    if (string.IsNullOrEmpty(fieldName))
-                        continue;
+                    Debug.LogError("Excel 第一行必须有「实例名」列");
+                    return false;
+                }
 
-                    // 查找对应字段
-                    FieldInfo field = dataType.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (field == null)
+                // 从第4行开始读数据
+                int dataStartRow = 4;
+                int rowCount = ws.Dimension.End.Row;
+
+                for (int r = dataStartRow; r <= rowCount; r++)
+                {
+                    string instName = ws.Cells[r, fieldNameToCol["实例名"]].Text.Trim();
+                    if (string.IsNullOrEmpty(instName)) continue;
+
+                    // 新建实例
+                    var data = new T();
+
+                    // 赋值所有字段
+                    foreach (var field in GetSerializableFields(dataType))
                     {
-                        Debug.LogWarning($"未找到字段：{fieldName}，跳过");
-                        continue;
+                        if (!fieldNameToCol.TryGetValue(field.Name, out int col)) continue;
+
+                        string cellText = ws.Cells[r, col].Text.Trim();
+                        object value = ConvertExcelValueToType(cellText, field.FieldType);
+                        field.SetValue(data, value);
                     }
 
-                    // 第四行：变量值
-                    string cellValue = worksheet.Cells[4, col].Text?.Trim();
-                    if (string.IsNullOrEmpty(cellValue))
-                        continue;
-
-                    // 转换值并赋值
-                    object value = ConvertExcelValueToType(cellValue, field.FieldType);
-                    field.SetValue(dataInstance, value);
+                    // 保存
+                    GenericDataPersistence.SaveData(data, instName);
                 }
             }
 
-            Debug.Log($"Excel导入成功：{excelPath}");
-            return dataInstance;
+            AssetDatabase.Refresh();
+            Debug.Log("导入完成");
+            return true;
         }
         catch (Exception e)
         {
-            Debug.LogError($"Excel导入失败：{e.Message}\n{e.StackTrace}");
-            return new T();
+            Debug.LogError($"导入失败：{e}");
+            return false;
         }
     }
+    #endregion
 
-    #region 辅助方法
-    // 获取友好的类型名称（如Vector3而非System.Numerics.Vector3）
+    #region 通用工具
+    private static List<FieldInfo> GetSerializableFields(Type type)
+    {
+        return type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+            .Where(f => !f.IsStatic && (f.IsPublic || f.GetCustomAttribute<SerializeField>() != null))
+            .Where(f => !f.Name.Contains("<") && !f.Name.Contains(">"))
+            .ToList();
+    }
+
     private static string GetFriendlyTypeName(Type type)
     {
-        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-        {
-            return GetFriendlyTypeName(type.GetGenericArguments()[0]) + "?";
-        }
+        if (Nullable.GetUnderlyingType(type) != null)
+            return GetFriendlyTypeName(Nullable.GetUnderlyingType(type)) + "?";
 
         return type.Name switch
         {
@@ -172,87 +200,39 @@ public static class ExcelDataUtility
         };
     }
 
-    // 将值转换为Excel兼容格式
     private static object ConvertValueToExcelCompatible(object value)
     {
-        if (value == null)
-            return "";
-
-        Type type = value.GetType();
-
-        // Unity基础类型转换
-        if (value is Vector2 v2)
-            return $"{v2.x},{v2.y}";
-        if (value is Vector3 v3)
-            return $"{v3.x},{v3.y},{v3.z}";
-        if (value is Vector4 v4)
-            return $"{v4.x},{v4.y},{v4.z},{v4.w}";
-        if (value is Color color)
-            return $"#{ColorUtility.ToHtmlStringRGBA(color)}";
-        if (value is Enum enumValue)
-            return enumValue.ToString();
-
-        // 基础类型直接返回
+        if (value == null) return "";
+        if (value is Vector2 v2) return $"{v2.x},{v2.y}";
+        if (value is Vector3 v3) return $"{v3.x},{v3.y},{v3.z}";
+        if (value is Vector4 v4) return $"{v4.x},{v4.y},{v4.z},{v4.w}";
+        if (value is Color c) return $"#{ColorUtility.ToHtmlStringRGBA(c)}";
+        if (value is Enum e) return e.ToString();
         return value;
     }
 
-    // 将Excel字符串值转换为指定类型
-    private static object ConvertExcelValueToType(string value, Type targetType)
+    private static object ConvertExcelValueToType(string text, Type targetType)
     {
-        // 处理可空类型
-        Type underlyingType = Nullable.GetUnderlyingType(targetType) ?? targetType;
-
+        Type ut = Nullable.GetUnderlyingType(targetType) ?? targetType;
         try
         {
-            // Unity基础类型解析
-            if (underlyingType == typeof(Vector2))
-            {
-                string[] parts = value.Split(',');
-                return new Vector2(float.Parse(parts[0]), float.Parse(parts[1]));
-            }
-            if (underlyingType == typeof(Vector3))
-            {
-                string[] parts = value.Split(',');
-                return new Vector3(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]));
-            }
-            if (underlyingType == typeof(Vector4))
-            {
-                string[] parts = value.Split(',');
-                return new Vector4(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2]), float.Parse(parts[3]));
-            }
-            if (underlyingType == typeof(Color))
-            {
-                if (value.StartsWith("#"))
-                    value = value.Substring(1);
-                Color color;
-                ColorUtility.TryParseHtmlString($"#{value}", out color);
-                return color;
-            }
-            if (underlyingType.IsEnum)
-            {
-                return Enum.Parse(underlyingType, value);
-            }
-
-            // 基础类型转换
-            return Convert.ChangeType(value, underlyingType);
+            if (ut == typeof(Vector2)) { var p = text.Split(','); return new Vector2(float.Parse(p[0]), float.Parse(p[1])); }
+            if (ut == typeof(Vector3)) { var p = text.Split(','); return new Vector3(float.Parse(p[0]), float.Parse(p[1]), float.Parse(p[2])); }
+            if (ut == typeof(Color)) { ColorUtility.TryParseHtmlString(text.StartsWith("#") ? text : $"#{text}", out var c); return c; }
+            if (ut.IsEnum) return Enum.Parse(ut, text);
+            return Convert.ChangeType(text, ut);
         }
-        catch
-        {
-            Debug.LogWarning($"值转换失败：{value} → {targetType.Name}，使用默认值");
-            return Activator.CreateInstance(targetType);
-        }
+        catch { return Activator.CreateInstance(targetType); }
     }
-    #endregion
 
-    // 选择Excel保存路径
-    public static string SelectExcelSavePath(string defaultFileName)
+    public static string SelectExcelSavePathForClass(Type dataType)
     {
-        return EditorUtility.SaveFilePanel("导出为Excel", Application.dataPath, defaultFileName, "xlsx");
+        return EditorUtility.SaveFilePanel("导出全部到Excel", Application.dataPath, $"{dataType.Name}_AllData.xlsx", "xlsx");
     }
 
-    // 选择Excel读取路径
     public static string SelectExcelLoadPath()
     {
-        return EditorUtility.OpenFilePanel("从Excel导入", Application.dataPath, "xlsx");
+        return EditorUtility.OpenFilePanel("导入全部Excel", Application.dataPath, "xlsx");
     }
+    #endregion
 }

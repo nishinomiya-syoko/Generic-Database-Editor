@@ -1,0 +1,17 @@
+{
+  "musicVolume": 0.8,
+  "sfxVolume": 1.0,
+  "maxPlayerCount": 4,
+  "screenResolution": {
+    "x": 1920.0,
+    "y": 1080.0,
+    "normalized": {
+      "x": 0.871575534,
+      "y": 0.490261227,
+      "magnitude": 1.0,
+      "sqrMagnitude": 1.0
+    },
+    "magnitude": 2202.90723,
+    "sqrMagnitude": 4852800.0
+  }
+}
