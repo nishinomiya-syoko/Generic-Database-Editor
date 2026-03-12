@@ -69,24 +69,24 @@ namespace Top
         {
             if (data is BuildingData buildingData)
             {
-                SetId(buildingData.Id);
-                SetDisplayName(buildingData.DisplayName);
-                SetDescription(buildingData.Description);
-                // buildingType = buildingData.buildingType;
-                size = buildingData.size;
-                // prefab = buildingData.prefab;
-                prefabPath = buildingData.prefabPath;
-                buildTime = buildingData.buildTime;
-                // buildCosts = buildingData.buildCosts;
-                maxLevel = buildingData.maxLevel;
-                levelData = buildingData.levelData;
-                hitPoints = buildingData.hitPoints;
-                armor = buildingData.armor;
-                range = buildingData.range;
-                isResourceProducer = buildingData.isResourceProducer;
-                producedResource = buildingData.producedResource;
-                productionRates = buildingData.productionRates;
-                buildingSkills = buildingData.buildingSkills;
+                // SetId(buildingData.Id);
+                // SetDisplayName(buildingData.DisplayName);
+                // SetDescription(buildingData.Description);
+                // // buildingType = buildingData.buildingType;
+                // size = buildingData.size;
+                // // prefab = buildingData.prefab;
+                // prefabPath = buildingData.prefabPath;
+                // buildTime = buildingData.buildTime;
+                // // buildCosts = buildingData.buildCosts;
+                // maxLevel = buildingData.maxLevel;
+                // levelData = buildingData.levelData;
+                // hitPoints = buildingData.hitPoints;
+                // armor = buildingData.armor;
+                // range = buildingData.range;
+                // isResourceProducer = buildingData.isResourceProducer;
+                // producedResource = buildingData.producedResource;
+                // productionRates = buildingData.productionRates;
+                // buildingSkills = buildingData.buildingSkills;
             }
         }
     }

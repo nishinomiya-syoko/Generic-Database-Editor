@@ -75,6 +75,7 @@
     <Compile Include="Assets/Scripts/EditorWindow/EntityEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Framework/Entry/GlobalManager.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/Json/Sample/TestDataClass.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillCardUI.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillEnum.cs" />
@@ -83,9 +84,9 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/UnitMover.cs" />
     <Compile Include="Assets/Scripts/EditorWindow/PivotEditor.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitDatabase.cs" />
-    <Compile Include="Assets/Scripts/Core/DataLoader.cs" />
     <Compile Include="Assets/Scripts/Generate/DataTable/Container/Moon.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Indicator.cs" />
+    <Compile Include="Assets/Scripts/Framework/Json/GenericDataEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/LevelManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/PathPool.cs" />
     <Compile Include="Assets/Scripts/Framework/Pool/PoolManager.cs" />
@@ -102,19 +103,21 @@
     <Compile Include="Assets/Scripts/Core/Camera/CamerHandlerEditor.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerData.cs" />
-    <Compile Include="Assets/Scripts/Core/Constant.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityBase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/BstarPathfinder.cs" />
     <Compile Include="Assets/Scripts/Framework/UI/UIManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillManager.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Decoration.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestData.cs" />
+    <Compile Include="Assets/Scripts/Framework/Json/EditableAttribute.cs" />
     <Compile Include="Assets/Scripts/Framework/UI/UIManager.Extension.cs" />
+    <Compile Include="Assets/Scripts/Framework/Json/GenericDataPersistance.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/SavableAttribute.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Projectile.cs" />
     <Compile Include="Assets/Scripts/Framework/UI/UIPanel.cs" />
     <Compile Include="Assets/Scripts/Framework/Pool/IReference.cs" />
+    <Compile Include="Assets/Scripts/Framework/Extension/Constant.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/LevelDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldVisualizer.cs" />
@@ -124,6 +127,7 @@
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/ConditionDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/AreaEffect.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillData.cs" />
+    <Compile Include="Assets/Scripts/Framework/Extension/DataLoader.cs" />
     <Compile Include="Assets/Scripts/Extension/AssetLoader.cs" />
     <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SOBulkEditor.cs" />
     <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SOEditorWindow.cs" />
@@ -137,9 +141,11 @@
     <Compile Include="Assets/Scripts/Framework/Entity/EntityGererator.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Sample/PlayerCombat.cs" />
     <Compile Include="Assets/Scripts/Extension/MethodExtension.cs" />
+    <Compile Include="Assets/Scripts/Framework/Json/GeneralEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Framework/SO/DataContainer/DataContainerGenerator.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ResourceSystem/ResourceManager.cs" />
     <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SODatabase.cs" />
+    <Compile Include="Assets/Scripts/Framework/Json/ExcelDataUtility.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/ArchiveCodeGenerator.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/LevelDataSO.cs" />
@@ -185,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Packages/Microsoft.Extensions.Configuration.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.dll" />
+    <None Include="Assets/Packages/Newtonsoft.Json.13.0.4/lib/netstandard2.0/Newtonsoft.Json.xml" />
     <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/useSharedDesignerContext.txt" />
     <None Include="Assets/Packages/Microsoft.Extensions.Configuration.Abstractions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.xml" />
     <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/THIRD-PARTY-NOTICES.TXT" />
@@ -192,6 +199,7 @@
     <None Include="Assets/Packages/System.Text.Json.4.7.0/useSharedDesignerContext.txt" />
     <None Include="Assets/Packages/System.Text.Json.4.7.0/lib/netstandard2.0/System.Text.Json.xml" />
     <None Include="Assets/Packages/System.Drawing.Common.4.7.0/useSharedDesignerContext.txt" />
+    <None Include="Assets/Packages/Newtonsoft.Json.13.0.4/lib/netstandard2.0/Newtonsoft.Json.dll" />
     <None Include="Assets/Packages/Microsoft.Extensions.FileSystemGlobbing.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll" />
     <None Include="Assets/Packages/System.Drawing.Common.4.7.0/LICENSE.TXT" />
     <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/version.txt" />
@@ -711,6 +719,10 @@
     </Reference>
     <Reference Include="System.Security.Cryptography.Pkcs">
       <HintPath>Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Pkcs.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Assets/Packages/Newtonsoft.Json.13.0.4/lib/netstandard2.0/Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
