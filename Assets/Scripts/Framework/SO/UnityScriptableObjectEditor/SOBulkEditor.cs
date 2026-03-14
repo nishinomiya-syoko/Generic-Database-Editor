@@ -29,7 +29,7 @@ namespace SOEditor.Editor
         private float _floatValue1;
         private string _stringValue1 = "";
         
-        [MenuItem("Tools/SO Editor/Bulk Editor")]
+        [MenuItem("Tools/SO Tool/Bulk Editor")]
         public static void ShowWindow()
         {
             SOBulkEditor window = GetWindow<SOBulkEditor>("Bulk Editor");

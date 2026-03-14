@@ -55,7 +55,7 @@ namespace SOEditor.Editor
         private GUIStyle _buttonStyle;
         private GUIStyle _selectedButtonStyle;
         
-        [MenuItem("Tools/SO Editor/SO Editor")]
+        [MenuItem("Tool/SO Tool/SO Editor")]
         public static void ShowWindow()
         {
             SOEditorWindow window = GetWindow<SOEditorWindow>("SO Editor");

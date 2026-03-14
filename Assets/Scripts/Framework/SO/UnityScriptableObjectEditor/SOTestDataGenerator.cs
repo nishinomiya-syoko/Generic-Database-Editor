@@ -8,7 +8,7 @@ namespace SOEditor
     /// </summary>
     public static class SOTestDataGenerator
     {
-        [UnityEditor.MenuItem("Tools/SO Editor/Generate Test Data")]
+        [UnityEditor.MenuItem("Tools/SO Tool/Generate Test Items Data")]
         public static void GenerateTestData()
         {
             if (!UnityEditor.EditorUtility.DisplayDialog("生成测试数据", "这将生成一些测试数据，是否继续？", "确定", "取消"))
@@ -285,7 +285,7 @@ namespace SOEditor
             return quest;
         }
         
-        [UnityEditor.MenuItem("Tools/SO Editor/Clear All Data")]
+        [UnityEditor.MenuItem("Tools/SO Tool/Clear All Data")]
         public static void ClearAllData()
         {
             if (!UnityEditor.EditorUtility.DisplayDialog("清除所有数据", "确定要删除所有数据吗？此操作不可恢复！", "删除", "取消"))

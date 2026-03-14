@@ -1,0 +1,50 @@
+{
+  "Id": "111",
+  "DisplayName": "",
+  "Description": "",
+  "IconPath": "",
+  "buildingType": 0,
+  "size": {
+    "x": 2,
+    "y": 2,
+    "magnitude": 2.828427,
+    "sqrMagnitude": 8
+  },
+  "prefabPath": "",
+  "buildTime": 60,
+  "buildCosts": [
+    {
+      "resourceType": 0,
+      "amount": 0
+    }
+  ],
+  "costs": {},
+  "maxLevel": 10,
+  "levelData": [
+    {
+      "level": 0,
+      "hitPoints": 0,
+      "upgradeCosts": [],
+      "upgradeTime": 0,
+      "stats": {
+        "damage": 0,
+        "attackSpeed": 1.0,
+        "attackRange": 5.0,
+        "productionRate": 0,
+        "storageCapacity": 0,
+        "troopCapacity": 0,
+        "buildSpeed": 1.0,
+        "researchSpeed": 1.0
+      },
+      "productionRate": 0
+    }
+  ],
+  "hitPoints": 100,
+  "armor": 0,
+  "range": 5.0,
+  "isResourceProducer": false,
+  "producedResource": 0,
+  "buildingSkills": [
+    "spe"
+  ]
+}

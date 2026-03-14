@@ -1,8 +1,8 @@
 {
-  "Id": null,
-  "DisplayName": null,
-  "Description": null,
-  "IconPath": null,
+  "Id": "",
+  "DisplayName": "",
+  "Description": "",
+  "IconPath": "",
   "buildingType": 0,
   "size": {
     "x": 2,
@@ -10,9 +10,10 @@
     "magnitude": 2.828427,
     "sqrMagnitude": 8
   },
-  "prefabPath": null,
+  "prefabPath": "",
   "buildTime": 60,
   "buildCosts": null,
+  "costs": {},
   "maxLevel": 10,
   "levelData": null,
   "hitPoints": 100,

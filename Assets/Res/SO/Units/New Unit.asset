@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcc6a82b98ebe477d95f111cbf36d0c4, type: 3}
   m_Name: New Unit
   m_EditorClassIdentifier: 
-  id: 
+  id: C6D05555
   unitName: 
   description: 
   unitType: 0
@@ -34,7 +34,8 @@ MonoBehaviour:
   searchRange: 10
   preferredTargetDistance: 2
   preferredTarget: 10
-  innateSkills: []
+  innateSkills:
+  - 
   maxSkillSlots: 3
   ultimateSkill: 
   skillChargeRate: 1

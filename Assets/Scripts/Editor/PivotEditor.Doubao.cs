@@ -32,11 +32,11 @@ public class PivotEditor : EditorWindow
     private ScriptableObject _selectedSO;
     private SerializedObject _serializedItem;
     
-    [MenuItem("Tools/PivotEditor")]
+    [MenuItem("Tools/SO Tool/Pivot Editor")]
     public static void ShowWindow()
     {
         var window = GetWindow<PivotEditor>();
-        window.titleContent = new GUIContent("PivotEditor");
+        window.titleContent = new GUIContent("Pivot Editor");
         window.minSize = new Vector2(800, 600); // 设置最小窗口尺寸，避免编辑区域过小
     }
 

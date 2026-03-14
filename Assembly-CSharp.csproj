@@ -66,10 +66,10 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BuildingPlacer.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/Enemy.cs" />
+    <Compile Include="Assets/Scripts/Framework/Json/HistoryVersion/ChatGPT.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ComputeSystem.cs" />
     <Compile Include="Assets/Scripts/Generate/DataTable/DRPlayerData.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingDatabase.cs" />
-    <Compile Include="Assets/Scripts/Framework/DataTable/CodeGenerater.Parse.cs" />
     <Compile Include="Assets/Scripts/Framework/Preformance/MobileOptimise.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Building.cs" />
     <Compile Include="Assets/Scripts/Framework/SO/SO2Excel/Moon.cs" />
@@ -88,14 +88,12 @@
     <Compile Include="Assets/Scripts/EditorWindow/PivotEditor.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitDatabase.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Indicator.cs" />
-    <Compile Include="Assets/Scripts/Framework/Json/GenericDataEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/LevelManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/PathPool.cs" />
     <Compile Include="Assets/Scripts/Framework/Pool/PoolManager.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/WaveManager.cs" />
     <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SORuntimeManager.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitAI.Search.cs" />
-    <Compile Include="Assets/Scripts/Framework/Json/GeneralEditorNewtonsoft.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingEnum.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/ISkillModifier.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/BinaryDataMgr.cs" />
@@ -116,6 +114,7 @@
     <Compile Include="Assets/Scripts/Framework/Json/EditableAttribute.cs" />
     <Compile Include="Assets/Scripts/Framework/UI/UIManager.Extension.cs" />
     <Compile Include="Assets/Scripts/Framework/Json/GenericDataPersistance.cs" />
+    <Compile Include="Assets/Scripts/Framework/Json/HistoryVersion/Qwen.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/SavableAttribute.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Projectile.cs" />
@@ -137,7 +136,6 @@
     <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SOBulkEditor.cs" />
     <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SOEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/CharacterSO.cs" />
-    <Compile Include="Assets/Scripts/Framework/DataTable/DataTableManager.cs" />
     <Compile Include="Assets/Scripts/Core/Map/MapManager.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/DataTable.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ResourceSystem/ResourceProducer.cs" />

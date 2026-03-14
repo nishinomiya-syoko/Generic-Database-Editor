@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dda5300d538524d3fb476fdc1eae251b, type: 3}
   m_Name: New Building 3
   m_EditorClassIdentifier: 
-  _id: 
+  _id: 0A683A1F
   _displayName: 
   _description: 
   _icon: {fileID: 0}
@@ -20,13 +20,30 @@ MonoBehaviour:
   size: {x: 2, y: 2}
   prefabPath: 
   buildTime: 60
-  buildCosts: []
+  buildCosts:
+  - resourceType: 0
+    amount: 0
   maxLevel: 10
-  levelData: []
+  levelData:
+  - level: 0
+    hitPoints: 0
+    upgradeCosts: []
+    upgradeTime: 0
+    stats:
+      damage: 0
+      attackSpeed: 1
+      attackRange: 5
+      productionRate: 0
+      storageCapacity: 0
+      troopCapacity: 0
+      buildSpeed: 1
+      researchSpeed: 1
+    productionRate: 0
   hitPoints: 100
   armor: 0
   range: 5
   isResourceProducer: 0
   producedResource: 0
-  productionRates: 
-  buildingSkills: []
+  productionRates: 00000000
+  buildingSkills:
+  - 

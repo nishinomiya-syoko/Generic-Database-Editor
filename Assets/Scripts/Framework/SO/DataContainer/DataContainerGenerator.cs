@@ -10,7 +10,7 @@ public class DataContainerGenerator : EditorWindow
     private static readonly string TEMPLATE_PATH = Constant.DATA_CONTAINER_PATH; // 生成的数据容器存放路径
     private MonoScript _targetSOScript; // 选中的 SO 脚本
 
-    [MenuItem("Tools/Generate SO to DataClass")]
+    [MenuItem("Tools/SO Tool/Generate SO to DataClass")]
     public static void ShowWindow()
     {
         GetWindow<DataContainerGenerator>("生成数据容器");

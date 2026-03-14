@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace DataCenter
 {
-    public partial class ExcelTool
+    public class ExcelTool
     {
         /// <summary>
         /// excel文件存放路径
@@ -43,7 +43,7 @@ namespace DataCenter
         /// </summary>
         public static int BEGIN_INDEX = 4;
 
-        [MenuItem("Tools/Generate Excel to Binary Class")]
+        [MenuItem("Tools/Excel2Datatable/Generate Excel to Binary Class")]
         private static void GenerateExcelInfo()
         {
             //加载指定路径中的所有Excel文件 用于生成对应的3个文件

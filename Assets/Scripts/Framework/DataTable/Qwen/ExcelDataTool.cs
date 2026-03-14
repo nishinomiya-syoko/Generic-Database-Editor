@@ -30,7 +30,7 @@ namespace UnityDataTableTool
         private int totalSheets = 0;
         private int successSheets = 0;
 
-        [MenuItem("Tools/Excel to datatable(Qwen)")]
+        [MenuItem("Tools/Excel2Datatable/Choose Excel File")]
         public static void ShowWindow()
         {
             var window = GetWindow<ExcelDataTableTool>("Excel 数据表工具");
@@ -122,7 +122,7 @@ namespace UnityDataTableTool
         // <summary>
         /// 快速生成 - 批量处理所有 Excel 文件
         /// </summary>
-        [MenuItem("Tools/Excel 数据表工具/Fast Generate (批量生成) _F5")]
+        [MenuItem("Tools/Excel2Datatable/Fast Generate (批量生成) _F5")]
         public static void FastGenerate()
         {
 
