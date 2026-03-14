@@ -5,8 +5,11 @@ public static class Constant
     public static readonly string EXCEL_PATH = Application.dataPath + "/Data/Excel/";
     public static readonly string DATA_CLASS_PATH = Application.dataPath + "/Scripts/Generate/DataTable/";
     public static readonly string DATA_CONTAINER_PATH = Application.dataPath + "/Scripts/Generate/DataTable/Container/";
+
+    public static readonly string DATA_NAMESPACE = "DataCenter";
     // public static readonly string DATA_BINARY_PATH = Application.streamingAssetsPath + "/Bianry/";
     public static readonly string DATA_BINARY_PATH = Application.dataPath + "/Data/Binary/";
+    public static readonly string DATA_BINARY_NAMEEND = ".pve";
     public static readonly string DATA_TXT_PATH = Application.dataPath + "/Data/TXT/";
     public static readonly string JSON_PATH = Application.dataPath + "/Res/Database";
     // 跳过的文件名前缀

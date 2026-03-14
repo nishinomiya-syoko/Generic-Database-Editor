@@ -12,8 +12,13 @@
   },
   "prefabPath": "",
   "buildTime": 60,
-  "buildCosts": [],
-  "costs": null,
+  "buildCosts": [
+    {
+      "resourceType": 0,
+      "amount": 0
+    }
+  ],
+  "costs": {},
   "maxLevel": 10,
   "levelData": [],
   "hitPoints": 100,

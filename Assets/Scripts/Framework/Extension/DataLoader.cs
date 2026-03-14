@@ -1,5 +1,4 @@
 using UnityEngine;
-using DataCenter;
 
 public class DataLoader : MonoBehaviour
 {

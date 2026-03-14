@@ -1,0 +1,26 @@
+﻿[
+  {
+    "实例名": "Default",
+    "Id": "111",
+    "prefabPath": "Resource",
+    "buildTime": 0,
+    "maxLevel": 0,
+    "hitPoints": 60,
+    "armor": 0,
+    "range": 0.0,
+    "isResourceProducer": false,
+    "buildingSkills": [
+      "Top.BuildingLevelData"
+    ]
+  },
+  {
+    "实例名": "NewInstance",
+    "prefabPath": "Resource",
+    "buildTime": 0,
+    "maxLevel": 0,
+    "hitPoints": 60,
+    "armor": 0,
+    "range": 0.0,
+    "isResourceProducer": false
+  }
+]

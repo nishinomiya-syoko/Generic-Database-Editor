@@ -10,14 +10,17 @@ using System.Reflection;
 using OfficeOpenXml;
 using Newtonsoft.Json;
 
-namespace UnityDataTableTool
+namespace DataCenter
 {
     public class ExcelDataTableTool : EditorWindow
     {
         private string excelPath = Constant.EXCEL_PATH;
-        private string outputFolder = Constant.DATA_BINARY_PATH;
+        // private string outputFolder = Constant.DATA_BINARY_PATH;
         private string classOutputFolder = Constant.DATA_CLASS_PATH;
-        private string classNamespace = "GameData";
+        private static readonly string DATA_TXT_PATH = Constant.DATA_TXT_PATH;
+        private static readonly string DATA_BINARY_PATH = Constant.DATA_BINARY_PATH;
+        public static readonly string DATA_BINARY_NAMEEND = Constant.DATA_BINARY_NAMEEND;
+        private static string classNamespace = Constant.DATA_NAMESPACE;
         private bool useBinary = true;
         private bool useTxt = true;
         private bool compressBinary = false;
@@ -61,9 +64,11 @@ namespace UnityDataTableTool
             
             // 输出路径
             GUILayout.Label("📂 输出配置", EditorStyles.boldLabel);
-            outputFolder = EditorGUILayout.TextField("数据输出文件夹", outputFolder);
+            // outputFolder = EditorGUILayout.TextField("数据输出文件夹", outputFolder);
             classOutputFolder = EditorGUILayout.TextField("代码输出文件夹", classOutputFolder);
             classNamespace = EditorGUILayout.TextField("命名空间", classNamespace);
+            GUILayout.Label($"文本输出文件夹:{DATA_TXT_PATH}", EditorStyles.boldLabel);
+            GUILayout.Label($"二进制输出文件夹:{DATA_BINARY_PATH}", EditorStyles.boldLabel);
 
             GUILayout.Space(15);
             
@@ -113,7 +118,8 @@ namespace UnityDataTableTool
             {
                 EditorGUILayout.HelpBox(
                     $"当前文件：{Path.GetFileName(excelPath)}\n" +
-                    $"数据输出：{outputFolder}\n" +
+                    // $"数据输出：{outputFolder}\n" +
+                    $"命名空间：{classNamespace}\n" +
                     $"代码输出：{classOutputFolder}", 
                     MessageType.None);
             }
@@ -242,10 +248,18 @@ namespace UnityDataTableTool
             }
 
             // 创建输出目录
-            if (!Directory.Exists(outputFolder))
-                Directory.CreateDirectory(outputFolder);
+            if (!Directory.Exists(DATA_TXT_PATH))
+                Directory.CreateDirectory(DATA_TXT_PATH);
+            if (!Directory.Exists(DATA_BINARY_PATH))
+                Directory.CreateDirectory(DATA_BINARY_PATH);
             if (!Directory.Exists(classOutputFolder))
                 Directory.CreateDirectory(classOutputFolder);
+
+            // string[] files = Directory.GetFiles(classOutputFolder);
+            // foreach (string file in files)
+            // {
+            //     File.Delete(file);
+            // }
 
             try
             {
@@ -283,7 +297,8 @@ namespace UnityDataTableTool
                                  $"跳过：{skipCount} 个表\n\n" +
                                  $"⚠️ 如果是首次运行，请等待 Unity 编译完成后再次点击按钮导出数据。";
 
-                    EditorUtility.DisplayDialog("完成", msg, "确定");
+                    // EditorUtility.DisplayDialog("完成", msg, "确定");
+                    Debug.Log(msg);
                 }
             }
             catch (Exception e)
@@ -292,7 +307,9 @@ namespace UnityDataTableTool
                 EditorUtility.DisplayDialog("错误", $"处理失败:\n{e.Message}", "确定");
             }
         }
-
+        /// <summary>
+        /// 处理工作表,生成类，并生成TXT 与BINARY 文件
+        /// </summary>
         private void ProcessWorksheet(ExcelWorksheet sheet)
         {
             string tableName = sheet.Name.Trim();
@@ -313,7 +330,7 @@ namespace UnityDataTableTool
             Type rowType = Type.GetType($"{classNamespace}.{tableName}Row");
             if (rowType == null)
             {
-                Debug.LogWarning($"[等待] 类 '{tableName}Row' 尚未编译。请等待 Unity 编译完成后再次运行工具导出数据。");
+                Debug.LogWarning($"[等待] 类 '{tableName}Row' 尚未编译。请等待 Unity 编译完成后再次运行工具导出TXT 与BINARY 文件。");
                 return;
             }
 
@@ -321,7 +338,8 @@ namespace UnityDataTableTool
             List<object> dataList = ParseDataRows(sheet, fields, rowType);
 
             // 5. 导出文件
-            string fileNameBase = $"{outputFolder}/{tableName}";
+            string txtFullPath = $"{DATA_TXT_PATH}/{tableName}";
+            string binaryFullPath = $"{DATA_BINARY_PATH}/{tableName}";
 
             if (useTxt)
             {
@@ -329,7 +347,7 @@ namespace UnityDataTableTool
                 {
                     NullValueHandling = NullValueHandling.Ignore
                 });
-                File.WriteAllText($"{fileNameBase}.txt", json, Encoding.UTF8);
+                File.WriteAllText($"{txtFullPath}.txt", json, Encoding.UTF8);
                 Debug.Log($"[✓] 生成 TXT: {tableName}.txt ({dataList.Count} 行)");
             }
 
@@ -340,13 +358,13 @@ namespace UnityDataTableTool
                 if (compressBinary)
                 {
                     bytes = Compress(bytes);
-                    File.WriteAllBytes($"{fileNameBase}.dat", bytes);
-                    Debug.Log($"[✓] 生成 Binary(压缩): {tableName}.dat ({bytes.Length} bytes)");
+                    File.WriteAllBytes($"{binaryFullPath}{DATA_BINARY_NAMEEND}", bytes);
+                    Debug.Log($"[✓] 生成 Binary(压缩): {tableName}{DATA_BINARY_NAMEEND} ({bytes.Length} bytes)");
                 }
                 else
                 {
-                    File.WriteAllBytes($"{fileNameBase}.dat", bytes);
-                    Debug.Log($"[✓] 生成 Binary: {tableName}.dat ({bytes.Length} bytes)");
+                    File.WriteAllBytes($"{binaryFullPath}{DATA_BINARY_NAMEEND}", bytes);
+                    Debug.Log($"[✓] 生成 Binary: {tableName}{DATA_BINARY_NAMEEND} ({bytes.Length} bytes)");
                 }
             }
         }
