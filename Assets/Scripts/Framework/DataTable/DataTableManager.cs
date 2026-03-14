@@ -47,7 +47,7 @@ namespace DataCenter
             string b = useBinary ? DATA_BINARY_PATH : DATA_TXT_PATH;
             string path = $"{b}/{tableName}{extension}";
 
-            TextAsset asset = Resources.Load<TextAsset>(path);
+            TextAsset asset = GlobalManager.Instance.dataLoader.LoadAssetAsync<TextAsset>(path); 
             if (asset == null)
             {
                 Debug.LogError($"[DataTableManager] 未找到：{path}");

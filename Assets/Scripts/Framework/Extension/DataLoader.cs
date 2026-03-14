@@ -1,18 +1,17 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class DataLoader : MonoBehaviour
 {
-     /// <summary>
-        /// 初始化数据表（按需加载指定表）
-        /// </summary>
-        public void InitData()
-        {
-            // 按需取消注释以加载对应的数据表
-            //LoadTable<TowerInfoContainer, TowerInfo>();
-            //LoadTable<PlayerInfo1Container, PlayerInfo1>();
-            //LoadTable<TestInfoContainer, TestInfo>();
-            //LoadTable<BasicDataContainer, BasicData>();
-            // BinaryDataMgr.Instance.LoadTable<DTBasicData>();
-            // Debug.Log("数据加载完成");
-        }
+    /// <summary>
+    /// 初始化数据表（按需加载指定表）
+    /// </summary>
+    public void InitData()
+    {
+
+    }
+    public T LoadAssetAsync<T>(string path) where T : UnityEngine.Object
+    {
+        return Addressables.LoadAssetAsync<T>(path).WaitForCompletion();
+    }
 }

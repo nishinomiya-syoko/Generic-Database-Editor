@@ -56,26 +56,27 @@ namespace DataCenter
         public void LoadTable(string tableName, bool useBinary = false)
         {
             if (_isLoaded) return;
+            _rows = DataTableManager.GetTable<T>(tableName, useBinary);
 
-            _useBinary = useBinary;
-            string extension = useBinary ? ".dat" : ".txt";
-            string path = $"DataTables/{tableName}{extension}";
+            // _useBinary = useBinary;
+            // string extension = useBinary ? ".dat" : ".txt";
+            // string path = $"DataTables/{tableName}{extension}";
 
-            TextAsset asset = Resources.Load<TextAsset>(path);
-            if (asset == null)
-            {
-                Debug.LogError($"[DataTable] 未找到数据文件：{path}");
-                return;
-            }
+            // TextAsset asset = Resources.Load<TextAsset>(path);
+            // if (asset == null)
+            // {
+            //     Debug.LogError($"[DataTable] 未找到数据文件：{path}");
+            //     return;
+            // }
 
-            if (useBinary)
-            {
-                _rows = ParseBinary(asset.bytes, tableName);
-            }
-            else
-            {
-                _rows = JsonConvert.DeserializeObject<List<T>>(asset.text);
-            }
+            // if (useBinary)
+            // {
+            //     _rows = ParseBinary(asset.bytes, tableName);
+            // }
+            // else
+            // {
+            //     _rows = JsonConvert.DeserializeObject<List<T>>(asset.text);
+            // }
 
             _isLoaded = true;
             Debug.Log($"[DataTable] 加载成功：{tableName} ({_rows.Count} 行) 格式：{(useBinary ? "Binary" : "JSON")}");
