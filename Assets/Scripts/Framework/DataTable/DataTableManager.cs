@@ -15,6 +15,9 @@ namespace DataCenter
     public static class DataTableManager
     {
         public static readonly string DATA_BINARY_NAMEEND = Constant.DATA_BINARY_NAMEEND;
+        public static readonly string DATA_BINARY_PATH = Constant.DATA_BINARY_PATH;
+        public static readonly string DATA_TXT_PATH = Constant.DATA_TXT_PATH;
+        
 
         private static Dictionary<string, object> _cache = new Dictionary<string, object>();
         private static bool _defaultUseBinary = false;
@@ -41,7 +44,8 @@ namespace DataCenter
         private static List<T> LoadTableInternal<T>(string tableName, bool useBinary) where T : class, new()
         {
             string extension = useBinary ? DATA_BINARY_NAMEEND : ".txt";
-            string path = $"DataTables/{tableName}{extension}";
+            string b = useBinary ? DATA_BINARY_PATH : DATA_TXT_PATH;
+            string path = $"{b}/{tableName}{extension}";
 
             TextAsset asset = Resources.Load<TextAsset>(path);
             if (asset == null)
