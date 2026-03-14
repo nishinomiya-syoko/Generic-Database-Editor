@@ -422,6 +422,10 @@
       <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Reflection.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Assets/Packages/Newtonsoft.Json.13.0.4/lib/netstandard2.0/Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Extensions.FileSystemGlobbing">
       <HintPath>Assets/Packages/Microsoft.Extensions.FileSystemGlobbing.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll</HintPath>
       <Private>False</Private>
@@ -572,10 +576,6 @@
     </Reference>
     <Reference Include="NugetForUnity">
       <HintPath>Assets/NuGet/Editor/NugetForUnity.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Assets/Packages/Newtonsoft.Json.13.0.4/lib/netstandard2.0/Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">

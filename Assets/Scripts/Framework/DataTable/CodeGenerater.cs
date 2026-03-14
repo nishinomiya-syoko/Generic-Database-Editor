@@ -33,6 +33,8 @@ namespace DataCenter
         //public static string DATA_BINARY_PATH = Application.streamingAssetsPath + "/Bianry/";
 
         public static string CUSTOM_NAME_END = ".pve";
+        public static string ROW_NAME_HEAD = "DR";
+        public static string CONTAINER_NAME_HEAD = "Container";
 
         /// <summary>
         /// 真正内容开始行号
@@ -69,7 +71,7 @@ namespace DataCenter
                     //生成数据结构类
                     GenerateDataClass(table);
                     //生成容器类
-                    GenerateDataContainer(table);
+                    GenerateDataCONTAINER_NAME_HEAD(table);
                     //生成2进制数据
                     ExchangeExcelToBinary(table);
                 }
@@ -98,13 +100,17 @@ namespace DataCenter
             }
 
             //如果我们要生成对应的数据结构类脚本 其实就是通过代码进行字符串拼接 然后存进文件就行了
-            //DR = DataRow
+            //ROW_NAME_HEAD = DataRow
             string str = "// 自动生成代码\n";
             str += "// Generate Time " + DateTime.Now.ToString() + "\n";
             str += "// 无需手动修改\n\n";
-            str = "namespace DataCenter\n{\n";
+            // str += "using System;\n";
+            str += "using System.Collections.Generic;\n";
+            str += "using UnityEngine;\n\n";
+
+            str += "namespace DataCenter\n{\n";
             str += "\t/// <summary>单行数据 " + table.TableName + "</summary>\n";
-            str += "\tpublic class DR" + table.TableName + "\n\t{\n";
+            str += "\tpublic class ROW_NAME_HEAD" + table.TableName + "\n\t{\n";
 
             //变量进行字符串拼接
             for (int i = 0; i < table.Columns.Count; i++)
@@ -122,7 +128,7 @@ namespace DataCenter
             str += "}\n";
 
             //把拼接好的字符串存进占地文件中
-            File.WriteAllText(DATA_CLASS_PATH + "DR" + table.TableName + ".cs", str);
+            File.WriteAllText(DATA_CLASS_PATH + "ROW_NAME_HEAD" + table.TableName + ".cs", str);
 
             //刷新Project窗口
             AssetDatabase.Refresh();
@@ -132,9 +138,9 @@ namespace DataCenter
         /// 生成Excel表对应的数据容器类
         /// </summary>
         /// <param name="table"></param>
-        private static void GenerateDataContainer(System.Data.DataTable table)
+        private static void GenerateDataCONTAINER_NAME_HEAD(System.Data.DataTable table)
         {
-            string fullName ="DR" + table.TableName;
+            string fullName ="ROW_NAME_HEAD" + table.TableName;
             //得到主键索引
             int keyIndex = GetKeyIndex(table);
             //得到字段类型行
@@ -149,22 +155,24 @@ namespace DataCenter
                 File.Delete(file);
             }
 
-            string str = "using System.Collections.Generic;\n\n";
+            string str = "// 自动生成代码\n";
+            str += "// Generate Time " + DateTime.Now.ToString() + "\n";
+            str += "// 无需手动修改\n\n";
+            str += "using System.Collections.Generic;\n";
+            str += "using UnityEngine;\n\n";
+
             str += "namespace DataCenter\n{\n";
             str += "\t/// <summary>数据表 " + table.TableName + "</summary>\n";
 
-            //str += "public class " + table.TableName + "Container" + "\n{\n";
-            str += "\tpublic class Container" + table.TableName + "\n\t{\n";
+            //str += "public class " + table.TableName + "CONTAINER_NAME_HEAD" + "\n{\n";
+            str += "\tpublic class CONTAINER_NAME_HEAD" + table.TableName + "\n\t{\n";
 
             str += "\t\tpublic Dictionary<" + rowType[keyIndex].ToString() + ", " + fullName + ">";
             str += "dataDic = new Dictionary<" + rowType[keyIndex].ToString() + ", " + fullName + ">();\n";
-            //str += "\t\tpublic Dictionary<" + rowType[keyIndex].ToString() + ", " + table.TableName + ">";
-            //str += "dataDic = new Dictionary<" + rowType[keyIndex].ToString() + ", " + table.TableName + ">();\n";
 
             str += "\t}\n}\n";
 
             File.WriteAllText(DATA_CONTAINER_PATH + table.TableName + ".cs", str);
-            //File.WriteAllText(DATA_CONTAINER_PATH + table.TableName + "Container.cs", str);
 
             //刷新Project窗口
             AssetDatabase.Refresh();
@@ -194,14 +202,14 @@ namespace DataCenter
                 //fs.Write(BitConverter.GetBytes(table.Rows.Count - 4), 0, 4);
 
                 // 修改后：
-                int validRowCount = 0;
+                int valiROW_NAME_HEADowCount = 0;
                 for (int i = BEGIN_INDEX; i < table.Rows.Count; i++)
                 {
                     if (table.Rows[i][0] == null || table.Rows[i][0].ToString() == string.Empty)
                         continue;
-                    ++validRowCount;
+                    ++valiROW_NAME_HEADowCount;
                 }
-                fs.Write(BitConverter.GetBytes(validRowCount), 0, 4);
+                fs.Write(BitConverter.GetBytes(valiROW_NAME_HEADowCount), 0, 4);
 
                 //2.存储主键的变量名
                 string keyName = GetVariableNameRow(table)[GetKeyIndex(table)].ToString();

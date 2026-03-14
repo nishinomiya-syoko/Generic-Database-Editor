@@ -67,6 +67,7 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BuildingPlacer.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/Enemy.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ComputeSystem.cs" />
+    <Compile Include="Assets/Scripts/Generate/DataTable/DRPlayerData.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/Preformance/MobileOptimise.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Building.cs" />
@@ -85,7 +86,6 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/UnitMover.cs" />
     <Compile Include="Assets/Scripts/EditorWindow/PivotEditor.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitDatabase.cs" />
-    <Compile Include="Assets/Scripts/Generate/DataTable/Container/Moon.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Indicator.cs" />
     <Compile Include="Assets/Scripts/Framework/Json/GenericDataEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/LevelManager.cs" />
@@ -99,6 +99,7 @@
     <Compile Include="Assets/Scripts/Framework/DataTable/BinaryDataMgr.cs" />
     <Compile Include="Assets/Scripts/EditorWindow/SkillEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/ConditionData.cs" />
+    <Compile Include="Assets/Scripts/Generate/DataTable/Container/PlayerData.cs" />
     <Compile Include="Assets/Scripts/Framework/Debug/DebugInfo.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Block.cs" />
     <Compile Include="Assets/Scripts/Core/Camera/CamerHandlerEditor.cs" />
@@ -606,6 +607,10 @@
       <HintPath>Assets/Plugins/Sirenix/Assemblies/Sirenix.Reflection.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Assets/Packages/Newtonsoft.Json.13.0.4/lib/netstandard2.0/Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Extensions.FileSystemGlobbing">
       <HintPath>Assets/Packages/Microsoft.Extensions.FileSystemGlobbing.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll</HintPath>
       <Private>False</Private>
@@ -720,10 +725,6 @@
     </Reference>
     <Reference Include="System.Security.Cryptography.Pkcs">
       <HintPath>Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Pkcs.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Assets/Packages/Newtonsoft.Json.13.0.4/lib/netstandard2.0/Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
