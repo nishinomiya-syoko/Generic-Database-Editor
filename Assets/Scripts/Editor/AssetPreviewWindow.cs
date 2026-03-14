@@ -5,7 +5,7 @@ public class AssetPreviewWindow : EditorWindow
     private Object unityAsset;
     private Editor assetEditor;
     private bool isAnimationClip;
-    [MenuItem("MyWindows/AssetPreview")]
+    [MenuItem("Tools/AssetPreview")]
     public static void OpenWindow()
     {
         EditorWindow.GetWindow<AssetPreviewWindow>().Show();

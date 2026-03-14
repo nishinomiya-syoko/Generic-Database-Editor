@@ -291,7 +291,8 @@ public class GeneralEditorWindow : EditorWindow
 
             LoadCurrentInstance();
             _isDirty = false;
-            EditorUtility.DisplayDialog("提示", "当前实例数据读取完成", "确定");
+            // EditorUtility.DisplayDialog("提示", "当前实例数据读取完成", "确定");
+            Debug.Log("当前实例数据读取完成");
         }
 
         if (GUILayout.Button("保存数据", GUILayout.Width(BUTTON_WIDTH), GUILayout.Height(BUTTON_HEIGHT)))
@@ -300,8 +301,9 @@ public class GeneralEditorWindow : EditorWindow
             if (success)
                 _isDirty = false;
 
-            EditorUtility.DisplayDialog(success ? "成功" : "失败",
-                success ? "当前实例数据保存完成" : "当前实例数据保存失败", "确定");
+            // EditorUtility.DisplayDialog(success ? "成功" : "失败",
+            //     success ? "当前实例数据保存完成" : "当前实例数据保存失败", "确定");
+            Debug.Log(success ? "当前实例数据保存完成" : "当前实例数据保存失败");
         }
 
         Color originalColor = GUI.backgroundColor;
@@ -505,7 +507,8 @@ public class GeneralEditorWindow : EditorWindow
             bool success = SaveCurrentInstance();
             if (!success)
             {
-                EditorUtility.DisplayDialog("失败", "保存失败，已取消切换", "确定");
+                // EditorUtility.DisplayDialog("失败", "保存失败，已取消切换", "确定");
+                Debug.LogWarning("保存失败，已取消切换");
                 return false;
             }
 
@@ -656,7 +659,7 @@ public class GeneralEditorWindow : EditorWindow
         }
         catch (Exception e)
         {
-            EditorUtility.DisplayDialog("失败", $"导入Excel失败：{e.Message}", "确定");
+            // EditorUtility.DisplayDialog("失败", $"导入Excel失败：{e.Message}", "确定");
             Debug.LogError($"导入Excel失败：{e}");
         }
     }

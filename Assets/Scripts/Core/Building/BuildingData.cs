@@ -18,7 +18,7 @@ namespace Top
         [Header("建造信息")]
         public int buildTime = 60; // 秒
         public ResourceCost[] buildCosts = new ResourceCost[0];
-        public Dictionary<ResourceType, int> costs = new Dictionary<ResourceType, int>();
+        public Dictionary<string, int> costs;
 
         [Header("升级信息")]
         public int maxLevel = 10;
