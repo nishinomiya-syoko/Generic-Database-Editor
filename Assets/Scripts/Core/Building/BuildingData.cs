@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Top
@@ -16,11 +17,12 @@ namespace Top
 
         [Header("建造信息")]
         public int buildTime = 60; // 秒
-        public ResourceCost[] buildCosts;
+        public ResourceCost[] buildCosts = new ResourceCost[0];
+        public Dictionary<ResourceType, int> costs = new Dictionary<ResourceType, int>();
 
         [Header("升级信息")]
         public int maxLevel = 10;
-        public BuildingLevelData[] levelData;
+        public BuildingLevelData[] levelData = new BuildingLevelData[0];
 
         [Header("特殊属性")]
         public int hitPoints = 100;
@@ -62,6 +64,10 @@ namespace Top
         public int upgradeTime;
         public BuildingStats stats;
         public int productionRate; // 资源产量（如果是生产建筑）
+        public BuildingLevelData()
+        {
+            stats = new BuildingStats();
+        }
     }
 
     // 建筑属性

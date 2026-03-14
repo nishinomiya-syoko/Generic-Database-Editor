@@ -1,0 +1,1140 @@
+using UnityEngine;
+using UnityEditor;
+using System;
+using System.Collections.Generic;
+using System.Collections;
+using System.IO;
+using System.Text;
+using System.Linq;
+using System.Reflection;
+using OfficeOpenXml;
+using Newtonsoft.Json;
+
+namespace UnityDataTableTool
+{
+    public class ExcelDataTableTool : EditorWindow
+    {
+        private string excelPath = Constant.EXCEL_PATH;
+        private string outputFolder = Constant.DATA_BINARY_PATH;
+        private string classOutputFolder = Constant.DATA_CLASS_PATH;
+        private string classNamespace = "GameData";
+        private bool useBinary = true;
+        private bool useTxt = true;
+        private bool compressBinary = false;
+        private bool showAdvancedSettings = false;
+
+        // 批量处理统计
+        private int totalFiles = 0;
+        private int successFiles = 0;
+        private int failedFiles = 0;
+        private int totalSheets = 0;
+        private int successSheets = 0;
+
+        [MenuItem("Tools/Excel to datatable(Qwen)")]
+        public static void ShowWindow()
+        {
+            var window = GetWindow<ExcelDataTableTool>("Excel 数据表工具");
+            window.minSize = new Vector2(500, 600);
+
+            window.Show();
+        }
+        
+
+        private void OnGUI()
+        {
+            GUILayout.Space(10);
+            GUILayout.Label("📊 Unity Excel 数据表生成工具", EditorStyles.boldLabel);
+            GUILayout.Label("支持格式：.xlsx | 引擎版本：Unity 2022+", EditorStyles.miniLabel);
+            
+            GUILayout.Space(15);
+            
+            // Excel 文件选择
+            GUILayout.Label("📁 Excel 配置", EditorStyles.boldLabel);
+            excelPath = EditorGUILayout.TextField("Excel 文件路径", excelPath);
+            if (GUILayout.Button("选择 Excel 文件", GUILayout.Height(25)))
+            {
+                string path = EditorUtility.OpenFilePanel("选择 Excel 文件", "", "xlsx");
+                if (!string.IsNullOrEmpty(path)) excelPath = path;
+            }
+
+            GUILayout.Space(15);
+            
+            // 输出路径
+            GUILayout.Label("📂 输出配置", EditorStyles.boldLabel);
+            outputFolder = EditorGUILayout.TextField("数据输出文件夹", outputFolder);
+            classOutputFolder = EditorGUILayout.TextField("代码输出文件夹", classOutputFolder);
+            classNamespace = EditorGUILayout.TextField("命名空间", classNamespace);
+
+            GUILayout.Space(15);
+            
+            // 导出格式
+            GUILayout.Label("🔧 导出格式", EditorStyles.boldLabel);
+            EditorGUILayout.BeginHorizontal();
+            useTxt = EditorGUILayout.ToggleLeft("📄 TXT (JSON)", useTxt, GUILayout.Width(150));
+            useBinary = EditorGUILayout.ToggleLeft("🔒 Binary (DAT)", useBinary, GUILayout.Width(150));
+            EditorGUILayout.EndHorizontal();
+            
+            if (useBinary)
+            {
+                compressBinary = EditorGUILayout.Toggle("压缩二进制文件", compressBinary);
+            }
+
+            GUILayout.Space(15);
+            
+            // 高级设置
+            showAdvancedSettings = EditorGUILayout.Foldout(showAdvancedSettings, "⚙️ 高级设置");
+            if (showAdvancedSettings)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.LabelField("Excel 格式要求:", EditorStyles.miniLabel);
+                EditorGUILayout.HelpBox(
+                    "第 1 行：字段名称\n" +
+                    "第 2 行：数据类型 (int, string, List<float> 等)\n" +
+                    "第 3 行：字段注释\n" +
+                    "第 4 行起：数据内容", 
+                    MessageType.Info);
+                EditorGUI.indentLevel--;
+            }
+
+            GUILayout.Space(20);
+            
+            // 执行按钮
+            GUI.backgroundColor = new Color(0.4f, 0.8f, 0.4f);
+            if (GUILayout.Button("🚀 开始转换 & 生成代码", GUILayout.Height(40)))
+            {
+                ProcessExcel(excelPath);
+            }
+            GUI.backgroundColor = Color.white;
+
+            GUILayout.Space(10);
+            
+            // 状态信息
+            if (!string.IsNullOrEmpty(excelPath))
+            {
+                EditorGUILayout.HelpBox(
+                    $"当前文件：{Path.GetFileName(excelPath)}\n" +
+                    $"数据输出：{outputFolder}\n" +
+                    $"代码输出：{classOutputFolder}", 
+                    MessageType.None);
+            }
+        }
+
+        // <summary>
+        /// 快速生成 - 批量处理所有 Excel 文件
+        /// </summary>
+        [MenuItem("Tools/Excel 数据表工具/Fast Generate (批量生成) _F5")]
+        public static void FastGenerate()
+        {
+
+            string excelFolder = Constant.EXCEL_PATH;
+
+            if (!Directory.Exists(excelFolder))
+            {
+                EditorUtility.DisplayDialog("错误",
+                    $"Excel 目录不存在：{excelFolder}\n\n请创建该目录或修改 Constant.EXCEL_PATH 配置",
+                    "确定");
+                return;
+            }
+
+            // 查找所有 Excel 文件
+            FileInfo[] files = Directory.CreateDirectory(Constant.EXCEL_PATH).GetFiles();
+            List<string> excelFiles = new List<string>();
+            foreach (var ext in files)
+            {
+                // excelFiles.AddRange(Directory.GetFiles(excelFolder, $"{ext}", SearchOption.AllDirectories)
+                //     .Where(f => !Constant.SKIP_PREFIXES.Any(p => Path.GetFileName(f).StartsWith(p))));
+                //如果不是Excel文件就不要处理
+                if (ext.Extension != ".xlsx" && ext.Extension != ".xls")
+                    continue;
+                else if (ext.Name.StartsWith("~$"))
+                    continue;
+                    excelFiles.Add(ext.FullName);
+            }
+
+            if (excelFiles.Count == 0)
+            {
+                EditorUtility.DisplayDialog("提示",
+                    $"在 {excelFolder} 目录下未找到 Excel 文件",
+                    "确定");
+                return;
+            }
+
+            // 创建输出目录
+            if (!Directory.Exists(Constant.DATA_BINARY_PATH))
+                Directory.CreateDirectory(Constant.DATA_BINARY_PATH);
+            if (!Directory.Exists(Constant.DATA_TXT_PATH))
+                Directory.CreateDirectory(Constant.DATA_TXT_PATH);
+            if (!Directory.Exists(Constant.DATA_CLASS_PATH))
+                Directory.CreateDirectory(Constant.DATA_CLASS_PATH);
+
+            // 显示进度
+            // EditorUtility.DisplayProgressBar("准备中", "正在初始化...", 0f);
+
+            try
+            {
+                var tool = CreateInstance<ExcelDataTableTool>();
+                tool.totalFiles = excelFiles.Count;
+                tool.successFiles = 0;
+                tool.failedFiles = 0;
+                tool.totalSheets = 0;
+                tool.successSheets = 0;
+
+                Debug.Log($"[Fast Generate] 开始批量处理 {excelFiles.Count} 个 Excel 文件...");
+
+                foreach (var file in excelFiles)
+                {
+                    float progress = (float)(excelFiles.IndexOf(file) + 1) / excelFiles.Count;
+                    // EditorUtility.DisplayProgressBar("处理中",
+                    //     $"[{excelFiles.IndexOf(file) + 1}/{excelFiles.Count}] {Path.GetFileName(file)}",
+                    //     progress);
+                    Debug   .Log($"[Fast Generate] [{excelFiles.IndexOf(file) + 1}/{excelFiles.Count}] {Path.GetFileName(file)}");
+
+                    try
+                    {
+                        tool.ProcessExcel(file);
+                        tool.successFiles++;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"[Fast Generate] 文件处理失败：{file}\n{ex.Message}");
+                        tool.failedFiles++;
+                    }
+                }
+
+                AssetDatabase.Refresh();
+
+                EditorUtility.ClearProgressBar();
+
+                string msg = $"✅ 批量处理完成!\n\n" +
+                             $"📁 文件统计:\n" +
+                             $"  总文件：{tool.totalFiles}\n" +
+                             $"  成功：{tool.successFiles}\n" +
+                             $"  失败：{tool.failedFiles}\n\n" +
+                             $"📊 表格统计:\n" +
+                             $"  总表格：{tool.totalSheets}\n" +
+                             $"  成功：{tool.successSheets}\n\n" +
+                             $"⚠️ 如果是首次运行，请等待 Unity 编译完成后再次运行以导出数据。";
+
+                Debug.Log(msg);
+                // EditorUtility.DisplayDialog("Fast Generate 完成", msg, "确定");
+            }
+            catch (Exception e)
+            {
+                EditorUtility.ClearProgressBar();
+                Debug.LogError($"[Fast Generate] 严重错误：{e.Message}\n{e.StackTrace}");
+                // EditorUtility.DisplayDialog("错误", $"批量处理失败:\n{e.Message}", "确定");
+            }
+        }
+        
+        private void ProcessExcel(string excelPath)
+        {
+            Debug.Log($"[Fast Generate] 正在处理文件：{excelPath}");
+            if (string.IsNullOrEmpty(excelPath) || !File.Exists(excelPath))
+            {
+                EditorUtility.DisplayDialog("错误", "请选择有效的 .xlsx 文件！", "确定");
+                return;
+            }
+
+            if (!excelPath.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+            {
+                EditorUtility.DisplayDialog("警告", "EPPlus 仅支持 .xlsx 格式！", "确定");
+                return;
+            }
+
+            // 创建输出目录
+            if (!Directory.Exists(outputFolder))
+                Directory.CreateDirectory(outputFolder);
+            if (!Directory.Exists(classOutputFolder))
+                Directory.CreateDirectory(classOutputFolder);
+
+            try
+            {
+                using (var package = new ExcelPackage(new FileInfo(excelPath)))
+                {
+                    int successCount = 0;
+                    int skipCount = 0;
+
+                    foreach (var worksheet in package.Workbook.Worksheets)
+                    {
+                        if (string.IsNullOrWhiteSpace(worksheet.Name) ||
+                            worksheet.Name.StartsWith("~") ||
+                            worksheet.Dimension == null ||
+                            worksheet.Dimension.Rows < 3)
+                        {
+                            skipCount++;
+                            continue;
+                        }
+
+                        try
+                        {
+                            ProcessWorksheet(worksheet);
+                            successCount++;
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogError($"[错误] Sheet '{worksheet.Name}' 处理失败：{ex.Message}");
+                        }
+                    }
+
+                    AssetDatabase.Refresh();
+
+                    string msg = $"✅ 处理完成!\n" +
+                                 $"成功：{successCount} 个表\n" +
+                                 $"跳过：{skipCount} 个表\n\n" +
+                                 $"⚠️ 如果是首次运行，请等待 Unity 编译完成后再次点击按钮导出数据。";
+
+                    EditorUtility.DisplayDialog("完成", msg, "确定");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[严重错误] {e.Message}\n{e.StackTrace}");
+                EditorUtility.DisplayDialog("错误", $"处理失败:\n{e.Message}", "确定");
+            }
+        }
+
+        private void ProcessWorksheet(ExcelWorksheet sheet)
+        {
+            string tableName = sheet.Name.Trim();
+            Debug.Log($"[处理] 表：{tableName}");
+
+            // 1. 解析表头
+            List<FieldDefinition> fields = ParseSheetHeader(sheet);
+            if (fields.Count == 0)
+            {
+                Debug.LogWarning($"[跳过] 表 '{tableName}' 没有有效字段");
+                return;
+            }
+
+            // 2. 生成 C# 类
+            GenerateCSharpClass(tableName, fields);
+
+            // 3. 检查类是否已编译
+            Type rowType = Type.GetType($"{classNamespace}.{tableName}Row");
+            if (rowType == null)
+            {
+                Debug.LogWarning($"[等待] 类 '{tableName}Row' 尚未编译。请等待 Unity 编译完成后再次运行工具导出数据。");
+                return;
+            }
+
+            // 4. 解析数据行
+            List<object> dataList = ParseDataRows(sheet, fields, rowType);
+
+            // 5. 导出文件
+            string fileNameBase = $"{outputFolder}/{tableName}";
+
+            if (useTxt)
+            {
+                string json = JsonConvert.SerializeObject(dataList, Formatting.Indented, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+                File.WriteAllText($"{fileNameBase}.txt", json, Encoding.UTF8);
+                Debug.Log($"[✓] 生成 TXT: {tableName}.txt ({dataList.Count} 行)");
+            }
+
+            if (useBinary)
+            {
+                byte[] bytes = SerializeToBinary(dataList, fields);
+                
+                if (compressBinary)
+                {
+                    bytes = Compress(bytes);
+                    File.WriteAllBytes($"{fileNameBase}.dat", bytes);
+                    Debug.Log($"[✓] 生成 Binary(压缩): {tableName}.dat ({bytes.Length} bytes)");
+                }
+                else
+                {
+                    File.WriteAllBytes($"{fileNameBase}.dat", bytes);
+                    Debug.Log($"[✓] 生成 Binary: {tableName}.dat ({bytes.Length} bytes)");
+                }
+            }
+        }
+
+        private List<FieldDefinition> ParseSheetHeader(ExcelWorksheet sheet)
+        {
+            List<FieldDefinition> fields = new List<FieldDefinition>();
+            int colCount = sheet.Dimension.End.Column;
+
+            for (int col = 1; col <= colCount; col++)
+            {
+                string name = sheet.Cells[1, col]?.Text?.Trim();
+                string typeStr = sheet.Cells[2, col]?.Text?.Trim();
+                string comment = sheet.Cells[3, col]?.Text?.Trim();
+
+                if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(typeStr))
+                    continue;
+
+                try
+                {
+                    Type systemType = ParseTypeString(typeStr);
+                    fields.Add(new FieldDefinition
+                    {
+                        Name = name,
+                        RawType = typeStr,
+                        SystemType = systemType,
+                        Comment = comment
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[类型错误] 字段 '{name}' 类型 '{typeStr}': {ex.Message}");
+                }
+            }
+
+            return fields;
+        }
+
+        private Type ParseTypeString(string typeStr)
+        {
+            typeStr = typeStr.Trim();
+
+            // 数组类型: int[]
+            if (typeStr.EndsWith("[]"))
+            {
+                string inner = typeStr.Substring(0, typeStr.Length - 2);
+                Type innerType = GetSimpleType(inner);
+                return innerType.MakeArrayType();
+            }
+
+            // List<T>
+            if (typeStr.StartsWith("List<") && typeStr.EndsWith(">"))
+            {
+                string inner = typeStr.Substring(5, typeStr.Length - 6);
+                Type innerType = GetSimpleType(inner);
+                return typeof(List<>).MakeGenericType(innerType);
+            }
+
+            // Dictionary<K,V>
+            if (typeStr.StartsWith("Dictionary<") && typeStr.EndsWith(">"))
+            {
+                string inner = typeStr.Substring(11, typeStr.Length - 12);
+                string[] parts = inner.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length != 2)
+                    throw new Exception($"Dictionary 格式错误：{typeStr}");
+                
+                Type keyType = GetSimpleType(parts[0].Trim());
+                Type valType = GetSimpleType(parts[1].Trim());
+                return typeof(Dictionary<,>).MakeGenericType(keyType, valType);
+            }
+
+            // Array<T>
+            if (typeStr.StartsWith("Array<") && typeStr.EndsWith(">"))
+            {
+                string inner = typeStr.Substring(6, typeStr.Length - 7);
+                Type innerType = GetSimpleType(inner);
+                return typeof(List<>).MakeGenericType(innerType); // Array 用 List 存储
+            }
+
+            return GetSimpleType(typeStr);
+        }
+
+        private Type GetSimpleType(string name)
+        {
+            string lowerName = name.ToLower().Trim();
+            
+            switch (lowerName)
+            {
+                case "int":
+                case "integer":
+                    return typeof(int);
+                case "long":
+                case "int64":
+                    return typeof(long);
+                case "float":
+                case "single":
+                    return typeof(float);
+                case "double":
+                    return typeof(double);
+                case "bool":
+                case "boolean":
+                    return typeof(bool);
+                case "string":
+                case "str":
+                case "text":
+                    return typeof(string);
+                case "byte":
+                    return typeof(byte);
+                case "short":
+                case "int16":
+                    return typeof(short);
+                case "uint":
+                case "uint32":
+                    return typeof(uint);
+                case "ulong":
+                case "uint64":
+                    return typeof(ulong);
+                case "vector2":
+                case "vec2":
+                    return typeof(Vector2);
+                case "vector3":
+                case "vec3":
+                    return typeof(Vector3);
+                case "vector4":
+                case "vec4":
+                    return typeof(Vector4);
+                case "color":
+                    return typeof(Color);
+                case "color32":
+                    return typeof(Color32);
+                case "quaternion":
+                case "quat":
+                    return typeof(Quaternion);
+                case "rect":
+                    return typeof(Rect);
+                case "bounds":
+                    return typeof(Bounds);
+                case "datetime":
+                case "date":
+                    return typeof(DateTime);
+                case "enum":
+                    return typeof(int); // 枚举用 int 存储
+                default:
+                    // 尝试查找用户自定义类型
+                    var t = Type.GetType($"{classNamespace}.{name}");
+                    if (t != null) return t;
+                    
+                    t = Type.GetType($"UnityEngine.{name}");
+                    if (t != null) return t;
+                    
+                    t = Type.GetType($"System.{name}");
+                    if (t != null) return t;
+                    
+                    throw new Exception($"未知类型：{name}");
+            }
+        }
+
+        private void GenerateCSharpClass(string tableName, List<FieldDefinition> fields)
+        {
+            StringBuilder sb = new StringBuilder();
+            
+            // 文件头
+            sb.AppendLine("// ============================================================");
+            sb.AppendLine($"// 自动生成的数据表类 - {tableName}");
+            sb.AppendLine($"// 生成时间：{DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            sb.AppendLine("// 请勿手动修改，修改会被覆盖");
+            sb.AppendLine("// ============================================================");
+            sb.AppendLine();
+            sb.AppendLine("using System;");
+            sb.AppendLine("using System.Collections.Generic;");
+            sb.AppendLine("using UnityEngine;");
+            sb.AppendLine($"namespace {classNamespace}");
+            sb.AppendLine("{");
+            
+            // 数据行类
+            sb.AppendLine($"    /// <summary>");
+            sb.AppendLine($"    /// {tableName} 数据行");
+            sb.AppendLine($"    /// </summary>");
+            sb.AppendLine($"    [Serializable]");
+            sb.AppendLine($"    public class {tableName}Row");
+            sb.AppendLine("    {");
+
+            foreach (var field in fields)
+            {
+                string typeCode = GetCSharpTypeName(field.SystemType);
+                
+                if (!string.IsNullOrEmpty(field.Comment))
+                {
+                    sb.AppendLine($"        /// <summary>");
+                    sb.AppendLine($"        /// {field.Comment}");
+                    sb.AppendLine($"        /// </summary>");
+                }
+                sb.AppendLine($"        public {typeCode} {field.Name};");
+            }
+
+            sb.AppendLine("    }");
+            sb.AppendLine();
+            
+            // 数据表容器类
+            sb.AppendLine($"    /// <summary>");
+            sb.AppendLine($"    /// {tableName} 数据表容器");
+            sb.AppendLine($"    /// </summary>");
+            sb.AppendLine($"    public class {tableName}Table : DataTableBase<{tableName}Row>");
+            sb.AppendLine("    {");
+            sb.AppendLine($"        private static {tableName}Table _instance;");
+            sb.AppendLine($"        public static {tableName}Table Instance");
+            sb.AppendLine("        {");
+            sb.AppendLine("            get");
+            sb.AppendLine("            {");
+            sb.AppendLine($"                if (_instance == null) _instance = new {tableName}Table();");
+            sb.AppendLine("                return _instance;");
+            sb.AppendLine("            }");
+            sb.AppendLine("        }");
+            sb.AppendLine();
+            sb.AppendLine($"        public void Load(bool useBinary = false) => LoadTable(\"{tableName}\", useBinary);");
+            sb.AppendLine("    }");
+            
+            sb.AppendLine("}");
+
+            string filePath = $"{classOutputFolder}/{tableName}Row.cs";
+            
+            // 只有内容变化时才写入
+            if (File.Exists(filePath))
+            {
+                string existing = File.ReadAllText(filePath);
+                // 忽略时间戳比较
+                if (StripComments(existing) == StripComments(sb.ToString()))
+                {
+                    return;
+                }
+            }
+
+            File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
+            Debug.Log($"[代码] 生成：{tableName}Row.cs");
+        }
+
+        private string StripComments(string code)
+        {
+            // 简单移除注释用于比较
+            return System.Text.RegularExpressions.Regex.Replace(code, @"//.*", "");
+        }
+
+        private string GetCSharpTypeName(Type t)
+        {
+            if (t == null) return "object";
+            
+            if (t.IsArray)
+                return $"{GetCSharpTypeName(t.GetElementType())}[]";
+            
+            if (t.IsGenericType)
+            {
+                var genericDef = t.GetGenericTypeDefinition();
+                
+                if (genericDef == typeof(List<>))
+                    return $"List<{GetCSharpTypeName(t.GetGenericArguments()[0])}>";
+                
+                if (genericDef == typeof(Dictionary<,>))
+                {
+                    var args = t.GetGenericArguments();
+                    return $"Dictionary<{GetCSharpTypeName(args[0])}, {GetCSharpTypeName(args[1])}>";
+                }
+            }
+            
+            string name = t.Name;
+            return name.Replace("Single", "float")
+                      .Replace("Double", "double")
+                      .Replace("Int32", "int")
+                      .Replace("Int64", "long")
+                      .Replace("Boolean", "bool")
+                      .Replace("String", "string");
+        }
+
+        private List<object> ParseDataRows(ExcelWorksheet sheet, List<FieldDefinition> fields, Type rowType)
+        {
+            List<object> resultList = new List<object>();
+            int rowCount = sheet.Dimension.End.Row;
+            int emptyRowCount = 0;
+
+            // 从第 4 行开始读取数据
+            for (int row = 4; row <= rowCount; row++)
+            {
+                // 检查是否为空行
+                bool isEmpty = true;
+                for (int col = 1; col <= fields.Count && col <= sheet.Dimension.End.Column; col++)
+                {
+                    var val = sheet.Cells[row, col]?.Value;
+                    if (val != null && !string.IsNullOrEmpty(val.ToString().Trim()))
+                    {
+                        isEmpty = false;
+                        break;
+                    }
+                }
+                
+                if (isEmpty)
+                {
+                    emptyRowCount++;
+                    continue;
+                }
+
+                object rowObj = Activator.CreateInstance(rowType);
+
+                for (int i = 0; i < fields.Count; i++)
+                {
+                    int colIndex = i + 1;
+                    
+                    if (colIndex > sheet.Dimension.End.Column)
+                    {
+                        // 列不足，使用默认值
+                        var field = rowType.GetField(fields[i].Name);
+                        field?.SetValue(rowObj, GetDefaultValue(fields[i].SystemType));
+                        continue;
+                    }
+                    
+                    var cellValue = sheet.Cells[row, colIndex]?.Value;
+                    string strValue = cellValue?.ToString() ?? "";
+                    
+                    FieldDefinition fieldDef = fields[i];
+                    
+                    try
+                    {
+                        object parsedValue = ParseCellValue(strValue, fieldDef.SystemType);
+                        var field = rowType.GetField(fieldDef.Name);
+                        field?.SetValue(rowObj, parsedValue);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"[数据错误] 表:{sheet.Name} 行:{row} 字段:{fields[i].Name} 值:{strValue} - {ex.Message}");
+                        var field = rowType.GetField(fields[i].Name);
+                        field?.SetValue(rowObj, GetDefaultValue(fields[i].SystemType));
+                    }
+                }
+                
+                resultList.Add(rowObj);
+            }
+
+            if (emptyRowCount > 0)
+                Debug.Log($"[信息] 表 '{sheet.Name}' 跳过 {emptyRowCount} 个空行");
+
+            return resultList;
+        }
+
+        private object ParseCellValue(string value, Type targetType)
+        {
+            if (string.IsNullOrEmpty(value) || value.Trim() == "")
+                return GetDefaultValue(targetType);
+
+            value = value.Trim();
+
+            try
+            {
+                // 基本数值类型
+                if (targetType == typeof(int)) return int.Parse(value);
+                if (targetType == typeof(long)) return long.Parse(value);
+                if (targetType == typeof(float)) return float.Parse(value);
+                if (targetType == typeof(double)) return double.Parse(value);
+                if (targetType == typeof(bool)) 
+                    return value.ToLower() == "true" || value == "1" || value.ToLower() == "yes";
+                if (targetType == typeof(string)) return value;
+                if (targetType == typeof(byte)) return byte.Parse(value);
+                if (targetType == typeof(short)) return short.Parse(value);
+                if (targetType == typeof(uint)) return uint.Parse(value);
+                if (targetType == typeof(ulong)) return ulong.Parse(value);
+
+                // Unity 内置类型
+                if (targetType == typeof(Vector2)) return ParseVector2(value);
+                if (targetType == typeof(Vector3)) return ParseVector3(value);
+                if (targetType == typeof(Vector4)) return ParseVector4(value);
+                if (targetType == typeof(Color)) return ParseColor(value);
+                if (targetType == typeof(Color32)) return ParseColor32(value);
+                if (targetType == typeof(Quaternion)) return ParseQuaternion(value);
+                if (targetType == typeof(Rect)) return ParseRect(value);
+                if (targetType == typeof(Bounds)) return ParseBounds(value);
+                if (targetType == typeof(DateTime)) return ParseDateTime(value);
+
+                // List<T>
+                if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    Type innerType = targetType.GetGenericArguments()[0];
+                    return ParseCollection(value, innerType, targetType, true);
+                }
+
+                // Array
+                if (targetType.IsArray)
+                {
+                    Type innerType = targetType.GetElementType();
+                    return ParseCollection(value, innerType, targetType, false);
+                }
+
+                // Dictionary<K,V>
+                if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+                {
+                    return ParseDictionary(value, targetType);
+                }
+
+                // 自定义类 (JSON)
+                if (!targetType.IsPrimitive && targetType != typeof(string) && !targetType.IsEnum)
+                {
+                    return JsonConvert.DeserializeObject(value, targetType);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"解析失败 [{targetType.Name}]: {ex.Message}");
+            }
+
+            return GetDefaultValue(targetType);
+        }
+
+        private Vector2 ParseVector2(string value)
+        {
+            return (Vector2)ParseVector(value, 2);
+        }
+
+        private Vector3 ParseVector3(string value)
+        {
+            return (Vector3)ParseVector(value, 3);
+        }
+
+        private Vector4 ParseVector4(string value)
+        {
+            return (Vector4)ParseVector(value, 4);
+        }
+
+        private object ParseVector(string value, int dimensions)
+        {
+            // 支持格式：(1,2,3) 或 {1,2,3} 或 1,2,3 或 JSON
+            value = value.Replace("(", "").Replace(")", "").Replace("{", "").Replace("}", "");
+            string[] parts = value.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+            
+            float[] nums = new float[dimensions];
+            for (int i = 0; i < dimensions && i < parts.Length; i++)
+            {
+                nums[i] = float.Parse(parts[i].Trim());
+            }
+
+            if (dimensions == 2) return new Vector2(nums[0], nums[1]);
+            if (dimensions == 3) return new Vector3(nums[0], nums[1], nums[2]);
+            if (dimensions == 4) return new Vector4(nums[0], nums[1], nums[2], nums[3]);
+            
+            return Vector3.zero;
+        }
+
+        private Color ParseColor(string value)
+        {
+            value = value.Replace("(", "").Replace(")", "").Replace("{", "").Replace("}", "");
+            string[] parts = value.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+            
+            if (parts.Length >= 3)
+            {
+                float r = float.Parse(parts[0].Trim());
+                float g = float.Parse(parts[1].Trim());
+                float b = float.Parse(parts[2].Trim());
+                float a = parts.Length >= 4 ? float.Parse(parts[3].Trim()) : 1f;
+                return new Color(r, g, b, a);
+            }
+            
+            return Color.white;
+        }
+
+        private Color32 ParseColor32(string value)
+        {
+            value = value.Replace("(", "").Replace(")", "").Replace("{", "").Replace("}", "");
+            string[] parts = value.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+            
+            if (parts.Length >= 3)
+            {
+                byte r = byte.Parse(parts[0].Trim());
+                byte g = byte.Parse(parts[1].Trim());
+                byte b = byte.Parse(parts[2].Trim());
+                byte a = parts.Length >= 4 ? byte.Parse(parts[3].Trim()) : (byte)255;
+                return new Color32(r, g, b, a);
+            }
+            
+            return Color.white;
+        }
+
+        private Quaternion ParseQuaternion(string value)
+        {
+            value = value.Replace("(", "").Replace(")", "").Replace("{", "").Replace("}", "");
+            string[] parts = value.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+            
+            if (parts.Length >= 4)
+            {
+                return new Quaternion(
+                    float.Parse(parts[0].Trim()),
+                    float.Parse(parts[1].Trim()),
+                    float.Parse(parts[2].Trim()),
+                    float.Parse(parts[3].Trim())
+                );
+            }
+            
+            return Quaternion.identity;
+        }
+
+        private Rect ParseRect(string value)
+        {
+            value = value.Replace("(", "").Replace(")", "").Replace("{", "").Replace("}", "");
+            string[] parts = value.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+            
+            if (parts.Length >= 4)
+            {
+                return new Rect(
+                    float.Parse(parts[0].Trim()),
+                    float.Parse(parts[1].Trim()),
+                    float.Parse(parts[2].Trim()),
+                    float.Parse(parts[3].Trim())
+                );
+            }
+            
+            return Rect.zero;
+        }
+
+        private Bounds ParseBounds(string value)
+        {
+            // 简化处理，建议使用 JSON 格式
+            if (value.Trim().StartsWith("{"))
+            {
+                return JsonConvert.DeserializeObject<Bounds>(value);
+            }
+            return new Bounds(Vector3.zero, Vector3.one);
+        }
+
+        private DateTime ParseDateTime(string value)
+        {
+            if (DateTime.TryParse(value, out DateTime result))
+                return result;
+            return DateTime.MinValue;
+        }
+
+        private object ParseCollection(string value, Type innerType, Type collectionType, bool isList)
+        {
+            // JSON 格式：[1,2,3]
+            if (value.Trim().StartsWith("["))
+            {
+                return JsonConvert.DeserializeObject(value, collectionType);
+            }
+
+            // 分隔符格式：1|2|3 或 1,2,3
+            char separator = value.Contains("|") ? '|' : ',';
+            string[] parts = value.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+
+            if (isList)
+            {
+                IList list = (IList)Activator.CreateInstance(collectionType);
+                foreach (var part in parts)
+                {
+                    list.Add(ParseCellValue(part.Trim(), innerType));
+                }
+                return list;
+            }
+            else
+            {
+                Array arr = Array.CreateInstance(innerType, parts.Length);
+                for (int i = 0; i < parts.Length; i++)
+                {
+                    arr.SetValue(ParseCellValue(parts[i].Trim(), innerType), i);
+                }
+                return arr;
+            }
+        }
+
+        private object ParseDictionary(string value, Type dictType)
+        {
+            // 强制 JSON 格式：{"key": value}
+            if (value.Trim().StartsWith("{"))
+            {
+                return JsonConvert.DeserializeObject(value, dictType);
+            }
+
+            throw new Exception("Dictionary 类型必须使用 JSON 格式，如：{\"key\": 1}");
+        }
+
+        private object GetDefaultValue(Type t)
+        {
+            if (t.IsValueType)
+                return Activator.CreateInstance(t);
+            return null;
+        }
+
+        private byte[] SerializeToBinary(List<object> dataList, List<FieldDefinition> fields)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            using (BinaryWriter bw = new BinaryWriter(ms))
+            {
+                // 文件头：魔数 + 版本 + 行数
+                bw.Write((byte)'D');
+                bw.Write((byte)'T');
+                bw.Write((byte)'B'); // DataTable Binary
+                bw.Write((byte)1);   // 版本号
+                
+                bw.Write(dataList.Count);
+
+                foreach (var obj in dataList)
+                {
+                    foreach (var field in fields)
+                    {
+                        WriteFieldToBinary(bw, field.Name, field.SystemType, obj);
+                    }
+                }
+
+                return ms.ToArray();
+            }
+        }
+
+        private void WriteFieldToBinary(BinaryWriter bw, string fieldName, Type fieldType, object obj)
+        {
+            FieldInfo field = obj.GetType().GetField(fieldName);
+            if (field == null)
+            {
+                WriteDefaultValue(bw, fieldType);
+                return;
+            }
+
+            object value = field.GetValue(obj);
+
+            if (value == null)
+            {
+                WriteDefaultValue(bw, fieldType);
+                return;
+            }
+
+            // 基础类型
+            if (fieldType == typeof(int)) bw.Write((int)value);
+            else if (fieldType == typeof(long)) bw.Write((long)value);
+            else if (fieldType == typeof(float)) bw.Write((float)value);
+            else if (fieldType == typeof(double)) bw.Write((double)value);
+            else if (fieldType == typeof(bool)) bw.Write((bool)value);
+            else if (fieldType == typeof(string)) bw.Write((string)value ?? "");
+            else if (fieldType == typeof(byte)) bw.Write((byte)value);
+            else if (fieldType == typeof(short)) bw.Write((short)value);
+            else if (fieldType == typeof(uint)) bw.Write((uint)value);
+            else if (fieldType == typeof(ulong)) bw.Write((ulong)value);
+            
+            // Unity 类型
+            else if (fieldType == typeof(Vector2))
+            {
+                var v = (Vector2)value;
+                bw.Write(v.x);
+                bw.Write(v.y);
+            }
+            else if (fieldType == typeof(Vector3))
+            {
+                var v = (Vector3)value;
+                bw.Write(v.x);
+                bw.Write(v.y);
+                bw.Write(v.z);
+            }
+            else if (fieldType == typeof(Vector4))
+            {
+                var v = (Vector4)value;
+                bw.Write(v.x); bw.Write(v.y); bw.Write(v.z); bw.Write(v.w);
+            }
+            else if (fieldType == typeof(Color))
+            {
+                var c = (Color)value;
+                bw.Write(c.r); bw.Write(c.g); bw.Write(c.b); bw.Write(c.a);
+            }
+            else if (fieldType == typeof(Color32))
+            {
+                var c = (Color32)value;
+                bw.Write(c.r); bw.Write(c.g); bw.Write(c.b); bw.Write(c.a);
+            }
+            else if (fieldType == typeof(Quaternion))
+            {
+                var q = (Quaternion)value;
+                bw.Write(q.x); bw.Write(q.y); bw.Write(q.z); bw.Write(q.w);
+            }
+            else if (fieldType == typeof(Rect))
+            {
+                var r = (Rect)value;
+                bw.Write(r.x); bw.Write(r.y); bw.Write(r.width); bw.Write(r.height);
+            }
+            else if (fieldType == typeof(DateTime))
+            {
+                bw.Write(((DateTime)value).ToBinary());
+            }
+            
+            // 集合类型
+            else if (fieldType.IsArray)
+            {
+                Array arr = (Array)value;
+                bw.Write(arr.Length);
+                Type innerType = fieldType.GetElementType();
+                foreach (var item in arr)
+                {
+                    WriteSimpleValue(bw, item, innerType);
+                }
+            }
+            else if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                IList list = (IList)value;
+                bw.Write(list.Count);
+                Type innerType = fieldType.GetGenericArguments()[0];
+                foreach (var item in list)
+                {
+                    WriteSimpleValue(bw, item, innerType);
+                }
+            }
+            else if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+            {
+                IDictionary dict = (IDictionary)value;
+                bw.Write(dict.Count);
+                Type keyType = fieldType.GetGenericArguments()[0];
+                Type valType = fieldType.GetGenericArguments()[1];
+                
+                foreach (DictionaryEntry entry in dict)
+                {
+                    WriteSimpleValue(bw, entry.Key, keyType);
+                    WriteSimpleValue(bw, entry.Value, valType);
+                }
+            }
+            
+            // 自定义类：使用 JSON 作为兜底
+            else
+            {
+                string json = JsonConvert.SerializeObject(value);
+                bw.Write(json ?? "");
+            }
+        }
+
+        private void WriteSimpleValue(BinaryWriter bw, object value, Type type)
+        {
+            if (value == null)
+            {
+                WriteDefaultValue(bw, type);
+                return;
+            }
+
+            if (type == typeof(int)) bw.Write((int)value);
+            else if (type == typeof(long)) bw.Write((long)value);
+            else if (type == typeof(float)) bw.Write((float)value);
+            else if (type == typeof(double)) bw.Write((double)value);
+            else if (type == typeof(bool)) bw.Write((bool)value);
+            else if (type == typeof(string)) bw.Write((string)value ?? "");
+            else if (type == typeof(byte)) bw.Write((byte)value);
+            else if (type == typeof(short)) bw.Write((short)value);
+            else bw.Write(value.ToString() ?? "");
+        }
+
+        private void WriteDefaultValue(BinaryWriter bw, Type t)
+        {
+            if (t == typeof(int)) bw.Write(0);
+            else if (t == typeof(long)) bw.Write(0L);
+            else if (t == typeof(float)) bw.Write(0f);
+            else if (t == typeof(double)) bw.Write(0.0);
+            else if (t == typeof(bool)) bw.Write(false);
+            else if (t == typeof(string)) bw.Write("");
+            else if (t == typeof(byte)) bw.Write((byte)0);
+            else if (t == typeof(short)) bw.Write((short)0);
+            else if (t == typeof(uint)) bw.Write(0u);
+            else if (t == typeof(ulong)) bw.Write(0ul);
+            else if (t == typeof(Vector2)) { bw.Write(0f); bw.Write(0f); }
+            else if (t == typeof(Vector3)) { bw.Write(0f); bw.Write(0f); bw.Write(0f); }
+            else if (t == typeof(Color)) { bw.Write(0f); bw.Write(0f); bw.Write(0f); bw.Write(1f); }
+            else bw.Write(0);
+        }
+
+        private byte[] Compress(byte[] data)
+        {
+            using (var output = new MemoryStream())
+            {
+                using (var deflate = new System.IO.Compression.DeflateStream(output, System.IO.Compression.CompressionMode.Compress))
+                {
+                    deflate.Write(data, 0, data.Length);
+                }
+                return output.ToArray();
+            }
+        }
+
+        private byte[] Decompress(byte[] data)
+        {
+            using (var input = new MemoryStream(data))
+            using (var output = new MemoryStream())
+            {
+                using (var deflate = new System.IO.Compression.DeflateStream(input, System.IO.Compression.CompressionMode.Decompress))
+                {
+                    deflate.CopyTo(output);
+                }
+                return output.ToArray();
+            }
+        }
+    }
+
+    public class FieldDefinition
+    {
+        public string Name;
+        public string RawType;
+        public Type SystemType;
+        public string Comment;
+    }
+}

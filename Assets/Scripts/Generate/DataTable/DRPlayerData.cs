@@ -1,13 +1,14 @@
-// 自动生成代码
-// Generate Time 3/14/2026 8:39:26 AM
-// 无需手动修改
+// ============================================================
+// 自动生成的数据表类 - PlayerData
+// 生成时间：2026-03-14 10:59:52
+// 请勿手动修改，修改会被覆盖
+// ============================================================
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-
-namespace DataCenter
+namespace Top
 {
-	/// <summary>单行数据 PlayerData</summary>
 	public class DRPlayerData
 	{
 		/// <summary>实例名称</summary>

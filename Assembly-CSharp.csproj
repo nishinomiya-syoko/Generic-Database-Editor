@@ -69,6 +69,7 @@
     <Compile Include="Assets/Scripts/Framework/System/ComputeSystem.cs" />
     <Compile Include="Assets/Scripts/Generate/DataTable/DRPlayerData.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingDatabase.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/CodeGenerater.Parse.cs" />
     <Compile Include="Assets/Scripts/Framework/Preformance/MobileOptimise.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Building.cs" />
     <Compile Include="Assets/Scripts/Framework/SO/SO2Excel/Moon.cs" />
@@ -94,12 +95,12 @@
     <Compile Include="Assets/Scripts/Framework/Level/WaveManager.cs" />
     <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SORuntimeManager.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitAI.Search.cs" />
+    <Compile Include="Assets/Scripts/Framework/Json/GeneralEditorNewtonsoft.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingEnum.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/ISkillModifier.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/BinaryDataMgr.cs" />
     <Compile Include="Assets/Scripts/EditorWindow/SkillEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/ConditionData.cs" />
-    <Compile Include="Assets/Scripts/Generate/DataTable/Container/PlayerData.cs" />
     <Compile Include="Assets/Scripts/Framework/Debug/DebugInfo.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Block.cs" />
     <Compile Include="Assets/Scripts/Core/Camera/CamerHandlerEditor.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerData.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityBase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/BstarPathfinder.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/Qwen/DataTableManager.cs" />
     <Compile Include="Assets/Scripts/Framework/UI/UIManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillManager.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Decoration.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="Assets/Scripts/Core/Building/BuildingManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Projectile.cs" />
     <Compile Include="Assets/Scripts/Framework/UI/UIPanel.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/Qwen/ExcelDataTool.cs" />
     <Compile Include="Assets/Scripts/Framework/Pool/IReference.cs" />
     <Compile Include="Assets/Scripts/Framework/Extension/Constant.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/LevelDatabase.cs" />
@@ -170,6 +173,7 @@
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerData.Archive.gen.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/BFSPathfinder.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/RewardDataSO.cs" />
+    <Compile Include="Assets/Scripts/Generate/DataTable/Container/ContainerPlayerData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/SOTestDataGenerator.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BinaryHeapPriorityQueue.cs" />

@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace DataCenter
 {
-    public class ExcelTool
+    public partial class ExcelTool
     {
         /// <summary>
         /// excel文件存放路径
@@ -32,7 +32,9 @@ namespace DataCenter
         /// </summary>
         //public static string DATA_BINARY_PATH = Application.streamingAssetsPath + "/Bianry/";
 
+
         public static string CUSTOM_NAME_END = ".pve";
+        public static string CLASS_NAMESPACE = "Top";
         public static string ROW_NAME_HEAD = "DR";
         public static string CONTAINER_NAME_HEAD = "Container";
 
@@ -45,9 +47,10 @@ namespace DataCenter
         private static void GenerateExcelInfo()
         {
             //加载指定路径中的所有Excel文件 用于生成对应的3个文件
-            DirectoryInfo dInfo = Directory.CreateDirectory(EXCEL_PATH);
+            // if (!Directory.Exists(EXCEL_PATH))
+            //     Directory.CreateDirectory(EXCEL_PATH);
             //得到指定路径中的所有文件信息 相当于就是得到所有的Exce1表
-            FileInfo[] files = dInfo.GetFiles();
+            FileInfo[] files = Directory.CreateDirectory(EXCEL_PATH).GetFiles();
             //数据容器
             DataTableCollection tableCollection;
             for (int i = 0; i < files.Length; i++)
@@ -71,7 +74,7 @@ namespace DataCenter
                     //生成数据结构类
                     GenerateDataClass(table);
                     //生成容器类
-                    GenerateDataCONTAINER_NAME_HEAD(table);
+                    GenerateDataContainer(table);
                     //生成2进制数据
                     ExchangeExcelToBinary(table);
                 }
@@ -98,19 +101,22 @@ namespace DataCenter
             {
                 File.Delete(file);
             }
-
-            //如果我们要生成对应的数据结构类脚本 其实就是通过代码进行字符串拼接 然后存进文件就行了
-            //ROW_NAME_HEAD = DataRow
-            string str = "// 自动生成代码\n";
-            str += "// Generate Time " + DateTime.Now.ToString() + "\n";
-            str += "// 无需手动修改\n\n";
-            // str += "using System;\n";
-            str += "using System.Collections.Generic;\n";
-            str += "using UnityEngine;\n\n";
-
-            str += "namespace DataCenter\n{\n";
-            str += "\t/// <summary>单行数据 " + table.TableName + "</summary>\n";
-            str += "\tpublic class ROW_NAME_HEAD" + table.TableName + "\n\t{\n";
+            string fileName = ROW_NAME_HEAD + table.TableName;
+             // 文件头
+             StringBuilder sb = new StringBuilder();
+            sb.AppendLine("// ============================================================");
+            sb.AppendLine($"// 自动生成的数据表类 - {table.TableName}");
+            sb.AppendLine($"// 生成时间：{DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            sb.AppendLine("// 请勿手动修改，修改会被覆盖");
+            sb.AppendLine("// ============================================================");
+            sb.AppendLine();
+            sb.AppendLine("using System;");
+            sb.AppendLine("using System.Collections.Generic;");
+            sb.AppendLine("using UnityEngine;");
+            sb.AppendLine($"namespace {CLASS_NAMESPACE}");
+            sb.AppendLine("{");
+            sb.AppendLine($"\tpublic class {fileName}");
+            sb.AppendLine("\t{");
 
             //变量进行字符串拼接
             for (int i = 0; i < table.Columns.Count; i++)
@@ -118,18 +124,18 @@ namespace DataCenter
                 if (rowType[i].ToString() == string.Empty || rowName[i].ToString() == string.Empty)
                     continue;
 
-                str += "\t\t/// <summary>" + rowComment[i].ToString() + "</summary>\n";
+                // str += "\t\t/// <summary>" + rowComment[i].ToString() + "</summary>\n";
+                sb.AppendLine($"\t\t/// <summary>{rowComment[i].ToString()}</summary>");
+                sb.AppendLine($"\t\tpublic {rowType[i].ToString()} {rowName[i].ToString()};");
+                sb.AppendLine();
                 //拼接字段类型和变量名 比如 int id;
-                str += "\t\tpublic " + rowType[i].ToString() + " " + rowName[i].ToString() + ";\n";
-                str += "\n";
-            }
-
-            str += "\t}\n";
-            str += "}\n";
+            }    
+            sb.AppendLine("\t}");
+            sb.AppendLine("}");
+        
 
             //把拼接好的字符串存进占地文件中
-            File.WriteAllText(DATA_CLASS_PATH + "ROW_NAME_HEAD" + table.TableName + ".cs", str);
-
+            File.WriteAllText(DATA_CLASS_PATH + fileName + ".cs", sb.ToString());
             //刷新Project窗口
             AssetDatabase.Refresh();
         }
@@ -138,9 +144,9 @@ namespace DataCenter
         /// 生成Excel表对应的数据容器类
         /// </summary>
         /// <param name="table"></param>
-        private static void GenerateDataCONTAINER_NAME_HEAD(System.Data.DataTable table)
+        private static void GenerateDataContainer(System.Data.DataTable table)
         {
-            string fullName ="ROW_NAME_HEAD" + table.TableName;
+            string fullName = CONTAINER_NAME_HEAD + table.TableName;
             //得到主键索引
             int keyIndex = GetKeyIndex(table);
             //得到字段类型行
@@ -155,24 +161,29 @@ namespace DataCenter
                 File.Delete(file);
             }
 
-            string str = "// 自动生成代码\n";
-            str += "// Generate Time " + DateTime.Now.ToString() + "\n";
-            str += "// 无需手动修改\n\n";
-            str += "using System.Collections.Generic;\n";
-            str += "using UnityEngine;\n\n";
+            // string str = string.Empty;
+            StringBuilder sb = new StringBuilder();
+              // 文件头
+            sb.AppendLine("// ============================================================");
+            sb.AppendLine($"// 自动生成的数据表类 - {table.TableName}");
+            sb.AppendLine($"// 生成时间：{DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            sb.AppendLine("// 请勿手动修改，修改会被覆盖");
+            sb.AppendLine("// ============================================================");
+            sb.AppendLine();
+            sb.AppendLine("using System;");
+            sb.AppendLine("using System.Collections.Generic;");
+            sb.AppendLine("using UnityEngine;");
+            sb.AppendLine($"namespace {CLASS_NAMESPACE}");
+            sb.AppendLine("{");
+            sb.AppendLine("\t\t/// <summary>数据表容器类 " + table.TableName + "</summary>");
+            sb.AppendLine($"\t\tpublic class {CONTAINER_NAME_HEAD}" + table.TableName);
+            sb.AppendLine("\t\t{");
+            sb.AppendLine($"\t\t\tpublic Dictionary<{rowType[keyIndex].ToString()}, {fullName}> dataDic = new Dictionary<{rowType[keyIndex].ToString()}, {fullName}>();");
+            sb.AppendLine("\t\t}");
+            sb.AppendLine("}");
+            
 
-            str += "namespace DataCenter\n{\n";
-            str += "\t/// <summary>数据表 " + table.TableName + "</summary>\n";
-
-            //str += "public class " + table.TableName + "CONTAINER_NAME_HEAD" + "\n{\n";
-            str += "\tpublic class CONTAINER_NAME_HEAD" + table.TableName + "\n\t{\n";
-
-            str += "\t\tpublic Dictionary<" + rowType[keyIndex].ToString() + ", " + fullName + ">";
-            str += "dataDic = new Dictionary<" + rowType[keyIndex].ToString() + ", " + fullName + ">();\n";
-
-            str += "\t}\n}\n";
-
-            File.WriteAllText(DATA_CONTAINER_PATH + table.TableName + ".cs", str);
+            File.WriteAllText(DATA_CONTAINER_PATH + fullName + ".cs", sb.ToString());
 
             //刷新Project窗口
             AssetDatabase.Refresh();
@@ -267,6 +278,7 @@ namespace DataCenter
 
             AssetDatabase.Refresh();
         }
+        
 
         /// <summary>
         /// 获取变量名所在行
