@@ -64,8 +64,28 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/2022.3.61f1c1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Scripts/Editor/PivotEditor.cs" />
-    <Compile Include="Assets/Scripts/Editor/AssetPreviewWindow.cs" />
+    <Compile Include="Assets/Editor/Json/GeneralEditorWindow.cs" />
+    <Compile Include="Assets/Editor/Json/ExcelDataUtility.cs" />
+    <Compile Include="Assets/Editor/UnityScriptableObjectEditor/CharacterSO.cs" />
+    <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SODatabase.cs" />
+    <Compile Include="Assets/Editor/Excel2Database/ExcelDataTool.cs" />
+    <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SOBulkEditor.cs" />
+    <Compile Include="Assets/Editor/Excel2Database/QwenExcel.cs" />
+    <Compile Include="Assets/Editor/SO2Excel/Moon.cs" />
+    <Compile Include="Assets/Editor/AssetPreviewWindow.cs" />
+    <Compile Include="Assets/Editor/Camera/CamerHandlerEditor.cs" />
+    <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SORuntimeManager.cs" />
+    <Compile Include="Assets/Editor/UnityScriptableObjectEditor/ItemSO.cs" />
+    <Compile Include="Assets/Editor/SO2Excel/SOtoExcel.cs" />
+    <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SkillSO.cs" />
+    <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SOExampleUsage.cs" />
+    <Compile Include="Assets/Editor/SO2Excel/ExcelableSO.cs" />
+    <Compile Include="Assets/Editor/DataContainer/DataContainerGenerator.cs" />
+    <Compile Include="Assets/Editor/UnityScriptableObjectEditor/QuestSO.cs" />
+    <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SOTestDataGenerator.cs" />
+    <Compile Include="Assets/Editor/PivotEditor.cs" />
+    <Compile Include="Assets/Editor/Asset/AssetLoader.cs" />
+    <Compile Include="Assets/Editor/SaveHelper/ArchiveCodeGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/NuGet/Editor/NuGetForUnity.PluginAPI.xml" />
