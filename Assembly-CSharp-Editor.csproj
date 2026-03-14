@@ -1125,6 +1125,10 @@
       <HintPath>Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.ResourceManager">
+      <HintPath>Library/ScriptAssemblies/Unity.ResourceManager.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
       <Private>False</Private>
@@ -1135,6 +1139,10 @@
     </Reference>
     <Reference Include="Unity.ShaderGraph.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline">
+      <HintPath>Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualStudio.Editor">
@@ -1217,6 +1225,10 @@
       <HintPath>Library/ScriptAssemblies/Unity.PlasticSCM.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Addressables.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.Addressables.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.State.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.State.Editor.dll</HintPath>
       <Private>False</Private>
@@ -1245,8 +1257,16 @@
       <HintPath>Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.RenderPipelines.HighDefinition.Runtime">
       <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.HighDefinition.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Addressables">
+      <HintPath>Library/ScriptAssemblies/Unity.Addressables.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipelines.HighDefinition.Editor">
@@ -1260,6 +1280,7 @@
     <ProjectReference Include="UniTask.Addressables.csproj" />
     <ProjectReference Include="UniTask.Linq.csproj" />
     <ProjectReference Include="Sirenix.OdinInspector.Modules.UnityMathematics.csproj" />
+    <ProjectReference Include="Sirenix.OdinInspector.Modules.Unity.Addressables.csproj" />
     <ProjectReference Include="UniTask.csproj" />
     <ProjectReference Include="UniTask.TextMeshPro.csproj" />
     <ProjectReference Include="UniTask.DOTween.csproj" />

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.Addressables", "UniTask.Addressables.csproj", "{895AD932-71C6-F735-4DC9-719F64B70181}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sirenix.OdinInspector.Modules.Unity.Addressables", "Sirenix.OdinInspector.Modules.Unity.Addressables.csproj", "{D89E8F49-5A70-843E-A700-41F073972631}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.TextMeshPro", "UniTask.TextMeshPro.csproj", "{207F41AE-75D8-8A37-D45E-5F1905C0721A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.DOTween", "UniTask.DOTween.csproj", "{A4276378-374E-E3DE-7EE4-B82E6F39ED43}"
@@ -47,6 +49,10 @@ Global
 		{895AD932-71C6-F735-4DC9-719F64B70181}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{895AD932-71C6-F735-4DC9-719F64B70181}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{895AD932-71C6-F735-4DC9-719F64B70181}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D89E8F49-5A70-843E-A700-41F073972631}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D89E8F49-5A70-843E-A700-41F073972631}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D89E8F49-5A70-843E-A700-41F073972631}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D89E8F49-5A70-843E-A700-41F073972631}.Release|Any CPU.Build.0 = Release|Any CPU
 		{207F41AE-75D8-8A37-D45E-5F1905C0721A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{207F41AE-75D8-8A37-D45E-5F1905C0721A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{207F41AE-75D8-8A37-D45E-5F1905C0721A}.Release|Any CPU.ActiveCfg = Release|Any CPU
