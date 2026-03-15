@@ -1,0 +1,42 @@
+{
+  "Id": "",
+  "skillName": "",
+  "description": "",
+  "icon": null,
+  "rarity": 0,
+  "maxLevel": 5,
+  "baseDamage": 0.0,
+  "damagePerLevel": 0.0,
+  "cooldown": 0.0,
+  "manaCost": 0.0,
+  "range": 0.0,
+  "triggerType": 0,
+  "effectType": 0,
+  "effects": [
+    {
+      "type": 0,
+      "value": 0.0,
+      "duration": 0.0,
+      "tickInterval": 0.0,
+      "maxStacks": 0,
+      "visualEffect": null,
+      "visualEffectPath": "",
+      "soundEffect": null,
+      "soundEffectPath": ""
+    }
+  ],
+  "evolutions": [
+    {
+      "requiredSkillId": "",
+      "requiredLevel": 0,
+      "evolvedSkill": null,
+      "evolvedSkillId": "",
+      "evolutionCondition": ""
+    }
+  ],
+  "tags": [
+    "ss",
+    "e",
+    "ii"
+  ]
+}

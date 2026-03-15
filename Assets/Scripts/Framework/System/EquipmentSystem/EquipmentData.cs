@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace Top
 {
     // 装备数据
-    [CreateAssetMenu(fileName = "EquipmentData", menuName = "Top/Equipment Data")]
-    public class EquipmentDataSO : ScriptableObject
+    [EditableData]
+    public class EquipmentData 
     {
         [Header("基本信息")]
         public string id;

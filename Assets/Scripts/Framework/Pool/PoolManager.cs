@@ -10,6 +10,7 @@ namespace Logic
     /// </summary>
     public class PoolManager : MonoBehaviour
     {
+        [EditableData]
         [Serializable]
         public class PoolConfig
         {
@@ -21,6 +22,7 @@ namespace Logic
 
             [Tooltip("要池化的预制件（需要挂有实现 IReference 的脚本，如 EntityBase 的子类）")]
             public GameObject prefab;
+            public string prefabPath;
 
             [Tooltip("初始预创建数量")]
             public int initialSize = 0;

@@ -45,21 +45,21 @@ public static class ExcelDataUtility
                 var ws = package.Workbook.Worksheets.Add(dataType.Name);
 
                 // ========== 1. 表头行：实例名 | 字段名1 | 字段名2 ... ==========
-                ws.Cells[1, 1].Value = "实例名";
+                ws.Cells[1, 1].Value = "#实例名";
                 for (int c = 0; c < fields.Count; c++)
                 {
                     ws.Cells[1, 2 + c].Value = fields[c].Name;
                 }
 
                 // ========== 2. 类型行 ==========
-                ws.Cells[2, 1].Value = "string";
+                ws.Cells[2, 1].Value = "#类型";
                 for (int c = 0; c < fields.Count; c++)
                 {
                     ws.Cells[2, 2 + c].Value = GetFriendlyTypeName(fields[c].FieldType);
                 }
 
                 // ========== 3. 注释行 ==========
-                ws.Cells[3, 1].Value = "实例名称";
+                ws.Cells[3, 1].Value = "#注释";
                 for (int c = 0; c < fields.Count; c++)
                 {
                     ws.Cells[3, 2 + c].Value = fields[c].GetCustomAttribute<HeaderAttribute>()?.header ?? "";
@@ -128,10 +128,20 @@ public static class ExcelDataUtility
                     if (!string.IsNullOrEmpty(name))
                         fieldNameToCol[name] = c;
                 }
-
-                if (!fieldNameToCol.ContainsKey("实例名"))
+                // 检查类型是否和 sheet 匹配
+                if(dataType.Name != ws.Name)
                 {
-                    Debug.LogError("Excel 第一行必须有「实例名」列");
+                    Debug.LogError($"Excel 表头名称与数据类型不一致\n Type: {dataType.Name} Excel: {ws.Name}");
+                }
+                // if (fieldNameToCol.Count != GetSerializableFields(dataType).Count)
+                // {
+                //     Debug.LogError("Excel 表头字段数量与数据类型不一致");
+                //     return false;
+                // }
+
+                if (!fieldNameToCol.ContainsKey("#实例名"))
+                {
+                    Debug.LogError("Excel 第一行必须有「#实例名」列");
                     return false;
                 }
 
@@ -141,7 +151,7 @@ public static class ExcelDataUtility
 
                 for (int r = dataStartRow; r <= rowCount; r++)
                 {
-                    string instName = ws.Cells[r, fieldNameToCol["实例名"]].Text.Trim();
+                    string instName = ws.Cells[r, fieldNameToCol["#实例名"]].Text.Trim();
                     if (string.IsNullOrEmpty(instName)) continue;
 
                     // 新建实例

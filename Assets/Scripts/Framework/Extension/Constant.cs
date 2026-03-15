@@ -15,6 +15,10 @@ public static class Constant
     // 跳过的文件名前缀
     public static readonly string[] SKIP_PREFIXES = { "~", "$", "_" };
 
+    // 资源
+    public static readonly string ASSET_BINARY_PATH = "Assets/Data/Binary/";
+    public static readonly string ASSET_TXT_PATH = "Assets/Data/TXT/";
+
     // 技能
     public const string SKILL_PATH = "Assets/Res/SO/Skills/";
     public const string BUILDING_PATH = "Assets/Res/SO/Buildings/";

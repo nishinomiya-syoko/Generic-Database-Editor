@@ -45,9 +45,11 @@ namespace DataCenter
         {
             string extension = useBinary ? DATA_BINARY_NAMEEND : ".txt";
             string b = useBinary ? DATA_BINARY_PATH : DATA_TXT_PATH;
-            string path = $"{b}/{tableName}{extension}";
+            // string path = $"{b}/{tableName}{extension}";
+            string path = tableName;
 
             TextAsset asset = GlobalManager.Instance.dataLoader.LoadAssetAsync<TextAsset>(path); 
+            DebugInfo.Log($"[DataTableManager] 加载：{tableName}");
             if (asset == null)
             {
                 Debug.LogError($"[DataTableManager] 未找到：{path}");

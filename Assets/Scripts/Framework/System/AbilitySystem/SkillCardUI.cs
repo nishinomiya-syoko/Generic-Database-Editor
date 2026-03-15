@@ -14,10 +14,10 @@ public class SkillCardUI : MonoBehaviour
     public Image rarityBorder;
     public Button selectButton;
 
-    private SkillDataSO data;
-    private System.Action<SkillDataSO> onSelected;
+    private SkillData data;
+    private System.Action<SkillData> onSelected;
 
-    public void Setup(SkillDataSO skillData, System.Action<SkillDataSO> callback)
+    public void Setup(SkillData skillData, System.Action<SkillData> callback)
     {
         data = skillData;
         onSelected = callback;

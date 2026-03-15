@@ -69,6 +69,7 @@
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/CharacterSO.cs" />
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SODatabase.cs" />
     <Compile Include="Assets/Editor/Excel2Database/ExcelDataTool.cs" />
+    <Compile Include="Assets/Editor/Json/GPT/GeneralEditorWindow_Fixed.cs" />
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SOBulkEditor.cs" />
     <Compile Include="Assets/Editor/Excel2Database/QwenExcel.cs" />
     <Compile Include="Assets/Editor/SO2Excel/Moon.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SOTestDataGenerator.cs" />
     <Compile Include="Assets/Editor/PivotEditor.cs" />
     <Compile Include="Assets/Editor/Asset/AssetLoader.cs" />
+    <Compile Include="Assets/Editor/Json/GPT/ExcelDataUtility_Fixed.cs" />
     <Compile Include="Assets/Editor/SaveHelper/ArchiveCodeGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1141,10 +1143,6 @@
       <HintPath>Library/ScriptAssemblies/Unity.Burst.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Burst.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.ResourceManager">
       <HintPath>Library/ScriptAssemblies/Unity.ResourceManager.dll</HintPath>
       <Private>False</Private>
@@ -1153,16 +1151,20 @@
       <HintPath>Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline">
+      <HintPath>Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.Shared.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.Shared.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.ShaderGraph.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll</HintPath>
+    <Reference Include="Unity.Burst.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.ScriptableBuildPipeline">
-      <HintPath>Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.dll</HintPath>
+    <Reference Include="Unity.ShaderGraph.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualStudio.Editor">
@@ -1273,12 +1275,12 @@
       <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.State.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.VSCode.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.ScriptableBuildPipeline.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VSCode.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipelines.HighDefinition.Runtime">

@@ -42,16 +42,25 @@ public class DebugInfo : MonoBehaviour
     {
         message += "\n";
         Instance.logList.Add(message);
+#if UNITY_EDITOR
+        Debug.Log(message);
+#endif
     }
     public static void LogWarning(string message)
     {
         message += "<color=yellow>Warning: " + message + "</color>\n";
         Instance.logList.Add(message);
+#if UNITY_EDITOR
+        Debug.LogWarning(message);
+#endif
     }
     public static void LogError(string message)
     {
         message += "<color=red>Error: " + message + "</color>\n";
         Instance.logList.Add(message);
+#if UNITY_EDITOR
+        Debug.LogError(message);
+#endif
     }
     void OnGUI()
     {

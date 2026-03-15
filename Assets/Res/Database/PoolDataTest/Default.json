@@ -1,0 +1,17 @@
+{
+  "id": "",
+  "name": "",
+  "prefabPath": "",
+  "initialSize": 0,
+  "expandIfEmpty": true,
+  "maxSize": 0,
+  "tags": [
+    "qq",
+    "e"
+  ],
+  "tagPriorities": [
+    222,
+    33
+  ],
+  "tagPriorityDict": {}
+}

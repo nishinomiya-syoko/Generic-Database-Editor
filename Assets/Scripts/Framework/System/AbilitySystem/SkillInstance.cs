@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class SkillInstance
 {
-    public SkillDataSO Data { get; private set; }
+    public SkillData Data { get; private set; }
     public int CurrentLevel { get; private set; }
     public float CurrentCooldown { get; set; }
     public bool IsEvolved { get; private set; }
@@ -18,7 +18,7 @@ public class SkillInstance
     {
         CurrentCooldown = Data.cooldown;
     }
-    public SkillInstance(SkillDataSO data)
+    public SkillInstance(SkillData data)
     {
         Data = data;
         CurrentLevel = 1;

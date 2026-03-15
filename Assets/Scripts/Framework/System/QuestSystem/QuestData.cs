@@ -76,8 +76,8 @@ namespace Top
     }
 
     // 任务数据
-    [CreateAssetMenu(fileName = "QuestData", menuName = "Top/Quest Data")]
-    public class QuestDataSO : ScriptableObject
+    [EditableData]
+    public class QuestData 
     {
         [Header("基本信息")]
         public string id;
@@ -163,7 +163,7 @@ namespace Top
         public DateTime completeTime;
         public int completionCount;         // 完成次数
 
-        public PlayerQuestData(QuestDataSO questData)
+        public PlayerQuestData(QuestData questData)
         {
             questId = questData.id;
             state = QuestState.Available;
@@ -208,4 +208,4 @@ namespace Top
         }
     }
 
-}
+}   

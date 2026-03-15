@@ -16,7 +16,7 @@ public class SkillSelectionUI : MonoBehaviour
     public int maxRerolls = 3;
 
     private int currentRerolls;
-    private List<SkillDataSO> currentChoices;
+    private List<SkillData> currentChoices;
 
     public void ShowSkillSelection()
     {
@@ -47,7 +47,7 @@ public class SkillSelectionUI : MonoBehaviour
         UpdateRerollText();
     }
 
-    private void OnSkillSelected(SkillDataSO skill)
+    private void OnSkillSelected(SkillData skill)
     {
         SkillManager.Instance.AcquireSkill(skill);
         gameObject.SetActive(false);

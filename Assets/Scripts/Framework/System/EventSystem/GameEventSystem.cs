@@ -22,7 +22,7 @@ namespace Top
         public Action<Unit> OnUnitDeployed;
         public Action<Unit> OnUnitDied;
 
-        public Action<EquipmentDataSO> OnEquipmentGet;
+        public Action<EquipmentData> OnEquipmentGet;
 
         // 科技事件
         public Action<string, int> OnTechResearched;

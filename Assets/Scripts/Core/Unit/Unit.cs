@@ -10,7 +10,7 @@ namespace Top
     public partial class Unit : LiveEntity,IDamageable
     {
         [Header("单位信息")]
-        public UnitDataSO data;
+        public UnitData data;
         // public UnitState currentState = UnitState.Idle;
         public int currentLevel = 1;
 

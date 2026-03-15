@@ -9,8 +9,8 @@ using Top;
 public class SkillManager : MonoBehaviour
 {
     [Header("配置")]
-    public List<SkillDataSO> allSkills = new List<SkillDataSO>();           // 所有可用技能池
-    public List<SkillDataSO> starterSkills = new List<SkillDataSO>();       // 初始可选技能
+    public List<SkillData> allSkills = new List<SkillData>();           // 所有可用技能池
+    public List<SkillData> starterSkills = new List<SkillData>();       // 初始可选技能
 
     [Header("运行时")]
     private List<SkillInstance> acquiredSkills = new List<SkillInstance>();    // 已获得的技能
@@ -39,9 +39,9 @@ public class SkillManager : MonoBehaviour
     /// <summary>
     /// 获取随机技能选择（用于升级奖励）
     /// </summary>
-    public List<SkillDataSO> GetRandomSkillChoices(int count, SkillRarity minRarity)
+    public List<SkillData> GetRandomSkillChoices(int count, SkillRarity minRarity)
     {
-        var available = new List<SkillDataSO>();
+        var available = new List<SkillData>();
 
         // 1. 优先提供已有技能的升级
         foreach (var skill in acquiredSkills)
@@ -62,7 +62,7 @@ public class SkillManager : MonoBehaviour
         available.AddRange(newSkills);
 
         // 3. 检查进化选项
-        var evolutions = new List<SkillDataSO>();
+        var evolutions = new List<SkillData>();
         foreach (var skill in acquiredSkills)
         {
             if (skill.CanEvolve(acquiredSkills))
@@ -83,7 +83,7 @@ public class SkillManager : MonoBehaviour
     /// <summary>
     /// 学习新技能
     /// </summary>
-    public SkillInstance AcquireSkill(SkillDataSO data)
+    public SkillInstance AcquireSkill(SkillData data)
     {
         // 检查是否已有此技能
         var existing = acquiredSkills.Find(s => s.Data.Id == data.Id);

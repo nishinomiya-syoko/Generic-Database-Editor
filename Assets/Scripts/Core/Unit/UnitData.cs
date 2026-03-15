@@ -39,8 +39,9 @@ namespace Top
     }
 
     // 单位数据
-    [CreateAssetMenu(fileName = "UnitData", menuName = "Top/Unit Data")]
-    public class UnitDataSO : ScriptableObject
+    // [CreateAssetMenu(fileName = "UnitData", menuName = "Top/Unit Data")]
+    [EditableData]
+    public class UnitData
     {
         [Header("基本信息")]
         public string id;

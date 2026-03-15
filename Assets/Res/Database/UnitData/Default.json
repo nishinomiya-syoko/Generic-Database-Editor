@@ -1,0 +1,31 @@
+{
+  "id": "",
+  "unitName": "",
+  "description": "",
+  "unitType": 0,
+  "icon": null,
+  "prefab": null,
+  "trainingTime": 30,
+  "housingSpace": 1,
+  "hitPoints": 100,
+  "damage": 25,
+  "attackSpeed": 1.0,
+  "attackRange": 2.0,
+  "movementSpeed": 3.0,
+  "attackDelay": 0.5,
+  "canFly": false,
+  "canAttackAir": false,
+  "canAttackGround": true,
+  "isRanged": false,
+  "projectilePrefab": null,
+  "searchRange": 10.0,
+  "preferredTargetDistance": 2.0,
+  "preferredTarget": 10,
+  "innateSkills": [
+    ""
+  ],
+  "maxSkillSlots": 3,
+  "ultimateSkill": "",
+  "skillChargeRate": 1.0,
+  "canEquipItems": false
+}

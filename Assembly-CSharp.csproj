@@ -64,8 +64,9 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/2022.3.61f1c1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/Scripts/Framework/Entity/Sample/Enemy.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BuildingPlacer.cs" />
-    <Compile Include="Assets/Scripts/Framework/Entity/Enemy.cs" />
+    <Compile Include="Assets/Scripts/Framework/Module/FlowModule.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ComputeSystem.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/Preformance/MobileOptimise.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerManager.cs" />
     <Compile Include="Assets/Scripts/Framework/Json/Sample/TestDataClass.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillCardUI.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillEnum.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/ArchiveSystem.cs" />
@@ -92,12 +94,11 @@
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/ConditionData.cs" />
     <Compile Include="Assets/Scripts/Framework/Debug/DebugInfo.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Block.cs" />
-    <Compile Include="Assets/Scripts/Core/Building/BuildingDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerData.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityBase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/BstarPathfinder.cs" />
     <Compile Include="Assets/Scripts/Framework/UI/UIManager.cs" />
-    <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillManager.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Decoration.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestData.cs" />
     <Compile Include="Assets/Scripts/Framework/Json/EditableAttribute.cs" />
@@ -114,13 +115,16 @@
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldVisualizer.cs" />
     <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/ScriptableObjectBase.cs" />
+    <Compile Include="Assets/Scripts/Core/Pool/PoolData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/ConditionDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/AreaEffect.cs" />
-    <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillData.cs" />
     <Compile Include="Assets/Scripts/Framework/Extension/DataLoader.cs" />
+    <Compile Include="Assets/Scripts/Framework/Module/ModuleManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestDatabase.cs" />
     <Compile Include="Assets/Scripts/Generate/DataTable/GameConfigRow.cs" />
+    <Compile Include="Assets/Scripts/Core/Quest/QuestManager.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/DataTableManager.cs" />
     <Compile Include="Assets/Scripts/Test/DataLoader.cs" />
     <Compile Include="Assets/Scripts/Core/Map/MapManager.cs" />
@@ -131,13 +135,14 @@
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Sample/PlayerCombat.cs" />
     <Compile Include="Assets/Scripts/Extension/MethodExtension.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ResourceSystem/ResourceManager.cs" />
-    <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/SkillDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/LevelDataSO.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/Unit.cs" />
+    <Compile Include="Assets/Scripts/Core/SO/BuildingDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/Pool/ObjectPool.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentData.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/Qwen/LoadDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/FlowFieldPathfinder.cs" />
+    <Compile Include="Assets/Scripts/Framework/Module/Procedure.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EventSystem/GameEventSystem.cs" />
     <Compile Include="Assets/Scripts/Core/LiveEntity.cs" />
@@ -165,6 +170,7 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/GridManager.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldMap.cs" />
+    <Compile Include="Assets/Scripts/Core/SO/UnitDataSO.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Packages/Microsoft.Extensions.Configuration.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.dll" />
@@ -1217,10 +1223,6 @@
       <HintPath>Library/ScriptAssemblies/Unity.Burst.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Burst.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.ResourceManager">
       <HintPath>Library/ScriptAssemblies/Unity.ResourceManager.dll</HintPath>
       <Private>False</Private>
@@ -1229,16 +1231,20 @@
       <HintPath>Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline">
+      <HintPath>Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.Shared.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.Shared.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.ShaderGraph.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll</HintPath>
+    <Reference Include="Unity.Burst.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.ScriptableBuildPipeline">
-      <HintPath>Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.dll</HintPath>
+    <Reference Include="Unity.ShaderGraph.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualStudio.Editor">
@@ -1349,12 +1355,12 @@
       <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.State.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.VSCode.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.ScriptableBuildPipeline.Editor">
       <HintPath>Library/ScriptAssemblies/Unity.ScriptableBuildPipeline.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VSCode.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipelines.HighDefinition.Runtime">

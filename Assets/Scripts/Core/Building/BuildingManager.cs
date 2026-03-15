@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Logic;
+using DataCenter;
 
 namespace Top
 {
@@ -10,7 +11,8 @@ namespace Top
     public class BuildingManager : MonoBehaviour
     {
         [Header("建筑数据库")]
-        public BuildingDatabase buildingDatabase;
+        // public BuildingDatabase buildingDatabase;
+        public BuildingDataTable buildingDatabase;
 
         [Header("建造设置")]
         public LayerMask groundLayer = 1;
@@ -48,20 +50,36 @@ namespace Top
 
         #region 建筑放置
 
-        public void StartBuildingPlacement(string buildingId)
+        public void StartBuildingPlacement(int buildingId)
         {
-            BuildingData buildingData = buildingDatabase.GetBuildingData(buildingId);
-            if (buildingData != null)
+            var p = buildingDatabase.GetByID(buildingId);
+            if (p == null)
             {
-                StartBuildingPlacement(buildingData);
+                DebugInfo.LogWarning("Invalid building id!");
+                return;
             }
+            BuildingData buildingData = new BuildingData()
+            {
+                Id = p.Id,
+                DisplayName = p.DisplayName,
+                Description = p.Description,
+                IconPath = p.IconPath,
+                prefabPath = p.prefabPath,
+                buildTime = p.buildTime,
+                maxLevel = p.maxLevel,
+                hitPoints = p.hitPoints,
+                armor = p.armor,
+                range = p.range,
+            };
+                StartBuildingPlacement(buildingData);
+            
         }
 
         public void StartBuildingPlacement(BuildingData buildingData)
         {
             if (!GlobalManager.Instance?.ResourceManager?.CanAfford(buildingData.buildCosts) == true)
             {
-                Debug.LogWarning("Not enough resources to build!");
+                DebugInfo.LogWarning("Not enough resources to build!");
                 return;
             }
 
