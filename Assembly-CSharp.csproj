@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/Framework/Entity/Sample/Enemy.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BuildingPlacer.cs" />
+    <Compile Include="Assets/Scripts/Generate/DataTable/PoolDataTestRow.cs" />
     <Compile Include="Assets/Scripts/Framework/Module/FlowModule.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ComputeSystem.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingDatabase.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerManager.cs" />
     <Compile Include="Assets/Scripts/Framework/Json/Sample/TestDataClass.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillCardUI.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/VisibleDataAttribute.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillEnum.cs" />

@@ -21,6 +21,7 @@ namespace DataCenter
 
         private static Dictionary<string, object> _cache = new Dictionary<string, object>();
         private static bool _defaultUseBinary = false;
+        public static bool useBinary => _defaultUseBinary;
 
         public static void SetDefaultFormat(bool useBinary)
         {

@@ -9,13 +9,168 @@ using System.Linq;
 using System.Reflection;
 using OfficeOpenXml;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using DataCenter;
 
-namespace DataCenter
+namespace Top
 {
+    // 【修复】添加 Unity 类型自定义转换器
+    public class Vector2Converter : JsonConverter<Vector2>
+    {
+        public override void WriteJson(JsonWriter writer, Vector2 value, JsonSerializer serializer)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("x");
+            writer.WriteValue(value.x);
+            writer.WritePropertyName("y");
+            writer.WriteValue(value.y);
+            writer.WriteEndObject();
+        }
+
+        public override Vector2 ReadJson(JsonReader reader, Type objectType, Vector2 existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            var dict = serializer.Deserialize<Dictionary<string, float>>(reader);
+            return new Vector2(dict["x"], dict["y"]);
+        }
+    }
+
+    public class Vector3Converter : JsonConverter<Vector3>
+    {
+        public override void WriteJson(JsonWriter writer, Vector3 value, JsonSerializer serializer)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("x");
+            writer.WriteValue(value.x);
+            writer.WritePropertyName("y");
+            writer.WriteValue(value.y);
+            writer.WritePropertyName("z");
+            writer.WriteValue(value.z);
+            writer.WriteEndObject();
+        }
+
+        public override Vector3 ReadJson(JsonReader reader, Type objectType, Vector3 existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            var dict = serializer.Deserialize<Dictionary<string, float>>(reader);
+            return new Vector3(dict["x"], dict["y"], dict["z"]);
+        }
+    }
+
+    public class Vector4Converter : JsonConverter<Vector4>
+    {
+        public override void WriteJson(JsonWriter writer, Vector4 value, JsonSerializer serializer)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("x");
+            writer.WriteValue(value.x);
+            writer.WritePropertyName("y");
+            writer.WriteValue(value.y);
+            writer.WritePropertyName("z");
+            writer.WriteValue(value.z);
+            writer.WritePropertyName("w");
+            writer.WriteValue(value.w);
+            writer.WriteEndObject();
+        }
+
+        public override Vector4 ReadJson(JsonReader reader, Type objectType, Vector4 existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            var dict = serializer.Deserialize<Dictionary<string, float>>(reader);
+            return new Vector4(dict["x"], dict["y"], dict["z"], dict["w"]);
+        }
+    }
+
+    public class ColorConverter : JsonConverter<Color>
+    {
+        public override void WriteJson(JsonWriter writer, Color value, JsonSerializer serializer)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("r");
+            writer.WriteValue(value.r);
+            writer.WritePropertyName("g");
+            writer.WriteValue(value.g);
+            writer.WritePropertyName("b");
+            writer.WriteValue(value.b);
+            writer.WritePropertyName("a");
+            writer.WriteValue(value.a);
+            writer.WriteEndObject();
+        }
+
+        public override Color ReadJson(JsonReader reader, Type objectType, Color existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            var dict = serializer.Deserialize<Dictionary<string, float>>(reader);
+            return new Color(dict["r"], dict["g"], dict["b"], dict["a"]);
+        }
+    }
+
+    public class QuaternionConverter : JsonConverter<Quaternion>
+    {
+        public override void WriteJson(JsonWriter writer, Quaternion value, JsonSerializer serializer)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("x");
+            writer.WriteValue(value.x);
+            writer.WritePropertyName("y");
+            writer.WriteValue(value.y);
+            writer.WritePropertyName("z");
+            writer.WriteValue(value.z);
+            writer.WritePropertyName("w");
+            writer.WriteValue(value.w);
+            writer.WriteEndObject();
+        }
+
+        public override Quaternion ReadJson(JsonReader reader, Type objectType, Quaternion existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            var dict = serializer.Deserialize<Dictionary<string, float>>(reader);
+            return new Quaternion(dict["x"], dict["y"], dict["z"], dict["w"]);
+        }
+    }
+
+    public class RectConverter : JsonConverter<Rect>
+    {
+        public override void WriteJson(JsonWriter writer, Rect value, JsonSerializer serializer)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("x");
+            writer.WriteValue(value.x);
+            writer.WritePropertyName("y");
+            writer.WriteValue(value.y);
+            writer.WritePropertyName("width");
+            writer.WriteValue(value.width);
+            writer.WritePropertyName("height");
+            writer.WriteValue(value.height);
+            writer.WriteEndObject();
+        }
+
+        public override Rect ReadJson(JsonReader reader, Type objectType, Rect existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            var dict = serializer.Deserialize<Dictionary<string, float>>(reader);
+            return new Rect(dict["x"], dict["y"], dict["width"], dict["height"]);
+        }
+    }
+
+    public class BoundsConverter : JsonConverter<Bounds>
+    {
+        public override void WriteJson(JsonWriter writer, Bounds value, JsonSerializer serializer)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("center");
+            serializer.Serialize(writer, value.center);
+            writer.WritePropertyName("size");
+            serializer.Serialize(writer, value.size);
+            writer.WriteEndObject();
+        }
+
+        public override Bounds ReadJson(JsonReader reader, Type objectType, Bounds existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            var dict = serializer.Deserialize<Dictionary<string, object>>(reader);
+            Vector3 center = JsonConvert.DeserializeObject<Vector3>(dict["center"].ToString());
+            Vector3 size = JsonConvert.DeserializeObject<Vector3>(dict["size"].ToString());
+            return new Bounds(center, size);
+        }
+    }
+
     public class ExcelDataTableTool : EditorWindow
     {
         private string excelPath = Constant.EXCEL_PATH;
-        // private string outputFolder = Constant.DATA_BINARY_PATH;
         private string classOutputFolder = Constant.DATA_CLASS_PATH;
         private static readonly string DATA_TXT_PATH = Constant.DATA_TXT_PATH;
         private static readonly string DATA_BINARY_PATH = Constant.DATA_BINARY_PATH;
@@ -33,15 +188,52 @@ namespace DataCenter
         private int totalSheets = 0;
         private int successSheets = 0;
 
-        [MenuItem("Tools/Excel2Datatable/Choose Excel File")]
+        // 【修复】JSON 序列化设置
+        private static JsonSerializerSettings _jsonSettings;
+
+        private static JsonSerializerSettings GetJsonSettings()
+        {
+            if (_jsonSettings == null)
+            {
+                _jsonSettings = new JsonSerializerSettings
+                {
+                    // 【核心修复】忽略循环引用
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    // 【核心修复】忽略 null 值
+                    NullValueHandling = NullValueHandling.Ignore,
+                    // 【核心修复】使用自定义 Unity 类型转换器
+                    Converters = new JsonConverter[]
+                    {
+                        new Vector2Converter(),
+                        new Vector3Converter(),
+                        new Vector4Converter(),
+                        new ColorConverter(),
+                        new QuaternionConverter(),
+                        new RectConverter(),
+                        new BoundsConverter()
+                    },
+                    // 格式化输出
+                    Formatting = Formatting.Indented
+                };
+            }
+            return _jsonSettings;
+        }
+
+        [MenuItem("Tools/Excel2Datatable/Choose Excel File Window")]
         public static void ShowWindow()
         {
             var window = GetWindow<ExcelDataTableTool>("Excel 数据表工具");
             window.minSize = new Vector2(500, 600);
-
             window.Show();
         }
         
+        private void OnEnable()
+        {
+            // 【修复】设置 EPPlus License
+            // ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            // 初始化 JSON 设置
+            GetJsonSettings();
+        }
 
         private void OnGUI()
         {
@@ -64,7 +256,6 @@ namespace DataCenter
             
             // 输出路径
             GUILayout.Label("📂 输出配置", EditorStyles.boldLabel);
-            // outputFolder = EditorGUILayout.TextField("数据输出文件夹", outputFolder);
             classOutputFolder = EditorGUILayout.TextField("代码输出文件夹", classOutputFolder);
             classNamespace = EditorGUILayout.TextField("命名空间", classNamespace);
             GUILayout.Label($"文本输出文件夹:{DATA_TXT_PATH}", EditorStyles.boldLabel);
@@ -118,20 +309,15 @@ namespace DataCenter
             {
                 EditorGUILayout.HelpBox(
                     $"当前文件：{Path.GetFileName(excelPath)}\n" +
-                    // $"数据输出：{outputFolder}\n" +
                     $"命名空间：{classNamespace}\n" +
                     $"代码输出：{classOutputFolder}", 
                     MessageType.None);
             }
         }
 
-        // <summary>
-        /// 快速生成 - 批量处理所有 Excel 文件
-        /// </summary>
-        [MenuItem("Tools/Excel2Datatable/Fast Generate (批量生成) _F5")]
+        [MenuItem("Tools/Excel2Datatable/Fast Generate Code (批量生成) _F5")]
         public static void FastGenerate()
         {
-
             string excelFolder = Constant.EXCEL_PATH;
 
             if (!Directory.Exists(excelFolder))
@@ -142,19 +328,23 @@ namespace DataCenter
                 return;
             }
 
-            // 查找所有 Excel 文件
-            FileInfo[] files = Directory.CreateDirectory(Constant.EXCEL_PATH).GetFiles();
+            // 【修复】正确获取所有 Excel 文件
             List<string> excelFiles = new List<string>();
-            foreach (var ext in files)
+            try
             {
-                // excelFiles.AddRange(Directory.GetFiles(excelFolder, $"{ext}", SearchOption.AllDirectories)
-                //     .Where(f => !Constant.SKIP_PREFIXES.Any(p => Path.GetFileName(f).StartsWith(p))));
-                //如果不是Excel文件就不要处理
-                if (ext.Extension != ".xlsx" && ext.Extension != ".xls")
-                    continue;
-                else if (ext.Name.StartsWith("~$"))
-                    continue;
-                    excelFiles.Add(ext.FullName);
+                string[] files = Directory.GetFiles(excelFolder, "*.xlsx", SearchOption.AllDirectories);
+                foreach (string file in files)
+                {
+                    string fileName = Path.GetFileName(file);
+                    if (fileName.StartsWith("~$"))
+                        continue;
+                    excelFiles.Add(file);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[Fast Generate] 获取文件列表失败：{e.Message}");
+                return;
             }
 
             if (excelFiles.Count == 0)
@@ -173,9 +363,6 @@ namespace DataCenter
             if (!Directory.Exists(Constant.DATA_CLASS_PATH))
                 Directory.CreateDirectory(Constant.DATA_CLASS_PATH);
 
-            // 显示进度
-            // EditorUtility.DisplayProgressBar("准备中", "正在初始化...", 0f);
-
             try
             {
                 var tool = CreateInstance<ExcelDataTableTool>();
@@ -187,13 +374,16 @@ namespace DataCenter
 
                 Debug.Log($"[Fast Generate] 开始批量处理 {excelFiles.Count} 个 Excel 文件...");
 
-                foreach (var file in excelFiles)
+                for (int i = 0; i < excelFiles.Count; i++)
                 {
-                    float progress = (float)(excelFiles.IndexOf(file) + 1) / excelFiles.Count;
-                    // EditorUtility.DisplayProgressBar("处理中",
-                    //     $"[{excelFiles.IndexOf(file) + 1}/{excelFiles.Count}] {Path.GetFileName(file)}",
-                    //     progress);
-                    Debug   .Log($"[Fast Generate] [{excelFiles.IndexOf(file) + 1}/{excelFiles.Count}] {Path.GetFileName(file)}");
+                    string file = excelFiles[i];
+                    float progress = (float)(i + 1) / excelFiles.Count;
+                    
+                    EditorUtility.DisplayProgressBar("处理中",
+                        $"[{i + 1}/{excelFiles.Count}] {Path.GetFileName(file)}",
+                        progress);
+                    
+                    Debug.Log($"[Fast Generate] [{i + 1}/{excelFiles.Count}] {Path.GetFileName(file)}");
 
                     try
                     {
@@ -202,13 +392,12 @@ namespace DataCenter
                     }
                     catch (Exception ex)
                     {
-                        Debug.LogError($"[Fast Generate] 文件处理失败：{file}\n{ex.Message}");
+                        Debug.LogError($"[Fast Generate] 文件处理失败：{file}\n{ex.Message}\n{ex.StackTrace}");
                         tool.failedFiles++;
                     }
                 }
 
                 AssetDatabase.Refresh();
-
                 EditorUtility.ClearProgressBar();
 
                 string msg = $"✅ 批量处理完成!\n\n" +
@@ -218,23 +407,23 @@ namespace DataCenter
                              $"  失败：{tool.failedFiles}\n\n" +
                              $"📊 表格统计:\n" +
                              $"  总表格：{tool.totalSheets}\n" +
-                             $"  成功：{tool.successSheets}\n\n" +
-                             $"⚠️ 如果是首次运行，请等待 Unity 编译完成后再次运行以导出数据。";
+                             $"  成功：{tool.successSheets}";
 
                 Debug.Log(msg);
-                // EditorUtility.DisplayDialog("Fast Generate 完成", msg, "确定");
+                EditorUtility.DisplayDialog("Fast Generate 完成", msg, "确定");
             }
             catch (Exception e)
             {
                 EditorUtility.ClearProgressBar();
                 Debug.LogError($"[Fast Generate] 严重错误：{e.Message}\n{e.StackTrace}");
-                // EditorUtility.DisplayDialog("错误", $"批量处理失败:\n{e.Message}", "确定");
+                EditorUtility.DisplayDialog("错误", $"批量处理失败:\n{e.Message}", "确定");
             }
         }
         
         private void ProcessExcel(string excelPath)
         {
-            Debug.Log($"[Fast Generate] 正在处理文件：{excelPath}");
+            Debug.Log($"[ProcessExcel] 正在处理文件：{excelPath}");
+            
             if (string.IsNullOrEmpty(excelPath) || !File.Exists(excelPath))
             {
                 EditorUtility.DisplayDialog("错误", "请选择有效的 .xlsx 文件！", "确定");
@@ -255,14 +444,11 @@ namespace DataCenter
             if (!Directory.Exists(classOutputFolder))
                 Directory.CreateDirectory(classOutputFolder);
 
-            // string[] files = Directory.GetFiles(classOutputFolder);
-            // foreach (string file in files)
-            // {
-            //     File.Delete(file);
-            // }
-
             try
             {
+                // 【修复】设置 EPPlus License
+                // ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
                 using (var package = new ExcelPackage(new FileInfo(excelPath)))
                 {
                     int successCount = 0;
@@ -270,6 +456,8 @@ namespace DataCenter
 
                     foreach (var worksheet in package.Workbook.Worksheets)
                     {
+                        totalSheets++; // 【修复】更新统计
+
                         if (string.IsNullOrWhiteSpace(worksheet.Name) ||
                             worksheet.Name.StartsWith("~") ||
                             worksheet.Dimension == null ||
@@ -283,10 +471,11 @@ namespace DataCenter
                         {
                             ProcessWorksheet(worksheet);
                             successCount++;
+                            successSheets++; // 【修复】更新统计
                         }
                         catch (Exception ex)
                         {
-                            Debug.LogError($"[错误] Sheet '{worksheet.Name}' 处理失败：{ex.Message}");
+                            Debug.LogError($"[错误] Sheet '{worksheet.Name}' 处理失败：{ex.Message}\n{ex.StackTrace}");
                         }
                     }
 
@@ -297,7 +486,6 @@ namespace DataCenter
                                  $"跳过：{skipCount} 个表\n\n" +
                                  $"⚠️ 如果是首次运行，请等待 Unity 编译完成后再次点击按钮导出数据。";
 
-                    // EditorUtility.DisplayDialog("完成", msg, "确定");
                     Debug.Log(msg);
                 }
             }
@@ -307,9 +495,7 @@ namespace DataCenter
                 EditorUtility.DisplayDialog("错误", $"处理失败:\n{e.Message}", "确定");
             }
         }
-        /// <summary>
-        /// 处理工作表,生成类，并生成TXT 与BINARY 文件
-        /// </summary>
+
         private void ProcessWorksheet(ExcelWorksheet sheet)
         {
             string tableName = sheet.Name.Trim();
@@ -330,7 +516,7 @@ namespace DataCenter
             Type rowType = Type.GetType($"{classNamespace}.{tableName}Row");
             if (rowType == null)
             {
-                Debug.LogWarning($"[等待] 类 '{tableName}Row' 尚未编译。请等待 Unity 编译完成后再次运行工具导出TXT 与BINARY 文件。");
+                Debug.LogWarning($"[等待] 类 '{tableName}Row' 尚未编译。请等待 Unity 编译完成后再次运行工具导出 TXT 与 BINARY 文件。");
                 return;
             }
 
@@ -338,33 +524,45 @@ namespace DataCenter
             List<object> dataList = ParseDataRows(sheet, fields, rowType);
 
             // 5. 导出文件
-            string txtFullPath = $"{DATA_TXT_PATH}/{tableName}";
-            string binaryFullPath = $"{DATA_BINARY_PATH}/{tableName}";
+            string txtFullPath = Path.Combine(DATA_TXT_PATH, tableName);
+            string binaryFullPath = Path.Combine(DATA_BINARY_PATH, tableName);
 
             if (useTxt)
             {
-                string json = JsonConvert.SerializeObject(dataList, Formatting.Indented, new JsonSerializerSettings
+                try
                 {
-                    NullValueHandling = NullValueHandling.Ignore
-                });
-                File.WriteAllText($"{txtFullPath}.txt", json, Encoding.UTF8);
-                Debug.Log($"[✓] 生成 TXT: {tableName}.txt ({dataList.Count} 行)");
+                    // 【核心修复】使用自定义 JSON 设置
+                    string json = JsonConvert.SerializeObject(dataList, GetJsonSettings());
+                    File.WriteAllText($"{txtFullPath}.txt", json, Encoding.UTF8);
+                    Debug.Log($"[✓] 生成 TXT: {tableName}.txt ({dataList.Count} 行)");
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[错误] 生成 TXT 失败：{tableName}.txt - {ex.Message}\n{ex.StackTrace}");
+                }
             }
 
             if (useBinary)
             {
-                byte[] bytes = SerializeToBinary(dataList, fields);
-                
-                if (compressBinary)
+                try
                 {
-                    bytes = Compress(bytes);
-                    File.WriteAllBytes($"{binaryFullPath}{DATA_BINARY_NAMEEND}", bytes);
-                    Debug.Log($"[✓] 生成 Binary(压缩): {tableName}{DATA_BINARY_NAMEEND} ({bytes.Length} bytes)");
+                    byte[] bytes = SerializeToBinary(dataList, fields);
+                    
+                    if (compressBinary)
+                    {
+                        bytes = Compress(bytes);
+                        File.WriteAllBytes($"{binaryFullPath}{DATA_BINARY_NAMEEND}", bytes);
+                        Debug.Log($"[✓] 生成 Binary(压缩): {tableName}{DATA_BINARY_NAMEEND} ({bytes.Length} bytes)");
+                    }
+                    else
+                    {
+                        File.WriteAllBytes($"{binaryFullPath}{DATA_BINARY_NAMEEND}", bytes);
+                        Debug.Log($"[✓] 生成 Binary: {tableName}{DATA_BINARY_NAMEEND} ({bytes.Length} bytes)");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    File.WriteAllBytes($"{binaryFullPath}{DATA_BINARY_NAMEEND}", bytes);
-                    Debug.Log($"[✓] 生成 Binary: {tableName}{DATA_BINARY_NAMEEND} ({bytes.Length} bytes)");
+                    Debug.LogError($"[错误] 生成 Binary 失败：{tableName}{DATA_BINARY_NAMEEND} - {ex.Message}\n{ex.StackTrace}");
                 }
             }
         }
@@ -382,6 +580,8 @@ namespace DataCenter
 
                 if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(typeStr))
                     continue;
+                if (typeStr.StartsWith("#"))
+                        continue;
 
                 try
                 {
@@ -407,7 +607,6 @@ namespace DataCenter
         {
             typeStr = typeStr.Trim();
 
-            // 数组类型: int[]
             if (typeStr.EndsWith("[]"))
             {
                 string inner = typeStr.Substring(0, typeStr.Length - 2);
@@ -415,7 +614,6 @@ namespace DataCenter
                 return innerType.MakeArrayType();
             }
 
-            // List<T>
             if (typeStr.StartsWith("List<") && typeStr.EndsWith(">"))
             {
                 string inner = typeStr.Substring(5, typeStr.Length - 6);
@@ -423,7 +621,6 @@ namespace DataCenter
                 return typeof(List<>).MakeGenericType(innerType);
             }
 
-            // Dictionary<K,V>
             if (typeStr.StartsWith("Dictionary<") && typeStr.EndsWith(">"))
             {
                 string inner = typeStr.Substring(11, typeStr.Length - 12);
@@ -436,12 +633,11 @@ namespace DataCenter
                 return typeof(Dictionary<,>).MakeGenericType(keyType, valType);
             }
 
-            // Array<T>
             if (typeStr.StartsWith("Array<") && typeStr.EndsWith(">"))
             {
                 string inner = typeStr.Substring(6, typeStr.Length - 7);
                 Type innerType = GetSimpleType(inner);
-                return typeof(List<>).MakeGenericType(innerType); // Array 用 List 存储
+                return typeof(List<>).MakeGenericType(innerType);
             }
 
             return GetSimpleType(typeStr);
@@ -506,9 +702,8 @@ namespace DataCenter
                 case "date":
                     return typeof(DateTime);
                 case "enum":
-                    return typeof(int); // 枚举用 int 存储
+                    return typeof(int);
                 default:
-                    // 尝试查找用户自定义类型
                     var t = Type.GetType($"{classNamespace}.{name}");
                     if (t != null) return t;
                     
@@ -526,7 +721,6 @@ namespace DataCenter
         {
             StringBuilder sb = new StringBuilder();
             
-            // 文件头
             sb.AppendLine("// ============================================================");
             sb.AppendLine($"// 自动生成的数据表类 - {tableName}");
             sb.AppendLine($"// 生成时间：{DateTime.Now:yyyy-MM-dd HH:mm:ss}");
@@ -539,11 +733,10 @@ namespace DataCenter
             sb.AppendLine($"namespace {classNamespace}");
             sb.AppendLine("{");
             
-            // 数据行类
             sb.AppendLine($"    /// <summary>");
             sb.AppendLine($"    /// {tableName} 数据行");
             sb.AppendLine($"    /// </summary>");
-            sb.AppendLine($"    [Serializable]");
+            // sb.AppendLine($"    [EditableData]");
             sb.AppendLine($"    public class {tableName}Row");
             sb.AppendLine("    {");
 
@@ -563,7 +756,6 @@ namespace DataCenter
             sb.AppendLine("    }");
             sb.AppendLine();
             
-            // 数据表容器类
             sb.AppendLine($"    /// <summary>");
             sb.AppendLine($"    /// {tableName} 数据表容器");
             sb.AppendLine($"    /// </summary>");
@@ -584,13 +776,11 @@ namespace DataCenter
             
             sb.AppendLine("}");
 
-            string filePath = $"{classOutputFolder}/{tableName}Row.cs";
+            string filePath = Path.Combine(classOutputFolder, $"{tableName}Row.cs");
             
-            // 只有内容变化时才写入
             if (File.Exists(filePath))
             {
                 string existing = File.ReadAllText(filePath);
-                // 忽略时间戳比较
                 if (StripComments(existing) == StripComments(sb.ToString()))
                 {
                     return;
@@ -603,7 +793,6 @@ namespace DataCenter
 
         private string StripComments(string code)
         {
-            // 简单移除注释用于比较
             return System.Text.RegularExpressions.Regex.Replace(code, @"//.*", "");
         }
 
@@ -643,10 +832,8 @@ namespace DataCenter
             int rowCount = sheet.Dimension.End.Row;
             int emptyRowCount = 0;
 
-            // 从第 4 行开始读取数据
             for (int row = 4; row <= rowCount; row++)
             {
-                // 检查是否为空行
                 bool isEmpty = true;
                 for (int col = 1; col <= fields.Count && col <= sheet.Dimension.End.Column; col++)
                 {
@@ -672,7 +859,6 @@ namespace DataCenter
                     
                     if (colIndex > sheet.Dimension.End.Column)
                     {
-                        // 列不足，使用默认值
                         var field = rowType.GetField(fields[i].Name);
                         field?.SetValue(rowObj, GetDefaultValue(fields[i].SystemType));
                         continue;
@@ -715,7 +901,6 @@ namespace DataCenter
 
             try
             {
-                // 基本数值类型
                 if (targetType == typeof(int)) return int.Parse(value);
                 if (targetType == typeof(long)) return long.Parse(value);
                 if (targetType == typeof(float)) return float.Parse(value);
@@ -728,7 +913,6 @@ namespace DataCenter
                 if (targetType == typeof(uint)) return uint.Parse(value);
                 if (targetType == typeof(ulong)) return ulong.Parse(value);
 
-                // Unity 内置类型
                 if (targetType == typeof(Vector2)) return ParseVector2(value);
                 if (targetType == typeof(Vector3)) return ParseVector3(value);
                 if (targetType == typeof(Vector4)) return ParseVector4(value);
@@ -739,27 +923,23 @@ namespace DataCenter
                 if (targetType == typeof(Bounds)) return ParseBounds(value);
                 if (targetType == typeof(DateTime)) return ParseDateTime(value);
 
-                // List<T>
                 if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(List<>))
                 {
                     Type innerType = targetType.GetGenericArguments()[0];
                     return ParseCollection(value, innerType, targetType, true);
                 }
 
-                // Array
                 if (targetType.IsArray)
                 {
                     Type innerType = targetType.GetElementType();
                     return ParseCollection(value, innerType, targetType, false);
                 }
 
-                // Dictionary<K,V>
                 if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
                 {
                     return ParseDictionary(value, targetType);
                 }
 
-                // 自定义类 (JSON)
                 if (!targetType.IsPrimitive && targetType != typeof(string) && !targetType.IsEnum)
                 {
                     return JsonConvert.DeserializeObject(value, targetType);
@@ -773,24 +953,12 @@ namespace DataCenter
             return GetDefaultValue(targetType);
         }
 
-        private Vector2 ParseVector2(string value)
-        {
-            return (Vector2)ParseVector(value, 2);
-        }
-
-        private Vector3 ParseVector3(string value)
-        {
-            return (Vector3)ParseVector(value, 3);
-        }
-
-        private Vector4 ParseVector4(string value)
-        {
-            return (Vector4)ParseVector(value, 4);
-        }
+        private Vector2 ParseVector2(string value) => (Vector2)ParseVector(value, 2);
+        private Vector3 ParseVector3(string value) => (Vector3)ParseVector(value, 3);
+        private Vector4 ParseVector4(string value) => (Vector4)ParseVector(value, 4);
 
         private object ParseVector(string value, int dimensions)
         {
-            // 支持格式：(1,2,3) 或 {1,2,3} 或 1,2,3 或 JSON
             value = value.Replace("(", "").Replace(")", "").Replace("{", "").Replace("}", "");
             string[] parts = value.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
             
@@ -879,10 +1047,9 @@ namespace DataCenter
 
         private Bounds ParseBounds(string value)
         {
-            // 简化处理，建议使用 JSON 格式
             if (value.Trim().StartsWith("{"))
             {
-                return JsonConvert.DeserializeObject<Bounds>(value);
+                return JsonConvert.DeserializeObject<Bounds>(value, GetJsonSettings());
             }
             return new Bounds(Vector3.zero, Vector3.one);
         }
@@ -896,13 +1063,11 @@ namespace DataCenter
 
         private object ParseCollection(string value, Type innerType, Type collectionType, bool isList)
         {
-            // JSON 格式：[1,2,3]
             if (value.Trim().StartsWith("["))
             {
-                return JsonConvert.DeserializeObject(value, collectionType);
+                return JsonConvert.DeserializeObject(value, collectionType, GetJsonSettings());
             }
 
-            // 分隔符格式：1|2|3 或 1,2,3
             char separator = value.Contains("|") ? '|' : ',';
             string[] parts = value.Split(separator, StringSplitOptions.RemoveEmptyEntries);
 
@@ -928,10 +1093,9 @@ namespace DataCenter
 
         private object ParseDictionary(string value, Type dictType)
         {
-            // 强制 JSON 格式：{"key": value}
             if (value.Trim().StartsWith("{"))
             {
-                return JsonConvert.DeserializeObject(value, dictType);
+                return JsonConvert.DeserializeObject(value, dictType, GetJsonSettings());
             }
 
             throw new Exception("Dictionary 类型必须使用 JSON 格式，如：{\"key\": 1}");
@@ -949,11 +1113,10 @@ namespace DataCenter
             using (MemoryStream ms = new MemoryStream())
             using (BinaryWriter bw = new BinaryWriter(ms))
             {
-                // 文件头：魔数 + 版本 + 行数
                 bw.Write((byte)'D');
                 bw.Write((byte)'T');
-                bw.Write((byte)'B'); // DataTable Binary
-                bw.Write((byte)1);   // 版本号
+                bw.Write((byte)'B');
+                bw.Write((byte)1);
                 
                 bw.Write(dataList.Count);
 
@@ -986,7 +1149,6 @@ namespace DataCenter
                 return;
             }
 
-            // 基础类型
             if (fieldType == typeof(int)) bw.Write((int)value);
             else if (fieldType == typeof(long)) bw.Write((long)value);
             else if (fieldType == typeof(float)) bw.Write((float)value);
@@ -998,7 +1160,6 @@ namespace DataCenter
             else if (fieldType == typeof(uint)) bw.Write((uint)value);
             else if (fieldType == typeof(ulong)) bw.Write((ulong)value);
             
-            // Unity 类型
             else if (fieldType == typeof(Vector2))
             {
                 var v = (Vector2)value;
@@ -1042,7 +1203,6 @@ namespace DataCenter
                 bw.Write(((DateTime)value).ToBinary());
             }
             
-            // 集合类型
             else if (fieldType.IsArray)
             {
                 Array arr = (Array)value;
@@ -1077,10 +1237,9 @@ namespace DataCenter
                 }
             }
             
-            // 自定义类：使用 JSON 作为兜底
             else
             {
-                string json = JsonConvert.SerializeObject(value);
+                string json = JsonConvert.SerializeObject(value, GetJsonSettings());
                 bw.Write(json ?? "");
             }
         }

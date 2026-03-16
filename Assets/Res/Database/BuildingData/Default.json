@@ -20,7 +20,8 @@
   ],
   "costs": {
     "22": 22,
-    "ss": 33
+    "ss": 33,
+    "s2": 3
   },
   "maxLevel": 10,
   "levelData": [

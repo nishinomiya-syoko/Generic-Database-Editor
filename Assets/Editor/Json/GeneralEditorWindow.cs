@@ -7,448 +7,1310 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 
-/// <summary>
-/// 通用数据编辑器窗口（重构布局版 - 支持集合类型）
-/// 布局：
-/// - 上半区：左=数据类型按钮组 | 右=功能按钮（保存/读取/导出/导入）
-/// - 下半区：左=实例列表+新建按钮 | 右=字段编辑窗口
-/// </summary>
-public class GeneralEditorWindow : EditorWindow
+namespace Top
 {
-    private static readonly string JSON_PATH = Constant.JSON_PATH; 
-    private static readonly string JSON_EXTENSION = ".json";
-    private static readonly string EXCEL_PATH = Constant.EXCEL_PATH; 
-    
-    // 核心数据
-    private Type _selectedDataType;
-    private object _currentDataInstance;
-    private string _instanceName = "Default";
-    private List<Type> _editableDataTypes;
-
-    // 布局相关
-    private Vector2 _typeButtonScrollPos;
-    private Vector2 _instanceListScrollPos;
-    private Vector2 _editAreaScrollPos;
-    private string _newInstanceName = "NewInstance";
-
-    // 集合编辑状态管理 (用于折叠/展开)
-    private Dictionary<string, bool> _foldoutStates = new Dictionary<string, bool>();
-
-    [MenuItem("Tools/通用数据编辑器/General Editor Window")]
-    public static void OpenWindow()
+    /// <summary>
+    /// 通用数据编辑器窗口（增强版）
+    /// 功能：
+    /// - 数据类型切换
+    /// - 实例列表 / 新建 / 删除 / 搜索
+    /// - 读取 / 保存 / Excel导入导出
+    /// - 基础类型编辑
+    /// - Unity常见结构编辑
+    /// - 枚举编辑
+    /// - 数组 / List / Dictionary 编辑
+    /// - [Serializable] 自定义类/结构体递归编辑
+    /// - List/Array 中复杂对象递归编辑
+    /// - Dictionary value 复杂对象递归编辑
+    /// - 脏标记提示
+    /// </summary>
+    public class GeneralEditorWindow : EditorWindow
     {
-        GeneralEditorWindow window = GetWindow<GeneralEditorWindow>("通用数据编辑器");
-        window.minSize = new Vector2(800, 600);
-        window.Show();
-        window.Init();
-    }
+        private static readonly string JSON_PATH = Constant.JSON_PATH;
+        private static readonly string JSON_EXTENSION = ".json";
+        private static readonly string EXCEL_PATH = Constant.EXCEL_PATH;
 
-    private void Init()
-    {
-        _editableDataTypes = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(asm => asm.GetTypes())
-            .Where(t => t.GetCustomAttribute<EditableDataAttribute>() != null && !t.IsAbstract && !t.IsInterface)
-            .ToList();
+        // UI常量
+        private const float TYPE_PANEL_WIDTH = 400f;
+        private const float INSTANCE_PANEL_WIDTH = 280f;
+        private const float BUTTON_WIDTH = 120f;
+        private const float SMALL_BUTTON_WIDTH = 60f;
+        private const float MID_BUTTON_WIDTH = 80f;
+        private const float LARGE_BUTTON_WIDTH = 100f;
+        private const float BUTTON_HEIGHT = 30f;
+        private const float TYPE_SCROLL_HEIGHT = 60f;
+        private const int TYPE_BUTTONS_PER_ROW = 3;
+        private const int MAX_RECURSION_DEPTH = 8;
 
-        if (_editableDataTypes.Count > 0)
-        {
-            _selectedDataType = _editableDataTypes[0];
-            LoadCurrentInstance();
-        }
-    }
+        // 核心数据
+        private Type _selectedDataType;
+        private object _currentDataInstance;
+        private string _instanceName = "Default";
+        private List<Type> _editableDataTypes = new List<Type>();
 
-    private void OnGUI()
-    {
-        // ========== 上半部分：操作按钮区 ==========
-        EditorGUILayout.BeginVertical("Box");
+        // UI状态
+        private Vector2 _typeButtonScrollPos;
+        private Vector2 _instanceListScrollPos;
+        private Vector2 _editAreaScrollPos;
+        private string _newInstanceName = "NewInstance";
+        private string _instanceSearchText = string.Empty;
 
-        EditorGUILayout.BeginHorizontal();
+        // Foldout状态
+        private readonly Dictionary<string, bool> _foldoutStates = new Dictionary<string, bool>();
 
-        // ---- 左侧：数据类型按钮组 ----
-        EditorGUILayout.BeginVertical(GUILayout.Width(400));
-        EditorGUILayout.LabelField("数据类型", EditorStyles.boldLabel);
-        _typeButtonScrollPos = EditorGUILayout.BeginScrollView(_typeButtonScrollPos, GUILayout.Height(60));
-        DrawDataTypeButtons();
-        EditorGUILayout.EndScrollView();
-        EditorGUILayout.EndVertical();
-
-        // ---- 右侧：功能按钮组 ----
-        EditorGUILayout.BeginVertical();
-        EditorGUILayout.LabelField("操作", EditorStyles.boldLabel);
-        DrawFunctionButtons();
-        EditorGUILayout.EndVertical();
-
-        EditorGUILayout.EndHorizontal();
-        EditorGUILayout.EndVertical();
-
-        if (_selectedDataType == null)
-        {
-            EditorGUILayout.HelpBox("请先选择左侧的数据类型", MessageType.Info);
-            return;
-        }
-
-        // ========== 下半部分：数据列表+编辑区 ==========
-        EditorGUILayout.BeginHorizontal();
-
-        // ---- 左侧：实例列表 + 新建按钮 ----
-        EditorGUILayout.BeginVertical("Box", GUILayout.Width(250));
-        EditorGUILayout.LabelField($"{GetDataTypeDisplayName()} - 实例列表", EditorStyles.boldLabel);
-        DrawNewInstanceButton();
-        DrawInstanceList();
-        EditorGUILayout.EndVertical();
-
-        // ---- 右侧：字段编辑窗口 ----
-        EditorGUILayout.BeginVertical("Box");
-        EditorGUILayout.LabelField($"编辑：{_instanceName}", EditorStyles.boldLabel);
-        _editAreaScrollPos = EditorGUILayout.BeginScrollView(_editAreaScrollPos);
+        // 新增：临时存储新增字典的键/值（解决立即模式GUI的帧同步问题）
+        private Dictionary<Type, object> _tempDictNewKey = new Dictionary<Type, object>();
+        private Dictionary<Type, object> _tempDictNewValue = new Dictionary<Type, object>();
         
-        if (_currentDataInstance != null)
+        // 脏标记
+        private bool _isDirty = false;
+
+        [MenuItem("Tools/Generic Database/General Editor Window")]
+        public static void OpenWindow()
         {
-            DrawDataFields();
+            GeneralEditorWindow window = GetWindow<GeneralEditorWindow>("通用数据编辑器");
+            window.minSize = new Vector2(950, 650);
+            window.Show();
+            window.Init();
         }
-        else
+
+        private void OnEnable()
         {
-            EditorGUILayout.LabelField("当前实例数据为空");
+            Init(false);
         }
-        
-        EditorGUILayout.EndScrollView();
-        EditorGUILayout.EndVertical();
 
-        EditorGUILayout.EndHorizontal();
-    }
-
-    #region 布局组件绘制
-
-    private void DrawDataTypeButtons()
-    {
-        EditorGUILayout.BeginHorizontal();
-        int buttonIndex = 0;
-        foreach (var dataType in _editableDataTypes)
+        private void OnDisable()
         {
-            string displayName = GetDataTypeDisplayName(dataType);
-            bool isSelected = dataType == _selectedDataType;
-            Color originalColor = GUI.backgroundColor;
-            if (isSelected)
-                GUI.backgroundColor = Color.cyan;
+            // 不强制弹窗，避免Unity关闭窗口/重编译时打断流程
+        }
 
-            if (GUILayout.Button(displayName, GUILayout.Width(120), GUILayout.Height(30)))
+        private void Init(bool forceResetSelection = true)
+        {
+            _editableDataTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(GetLoadableTypes)
+                .Where(t => t != null)
+                .Where(t => t.GetCustomAttribute<EditableDataAttribute>() != null && !t.IsAbstract && !t.IsInterface)
+                .OrderBy(t => t.Name)
+                .ToList();
+
+            if (_editableDataTypes.Count == 0)
             {
-                _selectedDataType = dataType;
-                _instanceName = "Default";
-                _foldoutStates.Clear(); // 切换类型时清空折叠状态
-                LoadCurrentInstance();
-            }
-
-            GUI.backgroundColor = originalColor;
-            buttonIndex++;
-
-            if (buttonIndex % 3 == 0)
-            {
-                EditorGUILayout.EndHorizontal();
-                EditorGUILayout.BeginHorizontal();
-            }
-        }
-        EditorGUILayout.EndHorizontal();
-    }
-
-    private void DrawFunctionButtons()
-    {
-        EditorGUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("读取数据", GUILayout.Width(120), GUILayout.Height(30)))
-        {
-            LoadCurrentInstance();
-            EditorUtility.DisplayDialog("提示", "当前实例数据读取完成", "确定");
-        }
-
-        if (GUILayout.Button("保存数据", GUILayout.Width(120), GUILayout.Height(30)))
-        {
-            bool success = SaveCurrentInstance();
-            EditorUtility.DisplayDialog(success ? "成功" : "失败",
-                success ? "当前实例数据保存完成" : "当前实例数据保存失败", "确定");
-        }
-
-        Color originalColor = GUI.backgroundColor;
-        GUI.backgroundColor = Color.red;
-        if (GUILayout.Button("删除当前实例", GUILayout.Width(120), GUILayout.Height(30)))
-        {
-            DeleteCurrentInstance();
-        }
-        GUI.backgroundColor = originalColor;
-
-        if (GUILayout.Button("导出所有实例到Excel", GUILayout.Width(120), GUILayout.Height(30)))
-        {
-            ExportAllInstancesToExcel();
-        }
-
-        if (GUILayout.Button("从Excel导入所有实例", GUILayout.Width(120), GUILayout.Height(30)))
-        {
-            ImportAllInstancesFromExcel();
-        }
-
-        EditorGUILayout.EndHorizontal();
-    }
-
-    private void DeleteCurrentInstance()
-    {
-        if (_selectedDataType == null || string.IsNullOrEmpty(_instanceName))
-        {
-            Debug.LogWarning("请先选择要删除的实例");
-            return;
-        }
-
-        bool confirm = EditorUtility.DisplayDialog(
-            "确认删除",
-            $"是否永久删除实例：{_instanceName}？\n此操作不可恢复！",
-            "删除",
-            "取消"
-        );
-
-        if (!confirm) return;
-
-        try
-        {
-            MethodInfo getSavePathMethod = typeof(GenericDataPersistence).GetMethod("GetSavePath")
-                .MakeGenericMethod(_selectedDataType);
-            string savePath = (string)getSavePathMethod.Invoke(null, new object[] { _instanceName });
-
-            if (File.Exists(savePath))
-            {
-                File.Delete(savePath);
-                AssetDatabase.Refresh();
-
-                MethodInfo getInstanceNamesMethod = typeof(GenericDataPersistence).GetMethod("GetAllInstanceNames")
-                    .MakeGenericMethod(_selectedDataType);
-                string[] remainingInstances = (string[])getInstanceNamesMethod.Invoke(null, null);
-
-                if (remainingInstances.Length > 0)
-                {
-                    _instanceName = remainingInstances.Contains("Default") ? "Default" : remainingInstances[0];
-                }
-                else
-                {
-                    _instanceName = "Default";
-                    _currentDataInstance = Activator.CreateInstance(_selectedDataType);
-                }
-
-                LoadCurrentInstance();
-                Debug.Log($"实例 {_instanceName} 已删除");
-            }
-            else
-            {
-                Debug.LogWarning($"实例文件不存在，无需删除");
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"删除实例 {_instanceName} 失败：{e}");
-        }
-    }
-
-    private void ExportAllInstancesToExcel()
-    {
-        if (_selectedDataType == null)
-        {
-            Debug.LogWarning("请先选择数据类型");
-            return;
-        }
-
-        string excelPath = EXCEL_PATH + $"{GetDataTypeDisplayName()}.xlsx";
-        // 确保目录存在
-        string dir = Path.GetDirectoryName(excelPath);
-        if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-
-        MethodInfo exportMethod = typeof(ExcelDataUtility).GetMethod("ExportAllInstancesToExcel")
-            .MakeGenericMethod(_selectedDataType);
-        bool success = (bool)exportMethod.Invoke(null, new[] { excelPath });
-
-        Debug.Log(success ? $"[{GetDataTypeDisplayName()}] 所有实例导出到Excel成功\n路径：{excelPath}" : "导出失败");
-    }
-
-    private void ImportAllInstancesFromExcel()
-    {
-        if (_selectedDataType == null)
-        {
-            EditorUtility.DisplayDialog("提示", "请先选择数据类型", "确定");
-            return;
-        }
-
-        string excelPath = ExcelDataUtility.SelectExcelLoadPath();
-        if (string.IsNullOrEmpty(excelPath))
-            return;
-
-        MethodInfo importMethod = typeof(ExcelDataUtility).GetMethod("ImportAllInstancesFromExcel")
-            .MakeGenericMethod(_selectedDataType);
-        bool success = (bool)importMethod.Invoke(null, new[] { excelPath });
-
-        LoadCurrentInstance();
-        EditorUtility.DisplayDialog(success ? "成功" : "失败",
-            success ? $"[{GetDataTypeDisplayName()}] 从Excel导入所有实例成功" : "导入失败（无有效实例或文件错误）", "确定");
-    }
-
-    private void DrawNewInstanceButton()
-    {
-        EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
-        GUILayout.Label("新实例名", GUILayout.Width(60));
-        _newInstanceName = EditorGUILayout.TextField(_newInstanceName);
-
-        if (GUILayout.Button("新建", GUILayout.Width(60)))
-        {
-            if (string.IsNullOrEmpty(_newInstanceName.Trim()))
-            {
-                Debug.LogWarning("实例名不能为空");
+                _selectedDataType = null;
+                _currentDataInstance = null;
                 return;
             }
 
-            string newName = _newInstanceName.Trim();
-            _instanceName = newName;
-            _currentDataInstance = Activator.CreateInstance(_selectedDataType);
+            bool needReset =
+                forceResetSelection ||
+                _selectedDataType == null ||
+                !_editableDataTypes.Contains(_selectedDataType);
 
-            bool saveSuccess = SaveCurrentInstance();
-            if (saveSuccess)
+            if (needReset)
             {
-                Debug.Log($"已创建并保存新实例：{newName}");
-                _newInstanceName = "NewInstance";
-                _foldoutStates.Clear();
-            }
-            else
-            {
-                Debug.LogError($"创建新实例失败：保存失败");
-            }
-        }
-
-        EditorGUILayout.EndHorizontal();
-        EditorGUILayout.Space(5);
-    }
-
-    private void DrawInstanceList()
-    {
-        _instanceListScrollPos = EditorGUILayout.BeginScrollView(_instanceListScrollPos);
-
-        MethodInfo getInstanceNamesMethod = typeof(GenericDataPersistence).GetMethod("GetAllInstanceNames")
-            .MakeGenericMethod(_selectedDataType);
-        string[] instanceNames = (string[])getInstanceNamesMethod.Invoke(null, null);
-
-        foreach (string name in instanceNames)
-        {
-            bool isSelected = name == _instanceName;
-            Color originalColor = GUI.backgroundColor;
-            if (isSelected)
-                GUI.backgroundColor = Color.green;
-
-            if (GUILayout.Button(name, GUILayout.Height(30)))
-            {
-                _instanceName = name;
-                _foldoutStates.Clear();
+                _selectedDataType = _editableDataTypes[0];
+                _instanceName = "Default";
                 LoadCurrentInstance();
             }
-
-            GUI.backgroundColor = originalColor;
+            else if (_selectedDataType != null && _currentDataInstance == null)
+            {
+                LoadCurrentInstance();
+            }
         }
 
-        EditorGUILayout.EndScrollView();
-    }
-
-    #endregion
-
-    #region 核心编辑逻辑 (支持 Array, List, Dictionary)
-
-    // 5. 绘制字段编辑区 (重构以支持集合)
-    private void DrawDataFields()
-    {
-        if (_currentDataInstance == null) return;
-
-        FieldInfo[] fields = _selectedDataType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-            .Where(f => !f.IsStatic && (f.IsPublic || f.GetCustomAttribute<SerializeField>() != null))
-            .Where(f => !f.Name.Contains("<") && !f.Name.Contains(">"))
-            .ToArray();
-
-        foreach (var field in fields)
+        private IEnumerable<Type> GetLoadableTypes(Assembly assembly)
         {
-            object value = field.GetValue(_currentDataInstance);
-            
-            // 检查是否是集合类型
-            if (IsCollectionType(field.FieldType))
+            try
             {
-                DrawCollectionField(field, value);
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                return e.Types.Where(t => t != null);
+            }
+            catch
+            {
+                return Array.Empty<Type>();
+            }
+        }
+
+        private void OnGUI()
+        {
+            if (_editableDataTypes == null || _editableDataTypes.Count == 0)
+            {
+                Init(false);
+            }
+
+            DrawDirtyBanner();
+
+            EditorGUILayout.BeginVertical("Box");
+
+            EditorGUILayout.BeginHorizontal();
+
+            EditorGUILayout.BeginVertical(GUILayout.Width(TYPE_PANEL_WIDTH));
+            EditorGUILayout.LabelField("数据类型", EditorStyles.boldLabel);
+            _typeButtonScrollPos = EditorGUILayout.BeginScrollView(_typeButtonScrollPos, GUILayout.Height(TYPE_SCROLL_HEIGHT));
+            DrawDataTypeButtons();
+            EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndVertical();
+
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.LabelField("操作", EditorStyles.boldLabel);
+            DrawFunctionButtons();
+            EditorGUILayout.EndVertical();
+
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
+
+            if (_selectedDataType == null)
+            {
+                EditorGUILayout.HelpBox("未找到可编辑的数据类型，请确认目标类是否添加了 [EditableData] 特性。", MessageType.Info);
+                return;
+            }
+
+            EditorGUILayout.BeginHorizontal();
+
+            EditorGUILayout.BeginVertical("Box", GUILayout.Width(INSTANCE_PANEL_WIDTH));
+            EditorGUILayout.LabelField($"{GetDataTypeDisplayName()} - 实例列表", EditorStyles.boldLabel);
+            DrawNewInstanceButton();
+            DrawInstanceSearchBar();
+            DrawInstanceList();
+            EditorGUILayout.EndVertical();
+
+            EditorGUILayout.BeginVertical("Box");
+            string dirtyMark = _isDirty ? " *未保存" : string.Empty;
+            EditorGUILayout.LabelField($"编辑：{_instanceName}{dirtyMark}", EditorStyles.boldLabel);
+            _editAreaScrollPos = EditorGUILayout.BeginScrollView(_editAreaScrollPos);
+            DrawDataFields();
+            EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndVertical();
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        #region 顶部提示
+
+        private void DrawDirtyBanner()
+        {
+            if (!_isDirty) return;
+
+            EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("当前实例有未保存修改", EditorStyles.boldLabel);
+
+            if (GUILayout.Button("立即保存", GUILayout.Width(100)))
+            {
+                bool success = SaveCurrentInstance();
+                if (success)
+                {
+                    _isDirty = false;
+                    Repaint();
+                }
+            }
+
+            if (GUILayout.Button("放弃修改并重载", GUILayout.Width(120)))
+            {
+                bool confirm = EditorUtility.DisplayDialog("确认", "是否放弃当前未保存修改并重新读取磁盘数据？", "放弃修改", "取消");
+                if (confirm)
+                {
+                    LoadCurrentInstance();
+                    _isDirty = false;
+                    Repaint();
+                }
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        #endregion
+
+        #region 主布局绘制
+
+        private void DrawDataTypeButtons()
+        {
+            if (_editableDataTypes == null || _editableDataTypes.Count == 0)
+            {
+                EditorGUILayout.LabelField("没有找到可编辑类型");
+                return;
+            }
+
+            int total = _editableDataTypes.Count;
+            int rowCount = Mathf.CeilToInt(total / (float)TYPE_BUTTONS_PER_ROW);
+
+            for (int row = 0; row < rowCount; row++)
+            {
+                EditorGUILayout.BeginHorizontal();
+
+                for (int col = 0; col < TYPE_BUTTONS_PER_ROW; col++)
+                {
+                    int index = row * TYPE_BUTTONS_PER_ROW + col;
+                    if (index >= total)
+                        break;
+
+                    Type dataType = _editableDataTypes[index];
+                    string displayName = GetDataTypeDisplayName(dataType);
+                    bool isSelected = dataType == _selectedDataType;
+
+                    Color originalColor = GUI.backgroundColor;
+                    if (isSelected)
+                        GUI.backgroundColor = Color.cyan;
+
+                    if (GUILayout.Button(displayName, GUILayout.Width(BUTTON_WIDTH), GUILayout.Height(BUTTON_HEIGHT)))
+                    {
+                        if (_selectedDataType != dataType)
+                        {
+                            if (!TryHandleUnsavedChangesBeforeSwitch())
+                            {
+                                GUI.backgroundColor = originalColor;
+                                EditorGUILayout.EndHorizontal();
+                                return;
+                            }
+
+                            _selectedDataType = dataType;
+                            _instanceName = "Default";
+                            _currentDataInstance = null;
+                            _isDirty = false;
+                            LoadCurrentInstance();
+                        }
+                    }
+
+                    GUI.backgroundColor = originalColor;
+                }
+
+                EditorGUILayout.EndHorizontal();
+            }
+        }
+
+        private void DrawFunctionButtons()
+        {
+            EditorGUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("读取数据", GUILayout.Width(BUTTON_WIDTH), GUILayout.Height(BUTTON_HEIGHT)))
+            {
+                if (_isDirty)
+                {
+                    bool confirm = EditorUtility.DisplayDialog("提示", "当前有未保存修改，是否放弃修改并读取磁盘数据？", "读取", "取消");
+                    if (!confirm)
+                    {
+                        EditorGUILayout.EndHorizontal();
+                        return;
+                    }
+                }
+
+                LoadCurrentInstance();
+                _isDirty = false;
+                // EditorUtility.DisplayDialog("提示", "当前实例数据读取完成", "确定");
+                Debug.Log("当前实例数据读取完成");
+            }
+
+            if (GUILayout.Button("保存数据", GUILayout.Width(BUTTON_WIDTH), GUILayout.Height(BUTTON_HEIGHT)))
+            {
+                bool success = SaveCurrentInstance();
+                if (success)
+                    _isDirty = false;
+
+                // EditorUtility.DisplayDialog(success ? "成功" : "失败",
+                //     success ? "当前实例数据保存完成" : "当前实例数据保存失败", "确定");
+                Debug.Log(success ? "当前实例数据保存完成" : "当前实例数据保存失败");
+            }
+
+            Color originalColor = GUI.backgroundColor;
+            GUI.backgroundColor = Color.red;
+            if (GUILayout.Button("删除当前实例", GUILayout.Width(BUTTON_WIDTH), GUILayout.Height(BUTTON_HEIGHT)))
+            {
+                DeleteCurrentInstance();
+            }
+            GUI.backgroundColor = originalColor;
+
+            if (GUILayout.Button("导出所有实例到Excel", GUILayout.Width(BUTTON_WIDTH), GUILayout.Height(BUTTON_HEIGHT)))
+            {
+                ExportAllInstancesToExcel();
+            }
+
+            if (GUILayout.Button("从Excel导入所有实例", GUILayout.Width(BUTTON_WIDTH), GUILayout.Height(BUTTON_HEIGHT)))
+            {
+                ImportAllInstancesFromExcel();
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void DrawNewInstanceButton()
+        {
+            EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
+
+            GUILayout.Label("新实例名", GUILayout.Width(60));
+            _newInstanceName = EditorGUILayout.TextField(_newInstanceName ?? string.Empty);
+
+            if (GUILayout.Button("新建", GUILayout.Width(SMALL_BUTTON_WIDTH)))
+            {
+                string newName = (_newInstanceName ?? string.Empty).Trim();
+                if (string.IsNullOrEmpty(newName))
+                {
+                    Debug.LogWarning("实例名不能为空");
+                    return;
+                }
+
+                if (_selectedDataType == null)
+                {
+                    Debug.LogWarning("请先选择数据类型");
+                    return;
+                }
+
+                if (!TryHandleUnsavedChangesBeforeSwitch())
+                    return;
+
+                try
+                {
+                    _instanceName = newName;
+                    _currentDataInstance = Activator.CreateInstance(_selectedDataType);
+                    _isDirty = true;
+
+                    bool saveSuccess = SaveCurrentInstance();
+                    if (saveSuccess)
+                    {
+                        _isDirty = false;
+                        Debug.Log($"已创建并保存新实例：{newName}");
+                        _newInstanceName = "NewInstance";
+                    }
+                    else
+                    {
+                        Debug.LogError("创建新实例失败：保存失败");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"创建新实例失败：{e}");
+                }
+            }
+
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Space(5);
+        }
+
+        private void DrawInstanceSearchBar()
+        {
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("搜索", GUILayout.Width(35));
+            _instanceSearchText = EditorGUILayout.TextField(_instanceSearchText ?? string.Empty);
+
+            if (GUILayout.Button("清空", GUILayout.Width(SMALL_BUTTON_WIDTH)))
+            {
+                _instanceSearchText = string.Empty;
+                GUI.FocusControl(null);
+            }
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.Space(4);
+        }
+
+        private void DrawInstanceList()
+        {
+            _instanceListScrollPos = EditorGUILayout.BeginScrollView(_instanceListScrollPos);
+
+            string[] instanceNames = GetAllInstanceNamesSafe(_selectedDataType);
+
+            if (!string.IsNullOrEmpty(_instanceSearchText))
+            {
+                instanceNames = instanceNames
+                    .Where(n => !string.IsNullOrEmpty(n) &&
+                                n.IndexOf(_instanceSearchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                    .ToArray();
+            }
+
+            if (instanceNames == null || instanceNames.Length == 0)
+            {
+                EditorGUILayout.HelpBox("没有匹配实例。", MessageType.Info);
             }
             else
             {
-                // 普通字段
-                object newValue = DrawFieldControl(field.Name, field.FieldType, value);
-                if (!Equals(newValue, value))
+                foreach (string name in instanceNames)
                 {
-                    field.SetValue(_currentDataInstance, newValue);
+                    bool isSelected = name == _instanceName;
+                    Color originalColor = GUI.backgroundColor;
+                    if (isSelected)
+                        GUI.backgroundColor = Color.green;
+
+                    if (GUILayout.Button(name, GUILayout.Height(BUTTON_HEIGHT)))
+                    {
+                        if (_instanceName != name)
+                        {
+                            if (!TryHandleUnsavedChangesBeforeSwitch())
+                            {
+                                GUI.backgroundColor = originalColor;
+                                EditorGUILayout.EndScrollView();
+                                return;
+                            }
+
+                            _instanceName = name;
+                            _isDirty = false;
+                            LoadCurrentInstance();
+                        }
+                    }
+
+                    GUI.backgroundColor = originalColor;
+                }
+            }
+
+            EditorGUILayout.EndScrollView();
+        }
+
+        private void DrawDataFields()
+        {
+            if (_selectedDataType == null)
+            {
+                EditorGUILayout.HelpBox("未选择数据类型", MessageType.Warning);
+                return;
+            }
+
+            if (_currentDataInstance == null)
+            {
+                EditorGUILayout.HelpBox("当前实例为空，请尝试读取数据或新建实例。", MessageType.Warning);
+                return;
+            }
+
+            FieldInfo[] fields = GetSerializableFields(_selectedDataType);
+
+            foreach (FieldInfo field in fields)
+            {
+                try
+                {
+                    object oldValue = field.GetValue(_currentDataInstance);
+                    object newValue = DrawAnyField(field.Name, field.FieldType, oldValue, BuildFieldPath(field.Name), 0, true);
+
+                    if (!AreValuesEqual(oldValue, newValue))
+                    {
+                        field.SetValue(_currentDataInstance, newValue);
+                        MarkDirty();
+                    }
+                }
+                catch (Exception e)
+                {
+                    EditorGUILayout.HelpBox($"字段 [{field.Name}] 绘制失败：{e.Message}", MessageType.Error);
                 }
             }
         }
-    }
 
-    // 判断是否为支持的集合类型
-    private bool IsCollectionType(Type type)
-    {
-        if (type.IsArray) return true;
-        if (type.IsGenericType)
+        #endregion
+
+        #region 实例管理
+
+        private bool TryHandleUnsavedChangesBeforeSwitch()
         {
-            var genericDef = type.GetGenericTypeDefinition();
-            if (genericDef == typeof(List<>) || genericDef == typeof(Dictionary<,>))
+            if (!_isDirty) return true;
+
+            int result = EditorUtility.DisplayDialogComplex(
+                "未保存修改",
+                $"当前实例 [{_instanceName}] 有未保存修改，是否先保存？",
+                "保存并继续",
+                "取消",
+                "不保存继续"
+            );
+
+            if (result == 1) // 取消
+                return false;
+
+            if (result == 0) // 保存并继续
+            {
+                bool success = SaveCurrentInstance();
+                if (!success)
+                {
+                    // EditorUtility.DisplayDialog("失败", "保存失败，已取消切换", "确定");
+                    Debug.LogWarning("保存失败，已取消切换");
+                    return false;
+                }
+
+                _isDirty = false;
                 return true;
+            }
+
+            if (result == 2) // 不保存继续
+            {
+                _isDirty = false;
+                return true;
+            }
+
+            return true;
         }
-        return false;
-    }
 
-    // 绘制集合字段 (List, Array, Dictionary)
-    private void DrawCollectionField(FieldInfo field, object currentValue)
-    {
-        Type fieldType = field.FieldType;
-        string fieldKey = field.Name; // 用于 foldout 状态唯一标识
-        
-        // 获取或初始化 Foldout 状态
-        if (!_foldoutStates.ContainsKey(fieldKey))
-            _foldoutStates[fieldKey] = true;
-
-        // 绘制折叠头
-        string label = $"{field.Name} ({GetCollectionTypeName(fieldType)})";
-        _foldoutStates[fieldKey] = EditorGUILayout.Foldout(_foldoutStates[fieldKey], label, true, EditorStyles.foldoutHeader);
-
-        if (!_foldoutStates[fieldKey])
-            return;
-
-        EditorGUI.indentLevel++;
-        EditorGUILayout.BeginVertical("Box");
-
-        if (currentValue == null)
+        private void DeleteCurrentInstance()
         {
-            EditorGUILayout.LabelField("null (点击初始化)", EditorStyles.miniLabel);
-            if (GUILayout.Button("初始化集合", GUILayout.Width(100)))
+            if (_selectedDataType == null || string.IsNullOrEmpty(_instanceName))
             {
-                object newInstance = Activator.CreateInstance(fieldType);
-                field.SetValue(_currentDataInstance, newInstance);
-                currentValue = newInstance;
+                Debug.LogWarning("请先选择要删除的实例");
+                return;
+            }
+
+            string deletedName = _instanceName;
+
+            bool confirm = EditorUtility.DisplayDialog(
+                "确认删除",
+                $"是否永久删除实例：{deletedName}？\n此操作不可恢复！",
+                "删除",
+                "取消"
+            );
+
+            if (!confirm) return;
+
+            try
+            {
+                MethodInfo getSavePathMethod = GetGenericStaticMethod(typeof(GenericDataPersistence), "GetSavePath", _selectedDataType);
+                if (getSavePathMethod == null)
+                {
+                    Debug.LogError("未找到 GenericDataPersistence.GetSavePath");
+                    return;
+                }
+
+                string savePath = (string)getSavePathMethod.Invoke(null, new object[] { deletedName });
+
+                if (File.Exists(savePath))
+                {
+                    File.Delete(savePath);
+                    AssetDatabase.Refresh();
+
+                    string[] remainingInstances = GetAllInstanceNamesSafe(_selectedDataType);
+
+                    if (remainingInstances.Length > 0)
+                    {
+                        _instanceName = remainingInstances.Contains("Default") ? "Default" : remainingInstances[0];
+                        LoadCurrentInstance();
+                    }
+                    else
+                    {
+                        _instanceName = "Default";
+                        _currentDataInstance = Activator.CreateInstance(_selectedDataType);
+                    }
+
+                    _isDirty = false;
+                    Debug.Log($"实例 {deletedName} 已删除");
+                }
+                else
+                {
+                    Debug.LogWarning($"实例文件不存在，无需删除：{savePath}");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"删除实例 {deletedName} 失败：{e}");
             }
         }
-        else
+
+        private void ExportAllInstancesToExcel()
         {
-            if (fieldType.IsArray)
+            if (_selectedDataType == null)
             {
-                DrawArrayField(field, (Array)currentValue);
+                Debug.LogWarning("请先选择数据类型");
+                return;
             }
-            else if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(List<>))
+
+            try
             {
-                DrawListField(field, (IList)currentValue);
+                string fileName = $"{_selectedDataType.Name}.xlsx";
+                string excelPath = Path.Combine(EXCEL_PATH, fileName);
+
+                MethodInfo exportMethod = GetGenericStaticMethod(typeof(ExcelDataUtility), "ExportAllInstancesToExcel", _selectedDataType);
+                if (exportMethod == null)
+                {
+                    Debug.LogError("未找到 ExcelDataUtility.ExportAllInstancesToExcel");
+                    return;
+                }
+
+                bool success = (bool)exportMethod.Invoke(null, new object[] { excelPath });
+                Debug.Log(success
+                    ? $"[{GetDataTypeDisplayName()}] 所有实例导出到Excel成功\n路径：{excelPath}"
+                    : "导出失败");
             }
-            else if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+            catch (Exception e)
             {
-                DrawDictionaryField(field, (IDictionary)currentValue);
+                Debug.LogError($"导出Excel失败：{e}");
             }
         }
 
-        EditorGUILayout.EndVertical();
-        EditorGUI.indentLevel--;
-    }
+        private void ImportAllInstancesFromExcel()
+        {
+            if (_selectedDataType == null)
+            {
+                EditorUtility.DisplayDialog("提示", "请先选择数据类型", "确定");
+                return;
+            }
 
-    private string GetCollectionTypeName(Type type)
-    {
+            try
+            {
+                MethodInfo selectMethod = typeof(ExcelDataUtility).GetMethod("SelectExcelLoadPath", BindingFlags.Public | BindingFlags.Static);
+                if (selectMethod == null)
+                {
+                    EditorUtility.DisplayDialog("失败", "未找到 ExcelDataUtility.SelectExcelLoadPath", "确定");
+                    return;
+                }
+
+                string excelPath = (string)selectMethod.Invoke(null, null);
+                if (string.IsNullOrEmpty(excelPath))
+                    return;
+
+                MethodInfo importMethod = GetGenericStaticMethod(typeof(ExcelDataUtility), "ImportAllInstancesFromExcel", _selectedDataType);
+                if (importMethod == null)
+                {
+                    EditorUtility.DisplayDialog("失败", "未找到 ExcelDataUtility.ImportAllInstancesFromExcel", "确定");
+                    return;
+                }
+
+                bool success = (bool)importMethod.Invoke(null, new object[] { excelPath });
+
+                LoadCurrentInstance();
+                _isDirty = false;
+
+                EditorUtility.DisplayDialog(success ? "成功" : "失败",
+                    success
+                        ? $"[{GetDataTypeDisplayName()}] 从Excel导入所有实例成功"
+                        : "导入失败（无有效实例或文件错误）",
+                    "确定");
+            }
+            catch (Exception e)
+            {
+                // EditorUtility.DisplayDialog("失败", $"导入Excel失败：{e.Message}", "确定");
+                Debug.LogError($"导入Excel失败：{e}");
+            }
+        }
+
+        #endregion
+
+        #region 通用字段绘制核心
+
+        private object DrawAnyField(string label, Type fieldType, object value, string path, int depth, bool showLabel)
+        {
+            if (depth > MAX_RECURSION_DEPTH)
+            {
+                EditorGUILayout.HelpBox($"嵌套层级过深：{label}", MessageType.Warning);
+                return value;
+            }
+
+            if (IsSimpleType(fieldType))
+            {
+                return DrawSimpleField(label, fieldType, value, showLabel);
+            }
+
+            if (IsUnityObjectReference(fieldType))
+            {
+                return DrawUnityObjectField(label, fieldType, value, showLabel);
+            }
+
+            if (IsCollectionType(fieldType))
+            {
+                return DrawCollectionValue(label, fieldType, value, path, depth, showLabel);
+            }
+
+            if (IsSerializableComplexType(fieldType))
+            {
+                return DrawComplexObjectField(label, fieldType, value, path, depth, showLabel);
+            }
+
+            EditorGUILayout.BeginHorizontal();
+            if (showLabel)
+                EditorGUILayout.LabelField(label, GUILayout.Width(150));
+            EditorGUILayout.LabelField($"不支持的类型：{fieldType.Name}");
+            EditorGUILayout.EndHorizontal();
+
+            return value;
+        }
+
+        private object DrawSimpleField(string label, Type fieldType, object value, bool showLabel)
+        {
+            EditorGUILayout.BeginHorizontal();
+
+            if (showLabel)
+                EditorGUILayout.LabelField(label, GUILayout.Width(150));
+
+            object newValue = value;
+
+            if (fieldType == typeof(string))
+                newValue = EditorGUILayout.TextField((string)(value ?? string.Empty));
+            else if (fieldType == typeof(int))
+                newValue = EditorGUILayout.IntField(value != null ? (int)value : 0);
+            else if (fieldType == typeof(float))
+                newValue = EditorGUILayout.FloatField(value != null ? (float)value : 0f);
+            else if (fieldType == typeof(bool))
+                newValue = EditorGUILayout.Toggle(value != null && (bool)value);
+            else if (fieldType == typeof(double))
+                newValue = EditorGUILayout.DoubleField(value != null ? (double)value : 0d);
+            else if (fieldType == typeof(long))
+                newValue = EditorGUILayout.LongField(value != null ? (long)value : 0L);
+            else if (fieldType == typeof(Vector2))
+                newValue = EditorGUILayout.Vector2Field("", value != null ? (Vector2)value : default);
+            else if (fieldType == typeof(Vector2Int))
+                newValue = EditorGUILayout.Vector2IntField("", value != null ? (Vector2Int)value : default);
+            else if (fieldType == typeof(Vector3))
+                newValue = EditorGUILayout.Vector3Field("", value != null ? (Vector3)value : default);
+            else if (fieldType == typeof(Vector3Int))
+                newValue = EditorGUILayout.Vector3IntField("", value != null ? (Vector3Int)value : default);
+            else if (fieldType == typeof(Vector4))
+                newValue = EditorGUILayout.Vector4Field("", value != null ? (Vector4)value : default);
+            else if (fieldType == typeof(Color))
+                newValue = EditorGUILayout.ColorField("", value != null ? (Color)value : Color.white);
+            else if (fieldType == typeof(Rect))
+                newValue = EditorGUILayout.RectField("", value != null ? (Rect)value : default);
+            else if (fieldType == typeof(Bounds))
+                newValue = EditorGUILayout.BoundsField("", value != null ? (Bounds)value : default);
+            else if (fieldType == typeof(Quaternion))
+            {
+                Quaternion q = value != null ? (Quaternion)value : Quaternion.identity;
+                newValue = Quaternion.Euler(EditorGUILayout.Vector3Field("", q.eulerAngles));
+            }
+            else if (fieldType.IsEnum)
+            {
+                Array enumValues = Enum.GetValues(fieldType);
+                Enum enumValue = value as Enum;
+                if (enumValue == null && enumValues.Length > 0)
+                    enumValue = (Enum)enumValues.GetValue(0);
+
+                newValue = EditorGUILayout.EnumPopup(enumValue);
+            }
+
+            EditorGUILayout.EndHorizontal();
+            return newValue;
+        }
+
+        private object DrawUnityObjectField(string label, Type fieldType, object value, bool showLabel)
+        {
+            EditorGUILayout.BeginHorizontal();
+            if (showLabel)
+                EditorGUILayout.LabelField(label, GUILayout.Width(150));
+
+            UnityEngine.Object obj = value as UnityEngine.Object;
+            UnityEngine.Object newObj = EditorGUILayout.ObjectField(obj, fieldType, true);
+            EditorGUILayout.EndHorizontal();
+            return newObj;
+        }
+
+        private object DrawComplexObjectField(string label, Type fieldType, object value, string path, int depth, bool showLabel)
+        {
+            bool isNull = value == null;
+            string foldKey = $"complex:{path}";
+            bool expanded = GetFoldoutState(foldKey, true);
+
+            string displayLabel = showLabel ? $"{label} ({fieldType.Name})" : fieldType.Name;
+            if (isNull)
+                displayLabel += " [null]";
+
+            expanded = EditorGUILayout.Foldout(expanded, displayLabel, true);
+            SetFoldoutState(foldKey, expanded);
+
+            if (!expanded)
+                return value;
+
+            EditorGUI.indentLevel++;
+
+            object workingObject = value;
+
+            if (workingObject == null)
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("对象为空", GUILayout.Width(120));
+                if (GUILayout.Button("创建实例", GUILayout.Width(100)))
+                {
+                    workingObject = CreateDefaultComplexObject(fieldType);
+                    MarkDirty();
+                }
+                EditorGUILayout.EndHorizontal();
+
+                if (workingObject == null)
+                {
+                    EditorGUI.indentLevel--;
+                    return value;
+                }
+            }
+
+            FieldInfo[] subFields = GetSerializableFields(fieldType);
+            if (subFields.Length == 0)
+            {
+                EditorGUILayout.LabelField("无可编辑字段");
+                EditorGUI.indentLevel--;
+                return workingObject;
+            }
+
+            foreach (FieldInfo subField in subFields)
+            {
+                object oldSubValue = subField.GetValue(workingObject);
+                object newSubValue = DrawAnyField(
+                    subField.Name,
+                    subField.FieldType,
+                    oldSubValue,
+                    $"{path}.{subField.Name}",
+                    depth + 1,
+                    true);
+
+                if (!AreValuesEqual(oldSubValue, newSubValue))
+                {
+                    subField.SetValue(workingObject, newSubValue);
+                    MarkDirty();
+                }
+            }
+
+            EditorGUI.indentLevel--;
+            return workingObject;
+        }
+
+        private object DrawCollectionValue(string label, Type collectionType, object value, string path, int depth, bool showLabel)
+        {
+            string foldKey = $"collection:{path}";
+            bool expanded = GetFoldoutState(foldKey, true);
+            // string elementTypeName = GetCollectionElementType(collectionType)?.Name ?? "Unknown";
+            // string elementTypeName = GetCollectionTypeName(collectionType)? ?? "Unknown";
+            string displayLabel = showLabel ? $"{label} ({GetCollectionTypeName(collectionType)} 集合)" : $"{GetCollectionTypeName(collectionType)} 集合";
+
+            expanded = EditorGUILayout.Foldout(expanded, displayLabel, true);
+            SetFoldoutState(foldKey, expanded);
+
+            if (!expanded)
+                return value;
+
+            EditorGUI.indentLevel++;
+
+            object workingValue = value;
+            if (workingValue == null)
+            {
+                EditorGUILayout.HelpBox("集合未初始化", MessageType.Warning);
+                if (GUILayout.Button("初始化空集合", GUILayout.Width(BUTTON_WIDTH)))
+                {
+                    workingValue = CreateEmptyCollection(collectionType);
+                    MarkDirty();
+                }
+
+                EditorGUI.indentLevel--;
+                return workingValue;
+            }
+
+            if (collectionType.IsArray)
+            {
+                workingValue = DrawArrayValue(collectionType, workingValue, path, depth + 1);
+            }
+            else if (collectionType.IsGenericType && collectionType.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                workingValue = DrawListValue(collectionType, workingValue, path, depth + 1);
+            }
+            else if (collectionType.IsGenericType && collectionType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+            {
+                workingValue = DrawDictionaryValue(collectionType, workingValue, path, depth + 1);
+            }
+
+            EditorGUI.indentLevel--;
+            return workingValue;
+        }
+
+        #endregion
+
+        #region 集合绘制
+
+        private object DrawArrayValue(Type arrayType, object arrayInstance, string path, int depth)
+        {
+            Type elementType = arrayType.GetElementType();
+            Array array = (Array)arrayInstance;
+            int count = array.Length;
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("清空", GUILayout.Width(SMALL_BUTTON_WIDTH)))
+            {
+                MarkDirty();
+                EditorGUILayout.EndHorizontal();
+                return Array.CreateInstance(elementType, 0);
+            }
+
+            if (GUILayout.Button("添加元素", GUILayout.Width(MID_BUTTON_WIDTH)))
+            {
+                Array newArray = Array.CreateInstance(elementType, count + 1);
+                Array.Copy(array, newArray, count);
+                newArray.SetValue(CreateDefaultValueForField(elementType), count);
+                MarkDirty();
+                EditorGUILayout.EndHorizontal();
+                return newArray;
+            }
+
+            EditorGUILayout.LabelField($"总数：{count}", GUILayout.Width(60));
+            EditorGUILayout.EndHorizontal();
+
+            for (int i = 0; i < count; i++)
+            {
+                EditorGUILayout.BeginVertical("box");
+
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField($"索引 [{i}]", EditorStyles.boldLabel);
+
+                if (GUILayout.Button("删除", GUILayout.Width(SMALL_BUTTON_WIDTH)))
+                {
+                    Array newArray = Array.CreateInstance(elementType, count - 1);
+                    for (int j = 0, k = 0; j < count; j++)
+                    {
+                        if (j == i) continue;
+                        newArray.SetValue(array.GetValue(j), k++);
+                    }
+
+                    MarkDirty();
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.EndVertical();
+                    return newArray;
+                }
+                EditorGUILayout.EndHorizontal();
+
+                object oldElement = array.GetValue(i);
+                object newElement = DrawAnyField("", elementType, oldElement, $"{path}[{i}]", depth, false);
+
+                if (!AreValuesEqual(oldElement, newElement))
+                {
+                    array.SetValue(newElement, i);
+                    MarkDirty();
+                }
+
+                EditorGUILayout.EndVertical();
+            }
+
+            return array;
+        }
+
+        private object DrawListValue(Type listType, object listInstance, string path, int depth)
+        {
+            Type elementType = listType.GetGenericArguments()[0];
+
+            PropertyInfo countProp = listType.GetProperty("Count");
+            MethodInfo addMethod = listType.GetMethod("Add");
+            MethodInfo removeAtMethod = listType.GetMethod("RemoveAt");
+            MethodInfo clearMethod = listType.GetMethod("Clear");
+            PropertyInfo indexerProp = listType.GetProperty("Item");
+
+            if (countProp == null || addMethod == null || removeAtMethod == null || clearMethod == null || indexerProp == null)
+            {
+                EditorGUILayout.HelpBox("List 反射信息获取失败", MessageType.Error);
+                return listInstance;
+            }
+
+            int count = (int)countProp.GetValue(listInstance);
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("清空", GUILayout.Width(SMALL_BUTTON_WIDTH)))
+            {
+                clearMethod.Invoke(listInstance, null);
+                MarkDirty();
+                EditorGUILayout.EndHorizontal();
+                return listInstance;
+            }
+
+            if (GUILayout.Button("添加元素", GUILayout.Width(MID_BUTTON_WIDTH)))
+            {
+                addMethod.Invoke(listInstance, new[] { CreateDefaultValueForField(elementType) });
+                MarkDirty();
+                EditorGUILayout.EndHorizontal();
+                return listInstance;
+            }
+
+            EditorGUILayout.LabelField($"总数：{count}", GUILayout.Width(60));
+            EditorGUILayout.EndHorizontal();
+
+            for (int i = 0; i < count; i++)
+            {
+                EditorGUILayout.BeginVertical("box");
+
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField($"索引 [{i}]", EditorStyles.boldLabel);
+
+                if (GUILayout.Button("删除", GUILayout.Width(SMALL_BUTTON_WIDTH)))
+                {
+                    removeAtMethod.Invoke(listInstance, new object[] { i });
+                    MarkDirty();
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.EndVertical();
+                    return listInstance;
+                }
+                EditorGUILayout.EndHorizontal();
+
+                object oldElement = indexerProp.GetValue(listInstance, new object[] { i });
+                object newElement = DrawAnyField("", elementType, oldElement, $"{path}[{i}]", depth, false);
+
+                if (!AreValuesEqual(oldElement, newElement))
+                {
+                    indexerProp.SetValue(listInstance, newElement, new object[] { i });
+                    MarkDirty();
+                }
+
+                EditorGUILayout.EndVertical();
+            }
+
+            return listInstance;
+        }
+
+
+        private object DrawDictionaryValue(Type dictType, object dictInstance, string path, int depth)
+        {
+            // 1. 基础校验与反射获取核心方法/属性
+            if (dictInstance == null)
+            {
+                EditorGUILayout.HelpBox("字典未初始化", MessageType.Warning);
+                if (GUILayout.Button("初始化空字典", GUILayout.Width(BUTTON_WIDTH)))
+                {
+                    dictInstance = CreateEmptyCollection(dictType);
+                    MarkDirty();
+                }
+                return dictInstance;
+            }
+
+            Type[] dictArgs = dictType.GetGenericArguments();
+            Type keyType = dictArgs[0];
+            Type valueType = dictArgs[1];
+
+            // 获取 Dictionary 核心方法/属性（带空值检查）
+            PropertyInfo countProp = dictType.GetProperty("Count");
+            MethodInfo addMethod = dictType.GetMethod("Add", new[] { keyType, valueType });
+            MethodInfo removeMethod = dictType.GetMethod("Remove", new[] { keyType });
+            MethodInfo clearMethod = dictType.GetMethod("Clear");
+            PropertyInfo indexerProp = dictType.GetProperty("Item", new[] { keyType });
+            MethodInfo containsKeyMethod = dictType.GetMethod("ContainsKey", new[] { keyType });
+
+            if (countProp == null || addMethod == null || removeMethod == null || clearMethod == null || indexerProp == null || containsKeyMethod == null)
+            {
+                EditorGUILayout.HelpBox("无法获取 Dictionary 反射信息", MessageType.Error);
+                return dictInstance;
+            }
+
+            // 2. 顶部操作按钮（清空/总数）
+            int count = (int)countProp.GetValue(dictInstance);
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("清空", GUILayout.Width(SMALL_BUTTON_WIDTH)))
+            {
+                clearMethod.Invoke(dictInstance, null);
+                MarkDirty();
+                EditorGUILayout.EndHorizontal();
+                return dictInstance;
+            }
+            EditorGUILayout.LabelField($"总数：{count}", GUILayout.Width(60));
+            EditorGUILayout.EndHorizontal();
+
+            // 3. 遍历编辑现有键值对（解决遍历中修改的问题：先收集要删除的键）
+            List<object> keysToRemove = new List<object>();
+            List<object> keys = new List<object>();
+            foreach (object item in (IEnumerable)dictInstance)
+            {
+                if (item == null) continue;
+                Type kvpType = item.GetType();
+                PropertyInfo keyProp = kvpType.GetProperty("Key");
+                PropertyInfo valueProp = kvpType.GetProperty("Value");
+                if (keyProp != null) keys.Add(keyProp.GetValue(item));
+            }
+
+            foreach (object key in keys)
+            {
+                EditorGUILayout.BeginVertical("box");
+
+                // 键编辑区域（只读/可编辑）
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("键", GUILayout.Width(40));
+                object editedKey = key;
+
+                // 仅支持简单类型键的编辑
+                if (CanEditDictionaryKeyType(keyType))
+                {
+                    editedKey = DrawAnyField("", keyType, key, $"{path}.key[{key}]", depth, false);
+                }
+                else
+                {
+                    EditorGUILayout.SelectableLabel(key?.ToString() ?? "null", GUILayout.Height(EditorGUIUtility.singleLineHeight));
+                }
+
+                // // 删除按钮（标记待删除，避免遍历中修改）
+                // if (GUILayout.Button("删除", GUILayout.Width(SMALL_BUTTON_WIDTH)))
+                // {
+                //     keysToRemove.Add(key);
+                // }
+                // EditorGUILayout.EndHorizontal();
+
+                // // 值编辑区域（支持复杂类型递归编辑）
+                // EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("值", GUILayout.Width(40));
+                object oldValue = indexerProp.GetValue(dictInstance, new object[] { key });
+                object newValue = DrawAnyField("", valueType, oldValue, $"{path}.value[{key}]", depth, false);
+                
+                 // 删除按钮（标记待删除，避免遍历中修改）
+                if (GUILayout.Button("删除", GUILayout.Width(SMALL_BUTTON_WIDTH)))
+                {
+                    keysToRemove.Add(key);
+                }
+                EditorGUILayout.EndHorizontal();
+
+                // 应用值修改
+                if (!AreValuesEqual(oldValue, newValue))
+                {
+                    indexerProp.SetValue(dictInstance, newValue, new object[] { key });
+                    MarkDirty();
+                }
+
+                // 应用键修改（仅当键变化且不重复时）
+                if (!AreValuesEqual(key, editedKey) && editedKey != null)
+                {
+                    bool keyExists = (bool)containsKeyMethod.Invoke(dictInstance, new[] { editedKey });
+                    if (!keyExists)
+                    {
+                        // 先删旧键，再加新键
+                        removeMethod.Invoke(dictInstance, new[] { key });
+                        addMethod.Invoke(dictInstance, new[] { editedKey, oldValue });
+                        MarkDirty();
+                    }
+                    else
+                    {
+                        EditorGUILayout.HelpBox($"键 [{editedKey}] 已存在，无法修改", MessageType.Warning);
+                    }
+                }
+
+                EditorGUILayout.EndVertical();
+            }
+
+            // 批量删除标记的键
+            foreach (object key in keysToRemove)
+            {
+                removeMethod.Invoke(dictInstance, new[] { key });
+                MarkDirty();
+            }
+
+            // 4. 新增键值对区域
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("新增键值对", EditorStyles.boldLabel);
+            EditorGUILayout.BeginHorizontal();
+
+            // 初始化临时键/值（按类型缓存，避免帧丢失）
+            if (!_tempDictNewKey.ContainsKey(keyType))
+                _tempDictNewKey[keyType] = CreateDefaultValueForField(keyType);
+            if (!_tempDictNewValue.ContainsKey(valueType))
+                _tempDictNewValue[valueType] = CreateDefaultValueForField(valueType);
+
+            // 绘制键输入框
+            EditorGUILayout.LabelField("键", GUILayout.Width(40));
+            object newKey = DrawAnyField("", keyType, _tempDictNewKey[keyType], $"{path}.newKey", depth, false);
+            _tempDictNewKey[keyType] = newKey;
+
+            // 绘制值输入框
+            EditorGUILayout.LabelField("值", GUILayout.Width(40));
+            object newValueTemp = DrawAnyField("", valueType, _tempDictNewValue[valueType], $"{path}.newValue", depth, false);
+            _tempDictNewValue[valueType] = newValueTemp;
+
+            // 新增按钮
+            if (GUILayout.Button("添加", GUILayout.Width(MID_BUTTON_WIDTH)))
+            {
+                if (newKey == null)
+                {
+                    EditorUtility.DisplayDialog("错误", "键不能为空", "确定");
+                }
+                else if ((bool)containsKeyMethod.Invoke(dictInstance, new[] { newKey }))
+                {
+                    EditorUtility.DisplayDialog("错误", $"键 [{newKey}] 已存在", "确定");
+                }
+                else
+                {
+                    addMethod.Invoke(dictInstance, new[] { newKey, newValueTemp });
+                    MarkDirty();
+                    // 重置临时键值
+                    _tempDictNewKey[keyType] = CreateDefaultValueForField(keyType);
+                    _tempDictNewValue[valueType] = CreateDefaultValueForField(valueType);
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+
+            return dictInstance;
+        }
+    
+        #endregion
+
+        #region 类型判断与辅助
+
+
+        private bool CanEditDictionaryKeyType(Type keyType)
+        {
+            if (keyType == null) return false;
+            if (IsSimpleType(keyType)) return true;
+            return false;
+        }
+
+        private bool IsSimpleType(Type type)
+        {
+            if (type == null) return false;
+
+            return type == typeof(string) ||
+                   type == typeof(int) ||
+                   type == typeof(float) ||
+                   type == typeof(bool) ||
+                   type == typeof(double) ||
+                   type == typeof(long) ||
+                   type == typeof(Vector2) ||
+                   type == typeof(Vector2Int) ||
+                   type == typeof(Vector3) ||
+                   type == typeof(Vector3Int) ||
+                   type == typeof(Vector4) ||
+                   type == typeof(Color) ||
+                   type == typeof(Rect) ||
+                   type == typeof(Bounds) ||
+                   type == typeof(Quaternion) ||
+                   type.IsEnum;
+        }
+
+        private bool IsUnityObjectReference(Type type)
+        {
+            return type != null && typeof(UnityEngine.Object).IsAssignableFrom(type);
+        }
+
+        private bool IsCollectionType(Type type)
+        {
+            if (type == null) return false;
+
+            if (type.IsArray) return true;
+
+            if (type.IsGenericType)
+            {
+                Type genericDef = type.GetGenericTypeDefinition();
+                return genericDef == typeof(List<>) || genericDef == typeof(Dictionary<,>);
+            }
+
+            return false;
+        }
+
+        private bool IsSerializableComplexType(Type type)
+        {
+            if (type == null) return false;
+            if (IsSimpleType(type)) return false;
+            if (IsUnityObjectReference(type)) return false;
+            if (IsCollectionType(type)) return false;
+            if (type == typeof(decimal)) return false;
+            if (type.IsAbstract || type.IsInterface) return false;
+
+            return type.IsSerializable || type.GetCustomAttribute<SerializableAttribute>() != null;
+        }
+
+        private FieldInfo[] GetSerializableFields(Type type)
+        {
+            if (type == null) return Array.Empty<FieldInfo>();
+
+            return type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(f => !f.IsStatic)
+                .Where(f => f.IsPublic || f.GetCustomAttribute<SerializeField>() != null)
+                .Where(f => !f.Name.Contains("<") && !f.Name.Contains(">"))
+                .ToArray();
+        }
+
+        private Type GetCollectionElementType(Type collectionType)
+        {
+            if (collectionType == null) return null;
+
+            if (collectionType.IsArray)
+                return collectionType.GetElementType();
+
+            if (collectionType.IsGenericType)
+            {
+                Type genericDef = collectionType.GetGenericTypeDefinition();
+                if (genericDef == typeof(List<>))
+                    return collectionType.GetGenericArguments()[0];
+
+                if (genericDef == typeof(Dictionary<,>))
+                {
+                    Type[] args = collectionType.GetGenericArguments();
+                    return typeof(KeyValuePair<,>).MakeGenericType(args[0], args[1]);
+                }
+            }
+
+            return null;
+        }
+        private string GetCollectionTypeName(Type type)
+        {
         if (type.IsArray) return $"Array[{type.GetElementType().Name}]";
         if (type.IsGenericType)
         {
@@ -457,322 +1319,259 @@ public class GeneralEditorWindow : EditorWindow
             if (def == typeof(Dictionary<,>)) return $"Dict<{type.GetGenericArguments()[0].Name}, {type.GetGenericArguments()[1].Name}>";
         }
         return type.Name;
-    }
+        }
 
-    // 绘制 Array
-    private void DrawArrayField(FieldInfo field, Array array)
-    {
-        int length = array.Length;
-        Type elementType = field.FieldType.GetElementType();
-
-        EditorGUILayout.LabelField($"长度: {length}", EditorStyles.miniLabel);
-
-        for (int i = 0; i < length; i++)
+        private object CreateEmptyCollection(Type collectionType)
         {
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"[{i}]", GUILayout.Width(30));
-            
-            object itemValue = array.GetValue(i);
-            object newItemValue = DrawFieldControl("", elementType, itemValue);
+            if (collectionType == null) return null;
 
-            if (!Equals(newItemValue, itemValue))
+            if (collectionType.IsArray)
             {
-                array.SetValue(newItemValue, i);
+                Type elementType = collectionType.GetElementType();
+                return Array.CreateInstance(elementType, 0);
             }
 
-            // 数组不支持动态删除单个元素（需重建），这里仅提供提示或整体重置
-            // 若要支持删除，通常建议转为 List 编辑后再转回，或者提供"移除该项"按钮并重建数组
-            if (GUILayout.Button("X", GUILayout.Width(20)))
+            if (collectionType.IsGenericType)
             {
-                // 简单实现：创建一个新数组，少一个元素
-                var newList = Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType)) as IList;
-                for (int j = 0; j < length; j++)
+                Type genericDef = collectionType.GetGenericTypeDefinition();
+                if (genericDef == typeof(List<>) || genericDef == typeof(Dictionary<,>))
+                    return Activator.CreateInstance(collectionType);
+            }
+
+            return null;
+        }
+
+        private object CreateDefaultValueForField(Type type)
+        {
+            if (type == null) return null;
+
+            if (type == typeof(string))
+                return string.Empty;
+
+            if (type.IsEnum)
+            {
+                Array values = Enum.GetValues(type);
+                return values.Length > 0 ? values.GetValue(0) : Activator.CreateInstance(type);
+            }
+
+            if (type.IsValueType)
+                return Activator.CreateInstance(type);
+
+            if (IsSerializableComplexType(type))
+                return CreateDefaultComplexObject(type);
+
+            return null;
+        }
+
+        private object CreateDefaultComplexObject(Type type)
+        {
+            if (type == null) return null;
+
+            try
+            {
+                return Activator.CreateInstance(type);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private bool TryCreateNewDictionaryKey(object dictInstance, Type keyType, MethodInfo containsKeyMethod, int count, out object newKey)
+        {
+            newKey = null;
+
+            if (keyType == typeof(string))
+            {
+                string baseKey = "NewKey";
+                string candidate = baseKey;
+                int suffix = 1;
+
+                while ((bool)containsKeyMethod.Invoke(dictInstance, new object[] { candidate }))
                 {
-                    if (j != i) newList.Add(array.GetValue(j));
+                    candidate = $"{baseKey}{suffix++}";
                 }
-                var newArray = Array.CreateInstance(elementType, newList.Count);
-                newList.CopyTo(newArray, 0);
-                field.SetValue(_currentDataInstance, newArray);
-                return; // 重建后立即返回，避免索引错误
+
+                newKey = candidate;
+                return true;
             }
-            EditorGUILayout.EndHorizontal();
-        }
 
-        // 添加元素按钮 (数组需要扩容)
-        if (GUILayout.Button("+ 添加元素"))
-        {
-            var newList = Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType)) as IList;
-            foreach (var item in array) newList.Add(item);
-            
-            // 添加默认值
-            object defaultVal = elementType.IsValueType ? Activator.CreateInstance(elementType) : null;
-            if (elementType == typeof(string)) defaultVal = "";
-            newList.Add(defaultVal);
-
-            var newArray = Array.CreateInstance(elementType, newList.Count);
-            newList.CopyTo(newArray, 0);
-            field.SetValue(_currentDataInstance, newArray);
-        }
-    }
-
-    // 绘制 List
-    private void DrawListField(FieldInfo field, IList list)
-    {
-        Type elementType = field.FieldType.GetGenericArguments()[0];
-        
-        for (int i = 0; i < list.Count; i++)
-        {
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"[{i}]", GUILayout.Width(30));
-
-            object itemValue = list[i];
-            object newItemValue = DrawFieldControl("", elementType, itemValue);
-
-            if (!Equals(newItemValue, itemValue))
+            if (keyType == typeof(int))
             {
-                list[i] = newItemValue;
+                int candidate = 0;
+                while ((bool)containsKeyMethod.Invoke(dictInstance, new object[] { candidate }))
+                {
+                    candidate++;
+                }
+
+                newKey = candidate;
+                return true;
             }
 
-            if (GUILayout.Button("X", GUILayout.Width(20)))
+            if (keyType.IsEnum)
             {
-                list.RemoveAt(i);
-                return; // 修改集合后立即返回
+                Array values = Enum.GetValues(keyType);
+                foreach (object value in values)
+                {
+                    if (!(bool)containsKeyMethod.Invoke(dictInstance, new object[] { value }))
+                    {
+                        newKey = value;
+                        return true;
+                    }
+                }
+                return false;
             }
-            EditorGUILayout.EndHorizontal();
+
+            return false;
         }
 
-        if (GUILayout.Button("+ 添加元素"))
+        private string BuildFieldPath(string fieldName)
         {
-            elementType = field.FieldType.GetGenericArguments()[0];
-            object defaultVal = elementType.IsValueType ? Activator.CreateInstance(elementType) : null;
-            if (elementType == typeof(string)) defaultVal = "";
-            else if (elementType.IsClass && elementType != typeof(string)) defaultVal = Activator.CreateInstance(elementType);
-            
-            list.Add(defaultVal);
+            return $"{_selectedDataType?.FullName ?? "UnknownType"}.{_instanceName}.{fieldName}";
         }
-    }
-    private object m_key;
-    private object m_value;
-    // 绘制 Dictionary
-    private void DrawDictionaryField(FieldInfo field, IDictionary dict)
-    {
-        Type keyType = field.FieldType.GetGenericArguments()[0];
-        Type valueType = field.FieldType.GetGenericArguments()[1];
 
-        // 注意：Dictionary 在遍历时不能直接修改结构（增删），所以我们需要暂存操作
-        object keyToRemove = null;
-        
-        // 临时存储新键值
-        // object newKey = null;
-        // object newValue = null;
-
-        // 绘制现有项
-        // 将 Keys 复制到数组以避免枚举期间修改异常
-        var keys = dict.Keys.Cast<object>().ToArray();
-        
-        foreach (var key in keys)
+        private bool GetFoldoutState(string key, bool defaultValue)
         {
-            EditorGUILayout.BeginHorizontal();
-            
-            // 绘制 Key (通常只读，或者允许编辑但需要重建键值对)
-            // 为简化，这里 Key 设为只读显示，若需编辑 Key，通常做法是删除旧项加新项
-            EditorGUILayout.LabelField(key.ToString(), GUILayout.Width(100), GUILayout.Height(EditorGUIUtility.singleLineHeight));
-            
-            object val = dict[key];
-            object newVal = DrawFieldControl("", valueType, val);
-
-            if (!Equals(newVal, val))
+            if (!_foldoutStates.TryGetValue(key, out bool value))
             {
-                dict[key] = newVal;
+                _foldoutStates[key] = defaultValue;
+                return defaultValue;
             }
+            return value;
+        }
 
-            if (GUILayout.Button("X", GUILayout.Width(20)))
+        private void SetFoldoutState(string key, bool value)
+        {
+            _foldoutStates[key] = value;
+        }
+
+        private void MarkDirty()
+        {
+            _isDirty = true;
+            Repaint();
+        }
+
+        private bool AreValuesEqual(object a, object b)
+        {
+            if (ReferenceEquals(a, b)) return true;
+            if (a == null || b == null) return false;
+            return Equals(a, b);
+        }
+
+        #endregion
+
+        #region 数据读写与反射
+
+        private string GetDataTypeDisplayName(Type type = null)
+        {
+            type ??= _selectedDataType;
+            if (type == null) return string.Empty;
+
+            EditableDataAttribute attr = type.GetCustomAttribute<EditableDataAttribute>();
+            return attr == null || string.IsNullOrEmpty(attr.DisplayName) ? type.Name : attr.DisplayName;
+        }
+
+        private void LoadCurrentInstance()
+        {
+            if (_selectedDataType == null)
+                return;
+
+            try
             {
-                keyToRemove = key;
+                MethodInfo loadMethod = GetGenericStaticMethod(typeof(GenericDataPersistence), "LoadData", _selectedDataType);
+                if (loadMethod == null)
+                {
+                    Debug.LogError("未找到 GenericDataPersistence.LoadData");
+                    _currentDataInstance = Activator.CreateInstance(_selectedDataType);
+                    return;
+                }
+
+                _currentDataInstance = loadMethod.Invoke(null, new object[] { _instanceName });
+
+                if (_currentDataInstance == null)
+                {
+                    Debug.LogWarning($"实例 {_instanceName} 加载为空，自动创建空实例");
+                    _currentDataInstance = Activator.CreateInstance(_selectedDataType);
+                }
             }
-            EditorGUILayout.EndHorizontal();
+            catch (Exception e)
+            {
+                Debug.LogError($"加载实例失败：{_instanceName}\n{e}");
+                _currentDataInstance = Activator.CreateInstance(_selectedDataType);
+            }
         }
 
-        if (keyToRemove != null)
+        private bool SaveCurrentInstance()
         {
-            dict.Remove(keyToRemove);
-            return;
+            if (_selectedDataType == null || _currentDataInstance == null)
+                return false;
+
+            try
+            {
+                MethodInfo saveMethod = GetGenericStaticMethod(typeof(GenericDataPersistence), "SaveData", _selectedDataType);
+                if (saveMethod == null)
+                {
+                    Debug.LogError("未找到 GenericDataPersistence.SaveData");
+                    return false;
+                }
+
+                bool success = (bool)saveMethod.Invoke(null, new[] { _currentDataInstance, _instanceName });
+                AssetDatabase.Refresh();
+                return success;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"保存实例失败：{_instanceName}\n{e}");
+                return false;
+            }
         }
 
-        // 添加新项区域
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("添加新项", EditorStyles.miniLabel);
-        EditorGUILayout.BeginHorizontal();
-
-        // 简单的 Key 输入器 (仅支持基础类型作为 Key 的输入演示)
-        var p = DrawSimpleKeyInput(keyType);
-        if (p != null) m_key = p;
-        
-        if (m_key != null)
+        private string[] GetAllInstanceNamesSafe(Type dataType)
         {
-             // 临时 Value
-             object defaultVal = valueType.IsValueType ? Activator.CreateInstance(valueType) : null;
-             if (valueType == typeof(string)) defaultVal = "";
-             
-             // 这里为了能在同一行绘制并获取值，我们用一个临时的匿名对象或者再次调用 DrawFieldControl
-             // 但由于 GUILayout 是立即模式，我们需要在一个单独的 pass 或者用临时变量
-             // 简化处理：分两行，或者假设用户先输入 Key 点击添加后，下一帧再编辑 Value
-             // 更好的方式：使用一个临时的 Dictionary entry 编辑器
-             
-             // 这里采用：如果 Key 有效且不为空，显示 Value 输入框和确认按钮
-             EditorGUILayout.LabelField("Value:", GUILayout.Width(40));
-            var q = DrawFieldControl("", valueType, defaultVal);
-             if (q != null) m_value = q;
-             
-             if (GUILayout.Button("Add", GUILayout.Width(40)))
-             {
-                 if (!dict.Contains(m_key))
-                 {
-                     dict.Add(m_key, m_value);
-                     // 强制刷新 UI 状态可能需要标记 Dirty，但在 EditorWindow 中通常下一帧自动重绘
-                 }
-                 else
-                 {
-                     EditorUtility.DisplayDialog("错误", "Key 已存在", "OK");
-                 }
-             }
-        }
-        else
-        {
-             EditorGUILayout.LabelField("不支持该类型的 Key 快速输入", EditorStyles.miniLabel);
+            if (dataType == null)
+                return Array.Empty<string>();
+
+            try
+            {
+                MethodInfo method = GetGenericStaticMethod(typeof(GenericDataPersistence), "GetAllInstanceNames", dataType);
+                if (method == null)
+                {
+                    Debug.LogError("未找到 GenericDataPersistence.GetAllInstanceNames");
+                    return Array.Empty<string>();
+                }
+
+                return (string[])method.Invoke(null, null) ?? Array.Empty<string>();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"获取实例列表失败：{e}");
+                return Array.Empty<string>();
+            }
         }
 
-        EditorGUILayout.EndHorizontal();
+        private MethodInfo GetGenericStaticMethod(Type ownerType, string methodName, Type genericArg)
+        {
+            if (ownerType == null || string.IsNullOrEmpty(methodName) || genericArg == null)
+                return null;
+
+            MethodInfo method = ownerType
+                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
+                .FirstOrDefault(m => m.Name == methodName && m.IsGenericMethodDefinition);
+
+            if (method == null)
+                return null;
+
+            try
+            {
+                return method.MakeGenericMethod(genericArg);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"泛型方法构造失败：{ownerType.Name}.{methodName}<{genericArg.Name}> \n{e}");
+                return null;
+            }
+        }
+
+        #endregion
     }
-
-    // 辅助：绘制简单的 Key 输入 (仅支持 string, int, enum 等简单类型作为 Key)
-    private object DrawSimpleKeyInput(Type keyType)
-    {
-        if (keyType == typeof(string))
-        {
-            return EditorGUILayout.TextField("", "");
-        }
-        else if (keyType == typeof(int))
-        {
-            return EditorGUILayout.IntField(0);
-        }
-        else if (keyType == typeof(long))
-        {
-            return EditorGUILayout.LongField(0);
-        }
-        else if (keyType.IsEnum)
-        {
-            return EditorGUILayout.EnumPopup((Enum)Activator.CreateInstance(keyType));
-        }
-        // 其他复杂类型作为 Key 在此简化处理，暂不支持直接输入
-        return null;
-    }
-
-    // 辅助：绘制单个字段控件 (增强版)
-    private object DrawFieldControl(string label, Type fieldType, object value)
-    {
-        // 如果是嵌套的可编辑数据类，也可以在这里递归处理，但目前先处理基础类型和集合
-        // 如果 value 是一个类且不是 Unity/Object 也不是基础类型，可以选择展开或显示提示
-        
-        EditorGUILayout.BeginHorizontal();
-        if (!string.IsNullOrEmpty(label))
-            EditorGUILayout.LabelField(label, GUILayout.Width(150));
-
-        object newValue = value;
-
-        // 基础类型
-        if (fieldType == typeof(string))
-            newValue = EditorGUILayout.TextField((string)value);
-        else if (fieldType == typeof(int))
-            newValue = EditorGUILayout.IntField((int)value);
-        else if (fieldType == typeof(float))
-            newValue = EditorGUILayout.FloatField((float)value);
-        else if (fieldType == typeof(bool))
-            newValue = EditorGUILayout.Toggle((bool)value);
-        else if (fieldType == typeof(double))
-            newValue = EditorGUILayout.DoubleField((double)value);
-        else if (fieldType == typeof(long))
-            newValue = EditorGUILayout.LongField((long)value);
-        else if (fieldType == typeof(char))
-        {
-            string s = EditorGUILayout.TextField(value?.ToString() ?? "");
-            if (!string.IsNullOrEmpty(s)) newValue = s[0];
-        }
-
-        // Unity 常用类型
-        else if (fieldType == typeof(Vector2))
-            newValue = EditorGUILayout.Vector2Field("", (Vector2)value);
-        else if (fieldType == typeof(Vector2Int))
-            newValue = EditorGUILayout.Vector2IntField("", (Vector2Int)value);
-        else if (fieldType == typeof(Vector3))
-            newValue = EditorGUILayout.Vector3Field("", (Vector3)value);
-        else if (fieldType == typeof(Vector3Int))
-            newValue = EditorGUILayout.Vector3IntField("", (Vector3Int)value);
-        else if (fieldType == typeof(Vector4))
-            newValue = EditorGUILayout.Vector4Field("", (Vector4)value);
-        else if (fieldType == typeof(Color))
-            newValue = EditorGUILayout.ColorField("", (Color)value);
-        else if (fieldType == typeof(Rect))
-            newValue = EditorGUILayout.RectField("", (Rect)value);
-        else if (fieldType == typeof(Bounds))
-            newValue = EditorGUILayout.BoundsField("", (Bounds)value);
-        else if (fieldType == typeof(Quaternion))
-            newValue = Quaternion.Euler(EditorGUILayout.Vector3Field("", ((Quaternion)value).eulerAngles));
-        else if (fieldType == typeof(UnityEngine.Object) || fieldType.IsSubclassOf(typeof(UnityEngine.Object)))
-            newValue = EditorGUILayout.ObjectField("", (UnityEngine.Object)value, fieldType, true);
-
-        // 枚举类型
-        else if (fieldType.IsEnum)
-            newValue = EditorGUILayout.EnumPopup((Enum)value);
-            
-        // 嵌套类 (非集合，非基础) - 简单提示或尝试展开 (此处简化为只显示类型名，避免无限递归复杂化)
-        else if (!fieldType.IsPrimitive && !fieldType.IsArray && !fieldType.Namespace.StartsWith("System.Collections"))
-        {
-             EditorGUILayout.LabelField($"[Object] {fieldType.Name}", GUILayout.Width(200));
-             // 如果需要编辑嵌套类，可以在此处递归调用 DrawDataFields 的逻辑，但这需要更复杂的布局管理
-        }
-
-        // 暂不支持的类型
-        else
-            EditorGUILayout.LabelField($"Unsupported: {fieldType.Name}", GUILayout.Width(200));
-
-        EditorGUILayout.EndHorizontal();
-        return newValue;
-    }
-
-    #endregion
-
-    #region 辅助方法
-
-    private string GetDataTypeDisplayName(Type type = null)
-    {
-        type ??= _selectedDataType;
-        if (type == null) return "";
-
-        var attr = type.GetCustomAttribute<EditableDataAttribute>();
-        return string.IsNullOrEmpty(attr.DisplayName) ? type.Name : attr.DisplayName;
-    }
-
-    private void LoadCurrentInstance()
-    {
-        if (_selectedDataType == null) return;
-
-        MethodInfo loadMethod = typeof(GenericDataPersistence).GetMethod("LoadData")
-            .MakeGenericMethod(_selectedDataType);
-        _currentDataInstance = loadMethod.Invoke(null, new object[] { _instanceName });
-        _foldoutStates.Clear(); // 加载新实例时重置折叠状态
-    }
-
-    private bool SaveCurrentInstance()
-    {
-        if (_selectedDataType == null || _currentDataInstance == null) return false;
-
-        MethodInfo saveMethod = typeof(GenericDataPersistence).GetMethod("SaveData")
-            .MakeGenericMethod(_selectedDataType);
-        bool success = (bool)saveMethod.Invoke(null, new[] { _currentDataInstance, _instanceName });
-        AssetDatabase.Refresh();
-        return success;
-    }
-
-    #endregion
 }
