@@ -58,6 +58,10 @@ namespace GPT
         // Foldout状态
         private readonly Dictionary<string, bool> _foldoutStates = new Dictionary<string, bool>();
 
+        // 新增：临时存储新增字典的键/值（解决立即模式GUI的帧同步问题）
+        private Dictionary<Type, object> _tempDictNewKey = new Dictionary<Type, object>();
+        private Dictionary<Type, object> _tempDictNewValue = new Dictionary<Type, object>();
+        
         // 脏标记
         private bool _isDirty = false;
 
@@ -847,8 +851,9 @@ namespace GPT
         {
             string foldKey = $"collection:{path}";
             bool expanded = GetFoldoutState(foldKey, true);
-            string elementTypeName = GetCollectionElementType(collectionType)?.Name ?? "Unknown";
-            string displayLabel = showLabel ? $"{label} ({elementTypeName} 集合)" : $"{elementTypeName} 集合";
+            // string elementTypeName = GetCollectionElementType(collectionType)?.Name ?? "Unknown";
+            // string elementTypeName = GetCollectionTypeName(collectionType)? ?? "Unknown";
+            string displayLabel = showLabel ? $"{label} ({GetCollectionTypeName(collectionType)} 集合)" : $"{GetCollectionTypeName(collectionType)} 集合";
 
             expanded = EditorGUILayout.Foldout(expanded, displayLabel, true);
             SetFoldoutState(foldKey, expanded);
@@ -1028,29 +1033,258 @@ namespace GPT
             return listInstance;
         }
 
+        // private object DrawDictionaryValue(Type dictType, object dictInstance, string path, int depth)
+        // {
+        //     Type[] dictArgs = dictType.GetGenericArguments();
+        //     Type keyType = dictArgs[0];
+        //     Type valueType = dictArgs[1];
+
+        //     PropertyInfo countProp = dictType.GetProperty("Count");
+        //     MethodInfo addMethod = dictType.GetMethod("Add");
+        //     MethodInfo removeMethod = dictType.GetMethod("Remove");
+        //     MethodInfo clearMethod = dictType.GetMethod("Clear");
+        //     PropertyInfo indexerProp = dictType.GetProperty("Item");
+        //     MethodInfo containsKeyMethod = dictType.GetMethod("ContainsKey");
+
+        //     if (countProp == null || addMethod == null || removeMethod == null || clearMethod == null || indexerProp == null || containsKeyMethod == null)
+        //     {
+        //         EditorGUILayout.HelpBox("Dictionary 反射信息获取失败", MessageType.Error);
+        //         return dictInstance;
+        //     }
+
+        //     int count = (int)countProp.GetValue(dictInstance);
+
+        //     EditorGUILayout.BeginHorizontal();
+
+        //     if (GUILayout.Button("清空", GUILayout.Width(SMALL_BUTTON_WIDTH)))
+        //     {
+        //         clearMethod.Invoke(dictInstance, null);
+        //         MarkDirty();
+        //         EditorGUILayout.EndHorizontal();
+        //         return dictInstance;
+        //     }
+
+        //     if (GUILayout.Button("添加键值对", GUILayout.Width(LARGE_BUTTON_WIDTH)))
+        //     {
+        //         if (TryCreateNewDictionaryKey(dictInstance, keyType, containsKeyMethod, count, out object newKey))
+        //         {
+        //             object defaultValue = CreateDefaultValueForField(valueType);
+        //             addMethod.Invoke(dictInstance, new object[] { newKey, defaultValue });
+        //             MarkDirty();
+        //         }
+        //         else
+        //         {
+        //             EditorUtility.DisplayDialog("提示", $"当前不支持为键类型 {keyType.Name} 自动生成新键", "确定");
+        //         }
+
+        //         EditorGUILayout.EndHorizontal();
+        //         return dictInstance;
+        //     }
+
+        //     EditorGUILayout.LabelField($"总数：{count}", GUILayout.Width(60));
+        //     EditorGUILayout.EndHorizontal();
+
+        //     List<object> keys = new List<object>();
+        //     foreach (object item in (IEnumerable)dictInstance)
+        //     {
+        //         if (item == null) continue;
+        //         Type kvpType = item.GetType();
+        //         PropertyInfo keyProp = kvpType.GetProperty("Key");
+        //         if (keyProp != null)
+        //             keys.Add(keyProp.GetValue(item));
+        //     }
+
+        //     for (int i = 0; i < keys.Count; i++)
+        //     {
+        //         object key = keys[i];
+        //         EditorGUILayout.BeginVertical("box");
+
+        //         object currentValue = indexerProp.GetValue(dictInstance, new object[] { key });
+
+        //         EditorGUILayout.BeginHorizontal();
+        //         object editedKey = key;
+
+        //         if (CanEditDictionaryKeyType(keyType))
+        //         {
+        //             editedKey = DrawAnyField("键", keyType, key, $"{path}.key[{i}]", depth, true);
+        //         }
+        //         else
+        //         {
+        //             EditorGUILayout.LabelField("键", GUILayout.Width(150));
+        //             EditorGUILayout.SelectableLabel(key?.ToString() ?? "null", GUILayout.Height(EditorGUIUtility.singleLineHeight));
+        //         }
+
+        //         if (GUILayout.Button("删除", GUILayout.Width(SMALL_BUTTON_WIDTH)))
+        //         {
+        //             removeMethod.Invoke(dictInstance, new object[] { key });
+        //             MarkDirty();
+        //             EditorGUILayout.EndHorizontal();
+        //             EditorGUILayout.EndVertical();
+        //             return dictInstance;
+        //         }
+        //         EditorGUILayout.EndHorizontal();
+
+        //         if (!AreValuesEqual(key, editedKey))
+        //         {
+        //             if (editedKey == null)
+        //             {
+        //                 EditorGUILayout.HelpBox("字典键不能为 null。", MessageType.Warning);
+        //             }
+        //             else if ((bool)containsKeyMethod.Invoke(dictInstance, new object[] { editedKey }))
+        //             {
+        //                 EditorGUILayout.HelpBox($"键 [{editedKey}] 已存在，不能重复。", MessageType.Warning);
+        //             }
+        //             else
+        //             {
+        //                 removeMethod.Invoke(dictInstance, new object[] { key });
+        //                 addMethod.Invoke(dictInstance, new object[] { editedKey, currentValue });
+        //                 MarkDirty();
+        //                 EditorGUILayout.EndVertical();
+        //                 return dictInstance;
+        //             }
+        //         }
+
+        //         object oldValue = indexerProp.GetValue(dictInstance, new object[] { key });
+        //         object newValue = DrawAnyField("值", valueType, oldValue, $"{path}[{key}]", depth, true);
+
+        //         if (!AreValuesEqual(oldValue, newValue))
+        //         {
+        //             indexerProp.SetValue(dictInstance, newValue, new object[] { key });
+        //             MarkDirty();
+        //         }
+
+        //         EditorGUILayout.EndVertical();
+        //     }
+
+        //     return dictInstance;
+        // }
+
+    //      private void DrawDictionaryValue(string label, Type fieldType, object value, string path, int depth)
+    // {
+    //     Type keyType = fieldType.GetGenericArguments()[0];
+    //     Type valueType = fieldType.GetGenericArguments()[1];
+
+    //     // 注意：Dictionary 在遍历时不能直接修改结构（增删），所以我们需要暂存操作
+    //     object keyToRemove = null;
+        
+    //     // 临时存储新键值
+    //     // object newKey = null;
+    //     // object newValue = null;
+    //     var dict = (IDictionary)value;
+    //     // 绘制现有项
+    //     // 将 Keys 复制到数组以避免枚举期间修改异常
+    //     var keys = dict.Keys.Cast<object>().ToArray();
+        
+    //     foreach (var key in keys)
+    //     {
+    //         EditorGUILayout.BeginHorizontal();
+            
+    //         // 绘制 Key (通常只读，或者允许编辑但需要重建键值对)
+    //         // 为简化，这里 Key 设为只读显示，若需编辑 Key，通常做法是删除旧项加新项
+    //         EditorGUILayout.LabelField(key.ToString(), GUILayout.Width(100), GUILayout.Height(EditorGUIUtility.singleLineHeight));
+            
+    //         object val = dict[key];
+    //         object newVal = DrawAnyField("", valueType, val,$"{path}[{key});
+
+    //         if (!Equals(newVal, val))
+    //         {
+    //             dict[key] = newVal;
+    //         }
+
+    //         if (GUILayout.Button("X", GUILayout.Width(20)))
+    //         {
+    //             keyToRemove = key;
+    //         }
+    //         EditorGUILayout.EndHorizontal();
+    //     }
+
+    //     if (keyToRemove != null)
+    //     {
+    //         dict.Remove(keyToRemove);
+    //         return;
+    //     }
+
+    //     // 添加新项区域
+    //     EditorGUILayout.Space();
+    //     EditorGUILayout.LabelField("添加新项", EditorStyles.miniLabel);
+    //     EditorGUILayout.BeginHorizontal();
+
+    //     // 简单的 Key 输入器 (仅支持基础类型作为 Key 的输入演示)
+    //     var p = DrawSimpleKeyInput(keyType);
+    //     if (p != null) m_key = p;
+        
+    //     if (m_key != null)
+    //     {
+    //          // 临时 Value
+    //          object defaultVal = valueType.IsValueType ? Activator.CreateInstance(valueType) : null;
+    //          if (valueType == typeof(string)) defaultVal = "";
+             
+    //          // 这里为了能在同一行绘制并获取值，我们用一个临时的匿名对象或者再次调用 DrawFieldControl
+    //          // 但由于 GUILayout 是立即模式，我们需要在一个单独的 pass 或者用临时变量
+    //          // 简化处理：分两行，或者假设用户先输入 Key 点击添加后，下一帧再编辑 Value
+    //          // 更好的方式：使用一个临时的 Dictionary entry 编辑器
+             
+    //          // 这里采用：如果 Key 有效且不为空，显示 Value 输入框和确认按钮
+    //          EditorGUILayout.LabelField("Value:", GUILayout.Width(40));
+    //         var q = DrawFieldControl("", valueType, defaultVal);
+    //          if (q != null) m_value = q;
+             
+    //          if (GUILayout.Button("Add", GUILayout.Width(40)))
+    //          {
+    //              if (!dict.Contains(m_key))
+    //              {
+    //                  dict.Add(m_key, m_value);
+    //                  // 强制刷新 UI 状态可能需要标记 Dirty，但在 EditorWindow 中通常下一帧自动重绘
+    //              }
+    //              else
+    //              {
+    //                  EditorUtility.DisplayDialog("错误", "Key 已存在", "OK");
+    //              }
+    //          }
+    //     }
+    //     else
+    //     {
+    //          EditorGUILayout.LabelField("不支持该类型的 Key 快速输入", EditorStyles.miniLabel);
+    //     }
+
+    //     EditorGUILayout.EndHorizontal();
+    // }
+
         private object DrawDictionaryValue(Type dictType, object dictInstance, string path, int depth)
         {
+            // 1. 基础校验与反射获取核心方法/属性
+            if (dictInstance == null)
+            {
+                EditorGUILayout.HelpBox("字典未初始化", MessageType.Warning);
+                if (GUILayout.Button("初始化空字典", GUILayout.Width(BUTTON_WIDTH)))
+                {
+                    dictInstance = CreateEmptyCollection(dictType);
+                    MarkDirty();
+                }
+                return dictInstance;
+            }
+
             Type[] dictArgs = dictType.GetGenericArguments();
             Type keyType = dictArgs[0];
             Type valueType = dictArgs[1];
 
+            // 获取 Dictionary 核心方法/属性（带空值检查）
             PropertyInfo countProp = dictType.GetProperty("Count");
-            MethodInfo addMethod = dictType.GetMethod("Add");
-            MethodInfo removeMethod = dictType.GetMethod("Remove");
+            MethodInfo addMethod = dictType.GetMethod("Add", new[] { keyType, valueType });
+            MethodInfo removeMethod = dictType.GetMethod("Remove", new[] { keyType });
             MethodInfo clearMethod = dictType.GetMethod("Clear");
-            PropertyInfo indexerProp = dictType.GetProperty("Item");
-            MethodInfo containsKeyMethod = dictType.GetMethod("ContainsKey");
+            PropertyInfo indexerProp = dictType.GetProperty("Item", new[] { keyType });
+            MethodInfo containsKeyMethod = dictType.GetMethod("ContainsKey", new[] { keyType });
 
             if (countProp == null || addMethod == null || removeMethod == null || clearMethod == null || indexerProp == null || containsKeyMethod == null)
             {
-                EditorGUILayout.HelpBox("Dictionary 反射信息获取失败", MessageType.Error);
+                EditorGUILayout.HelpBox("无法获取 Dictionary 反射信息", MessageType.Error);
                 return dictInstance;
             }
 
+            // 2. 顶部操作按钮（清空/总数）
             int count = (int)countProp.GetValue(dictInstance);
-
             EditorGUILayout.BeginHorizontal();
-
             if (GUILayout.Button("清空", GUILayout.Width(SMALL_BUTTON_WIDTH)))
             {
                 clearMethod.Invoke(dictInstance, null);
@@ -1058,102 +1292,140 @@ namespace GPT
                 EditorGUILayout.EndHorizontal();
                 return dictInstance;
             }
-
-            if (GUILayout.Button("添加键值对", GUILayout.Width(LARGE_BUTTON_WIDTH)))
-            {
-                if (TryCreateNewDictionaryKey(dictInstance, keyType, containsKeyMethod, count, out object newKey))
-                {
-                    object defaultValue = CreateDefaultValueForField(valueType);
-                    addMethod.Invoke(dictInstance, new object[] { newKey, defaultValue });
-                    MarkDirty();
-                }
-                else
-                {
-                    EditorUtility.DisplayDialog("提示", $"当前不支持为键类型 {keyType.Name} 自动生成新键", "确定");
-                }
-
-                EditorGUILayout.EndHorizontal();
-                return dictInstance;
-            }
-
             EditorGUILayout.LabelField($"总数：{count}", GUILayout.Width(60));
             EditorGUILayout.EndHorizontal();
 
+            // 3. 遍历编辑现有键值对（解决遍历中修改的问题：先收集要删除的键）
+            List<object> keysToRemove = new List<object>();
             List<object> keys = new List<object>();
             foreach (object item in (IEnumerable)dictInstance)
             {
                 if (item == null) continue;
                 Type kvpType = item.GetType();
                 PropertyInfo keyProp = kvpType.GetProperty("Key");
-                if (keyProp != null)
-                    keys.Add(keyProp.GetValue(item));
+                PropertyInfo valueProp = kvpType.GetProperty("Value");
+                if (keyProp != null) keys.Add(keyProp.GetValue(item));
             }
 
-            for (int i = 0; i < keys.Count; i++)
+            foreach (object key in keys)
             {
-                object key = keys[i];
                 EditorGUILayout.BeginVertical("box");
 
-                object currentValue = indexerProp.GetValue(dictInstance, new object[] { key });
-
+                // 键编辑区域（只读/可编辑）
                 EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("键", GUILayout.Width(40));
                 object editedKey = key;
 
+                // 仅支持简单类型键的编辑
                 if (CanEditDictionaryKeyType(keyType))
                 {
-                    editedKey = DrawAnyField("键", keyType, key, $"{path}.key[{i}]", depth, true);
+                    editedKey = DrawAnyField("", keyType, key, $"{path}.key[{key}]", depth, false);
                 }
                 else
                 {
-                    EditorGUILayout.LabelField("键", GUILayout.Width(150));
                     EditorGUILayout.SelectableLabel(key?.ToString() ?? "null", GUILayout.Height(EditorGUIUtility.singleLineHeight));
                 }
 
+                // // 删除按钮（标记待删除，避免遍历中修改）
+                // if (GUILayout.Button("删除", GUILayout.Width(SMALL_BUTTON_WIDTH)))
+                // {
+                //     keysToRemove.Add(key);
+                // }
+                // EditorGUILayout.EndHorizontal();
+
+                // // 值编辑区域（支持复杂类型递归编辑）
+                // EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("值", GUILayout.Width(40));
+                object oldValue = indexerProp.GetValue(dictInstance, new object[] { key });
+                object newValue = DrawAnyField("", valueType, oldValue, $"{path}.value[{key}]", depth, false);
+                
+                 // 删除按钮（标记待删除，避免遍历中修改）
                 if (GUILayout.Button("删除", GUILayout.Width(SMALL_BUTTON_WIDTH)))
                 {
-                    removeMethod.Invoke(dictInstance, new object[] { key });
-                    MarkDirty();
-                    EditorGUILayout.EndHorizontal();
-                    EditorGUILayout.EndVertical();
-                    return dictInstance;
+                    keysToRemove.Add(key);
                 }
                 EditorGUILayout.EndHorizontal();
 
-                if (!AreValuesEqual(key, editedKey))
-                {
-                    if (editedKey == null)
-                    {
-                        EditorGUILayout.HelpBox("字典键不能为 null。", MessageType.Warning);
-                    }
-                    else if ((bool)containsKeyMethod.Invoke(dictInstance, new object[] { editedKey }))
-                    {
-                        EditorGUILayout.HelpBox($"键 [{editedKey}] 已存在，不能重复。", MessageType.Warning);
-                    }
-                    else
-                    {
-                        removeMethod.Invoke(dictInstance, new object[] { key });
-                        addMethod.Invoke(dictInstance, new object[] { editedKey, currentValue });
-                        MarkDirty();
-                        EditorGUILayout.EndVertical();
-                        return dictInstance;
-                    }
-                }
-
-                object oldValue = indexerProp.GetValue(dictInstance, new object[] { key });
-                object newValue = DrawAnyField("值", valueType, oldValue, $"{path}[{key}]", depth, true);
-
+                // 应用值修改
                 if (!AreValuesEqual(oldValue, newValue))
                 {
                     indexerProp.SetValue(dictInstance, newValue, new object[] { key });
                     MarkDirty();
                 }
 
+                // 应用键修改（仅当键变化且不重复时）
+                if (!AreValuesEqual(key, editedKey) && editedKey != null)
+                {
+                    bool keyExists = (bool)containsKeyMethod.Invoke(dictInstance, new[] { editedKey });
+                    if (!keyExists)
+                    {
+                        // 先删旧键，再加新键
+                        removeMethod.Invoke(dictInstance, new[] { key });
+                        addMethod.Invoke(dictInstance, new[] { editedKey, oldValue });
+                        MarkDirty();
+                    }
+                    else
+                    {
+                        EditorGUILayout.HelpBox($"键 [{editedKey}] 已存在，无法修改", MessageType.Warning);
+                    }
+                }
+
                 EditorGUILayout.EndVertical();
             }
 
+            // 批量删除标记的键
+            foreach (object key in keysToRemove)
+            {
+                removeMethod.Invoke(dictInstance, new[] { key });
+                MarkDirty();
+            }
+
+            // 4. 新增键值对区域
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("新增键值对", EditorStyles.boldLabel);
+            EditorGUILayout.BeginHorizontal();
+
+            // 初始化临时键/值（按类型缓存，避免帧丢失）
+            if (!_tempDictNewKey.ContainsKey(keyType))
+                _tempDictNewKey[keyType] = CreateDefaultValueForField(keyType);
+            if (!_tempDictNewValue.ContainsKey(valueType))
+                _tempDictNewValue[valueType] = CreateDefaultValueForField(valueType);
+
+            // 绘制键输入框
+            EditorGUILayout.LabelField("键", GUILayout.Width(40));
+            object newKey = DrawAnyField("", keyType, _tempDictNewKey[keyType], $"{path}.newKey", depth, false);
+            _tempDictNewKey[keyType] = newKey;
+
+            // 绘制值输入框
+            EditorGUILayout.LabelField("值", GUILayout.Width(40));
+            object newValueTemp = DrawAnyField("", valueType, _tempDictNewValue[valueType], $"{path}.newValue", depth, false);
+            _tempDictNewValue[valueType] = newValueTemp;
+
+            // 新增按钮
+            if (GUILayout.Button("添加", GUILayout.Width(MID_BUTTON_WIDTH)))
+            {
+                if (newKey == null)
+                {
+                    EditorUtility.DisplayDialog("错误", "键不能为空", "确定");
+                }
+                else if ((bool)containsKeyMethod.Invoke(dictInstance, new[] { newKey }))
+                {
+                    EditorUtility.DisplayDialog("错误", $"键 [{newKey}] 已存在", "确定");
+                }
+                else
+                {
+                    addMethod.Invoke(dictInstance, new[] { newKey, newValueTemp });
+                    MarkDirty();
+                    // 重置临时键值
+                    _tempDictNewKey[keyType] = CreateDefaultValueForField(keyType);
+                    _tempDictNewValue[valueType] = CreateDefaultValueForField(valueType);
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+
             return dictInstance;
         }
-
+    
         #endregion
 
         #region 类型判断与辅助
@@ -1252,6 +1524,17 @@ namespace GPT
             }
 
             return null;
+        }
+        private string GetCollectionTypeName(Type type)
+        {
+        if (type.IsArray) return $"Array[{type.GetElementType().Name}]";
+        if (type.IsGenericType)
+        {
+            var def = type.GetGenericTypeDefinition();
+            if (def == typeof(List<>)) return $"List<{type.GetGenericArguments()[0].Name}>";
+            if (def == typeof(Dictionary<,>)) return $"Dict<{type.GetGenericArguments()[0].Name}, {type.GetGenericArguments()[1].Name}>";
+        }
+        return type.Name;
         }
 
         private object CreateEmptyCollection(Type collectionType)

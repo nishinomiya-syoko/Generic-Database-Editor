@@ -72,6 +72,7 @@
     <Compile Include="Assets/Editor/Json/GPT/GeneralEditorWindow_Fixed.cs" />
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SOBulkEditor.cs" />
     <Compile Include="Assets/Editor/Excel2Database/QwenExcel.cs" />
+    <Compile Include="Assets/Editor/Json/GPT/GPT.cs" />
     <Compile Include="Assets/Editor/SO2Excel/Moon.cs" />
     <Compile Include="Assets/Editor/AssetPreviewWindow.cs" />
     <Compile Include="Assets/Editor/Camera/CamerHandlerEditor.cs" />

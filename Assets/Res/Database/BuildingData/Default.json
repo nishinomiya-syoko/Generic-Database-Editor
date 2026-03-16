@@ -18,7 +18,10 @@
       "amount": 0
     }
   ],
-  "costs": {},
+  "costs": {
+    "22": 22,
+    "ss": 33
+  },
   "maxLevel": 10,
   "levelData": [
     {
