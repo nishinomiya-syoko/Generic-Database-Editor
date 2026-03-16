@@ -1,6 +1,6 @@
 ﻿// ============================================================
 // 自动生成的数据表类 - BuildingData
-// 生成时间：2026-03-14 18:42:27
+// 生成时间：2026-03-16 19:44:54
 // 请勿手动修改，修改会被覆盖
 // ============================================================
 
@@ -15,10 +15,6 @@ namespace DataCenter
     [Serializable]
     public class BuildingDataRow
     {
-        /// <summary>
-        /// 实例名称
-        /// </summary>
-        public string 实例名;
         public string Id;
         public string DisplayName;
         public string Description;
@@ -28,6 +24,7 @@ namespace DataCenter
         /// 建造信息
         /// </summary>
         public int buildTime;
+        public Dictionary<string, int> costs;
         /// <summary>
         /// 升级信息
         /// </summary>

@@ -3,6 +3,7 @@ public static class Constant
 {
     // 数据表路径
     public static readonly string EXCEL_PATH = Application.dataPath + "/Data/Excel/";
+    public static readonly string EXCEL_SEPARATOR = "|";
     public static readonly string DATA_CLASS_PATH = Application.dataPath + "/Scripts/Generate/DataTable/";
     public static readonly string DATA_CONTAINER_PATH = Application.dataPath + "/Scripts/Generate/DataTable/Container/";
 

@@ -21,6 +21,8 @@ namespace GPT
     /// </summary>
     public static class ExcelDataUtility
     {
+        public static readonly string EXCEL_SEPARATOR = Constant.EXCEL_SEPARATOR;
+
         // 初始化EPPlus授权上下文（必须配置，否则报错）
         static ExcelDataUtility()
         {
@@ -275,7 +277,7 @@ namespace GPT
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < array.Length; i++)
                 {
-                    if (i > 0) sb.Append("|");
+                    if (i > 0) sb.Append(EXCEL_SEPARATOR);
                     sb.Append(ConvertValueToExcelCompatible(array.GetValue(i)));
                 }
                 return sb.ToString();
@@ -287,7 +289,7 @@ namespace GPT
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < list.Count; i++)
                 {
-                    if (i > 0) sb.Append("|");
+                    if (i > 0) sb.Append(EXCEL_SEPARATOR);
                     sb.Append(ConvertValueToExcelCompatible(list[i]));
                 }
                 return sb.ToString();
@@ -300,7 +302,7 @@ namespace GPT
                 int idx = 0;
                 foreach (var key in dict.Keys)
                 {
-                    if (idx > 0) sb.Append("|");
+                    if (idx > 0) sb.Append(EXCEL_SEPARATOR);
                     object val = dict[key];
                     sb.Append($"{ConvertValueToExcelCompatible(key)}={ConvertValueToExcelCompatible(val)}");
                     idx++;
@@ -357,7 +359,7 @@ namespace GPT
                 if (underlyingType.IsArray)
                 {
                     Type elemType = underlyingType.GetElementType();
-                    string[] elemTexts = text.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                    string[] elemTexts = text.Split(EXCEL_SEPARATOR, StringSplitOptions.RemoveEmptyEntries);
                     Array array = Array.CreateInstance(elemType, elemTexts.Length);
                     for (int i = 0; i < elemTexts.Length; i++)
                     {
@@ -370,7 +372,7 @@ namespace GPT
                 if (underlyingType.IsGenericType && underlyingType.GetGenericTypeDefinition() == typeof(List<>))
                 {
                     Type elemType = underlyingType.GetGenericArguments()[0];
-                    string[] elemTexts = text.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                    string[] elemTexts = text.Split(EXCEL_SEPARATOR, StringSplitOptions.RemoveEmptyEntries);
                     var list = (System.Collections.IList)Activator.CreateInstance(underlyingType);
                     foreach (var elemText in elemTexts)
                     {
@@ -387,7 +389,7 @@ namespace GPT
                     Type valType = dictArgs[1];
 
                     var dict = (System.Collections.IDictionary)Activator.CreateInstance(underlyingType);
-                    string[] kvPairs = text.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                    string[] kvPairs = text.Split(EXCEL_SEPARATOR, StringSplitOptions.RemoveEmptyEntries);
 
                     foreach (var kvText in kvPairs)
                     {
