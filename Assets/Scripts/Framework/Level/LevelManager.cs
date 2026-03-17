@@ -43,7 +43,7 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        waveManager = GlobalManager.Instance.waveManager;
+        waveManager = GlobalManager.Instance.WaveManager;
     }
     public void StartLevel(int levelId)
     {

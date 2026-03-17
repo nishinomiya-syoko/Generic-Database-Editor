@@ -33,7 +33,7 @@ public class BuildingPlacer : MonoBehaviour
         // var go = Instantiate(buildingPrefab, worldPos, Quaternion.identity);
         // var b = go.AddComponent<Tower>(); // 添加辅助组件用于后续移除
         // b.gridX = gridX; b.gridY = gridY; b.size = size;
-        var go = GlobalManager.Instance.poolManager.Spawn("Tower", worldPos);
+        var go = GlobalManager.Instance.PoolManager.Spawn("Tower", worldPos);
         return go;
     }
 

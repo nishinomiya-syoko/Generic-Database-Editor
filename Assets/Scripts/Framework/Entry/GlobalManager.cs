@@ -12,9 +12,9 @@ public class GlobalManager : MonoBehaviour
 
     [Header("关卡系统")]
     public LevelManager LevelManager;
-    public EntityManager entityManager;
-    public WaveManager waveManager;
-    public PoolManager poolManager;
+    public EntityManager EntityManager;
+    public WaveManager WaveManager;
+    public PoolManager PoolManager;
 
     public EventManager EventManager;
     public ResourceManager ResourceManager;
@@ -22,7 +22,7 @@ public class GlobalManager : MonoBehaviour
     public UIManager UIManager;
 
 
-    public DataLoader dataLoader;
+    public DataLoader DataLoader;
 
     public int level = 1;
 
@@ -31,9 +31,17 @@ public class GlobalManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         LevelManager = GetComponentInChildren<LevelManager>();
-        entityManager = GetComponentInChildren<EntityManager>();
-        waveManager = GetComponentInChildren<WaveManager>();
-        poolManager = GetComponentInChildren<PoolManager>();
-        dataLoader = GetComponentInChildren<DataLoader>();
+        EntityManager = GetComponentInChildren<EntityManager>();
+        WaveManager = GetComponentInChildren<WaveManager>();
+        PoolManager = GetComponentInChildren<PoolManager>();
+        DataLoader = GetComponentInChildren<DataLoader>();
+        EventManager = GetComponentInChildren<EventManager>();
+        ResourceManager = GetComponentInChildren<ResourceManager>();
+        QuestManager = GetComponentInChildren<QuestManager>();
+        UIManager = GetComponentInChildren<UIManager>();
+        MapManager = GetComponentInChildren<MapManager>();
+        GridManager = GetComponentInChildren<GridManager>();
+        AudioManager = GetComponentInChildren<AudioManager>();
+
     }
 }

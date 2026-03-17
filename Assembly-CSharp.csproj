@@ -67,6 +67,8 @@
     <Compile Include="Assets/Scripts/Framework/Entity/Sample/Enemy.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BuildingPlacer.cs" />
     <Compile Include="Assets/Scripts/Generate/DataTable/PoolDataTestRow.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/Gemini/ExcelImporter.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/Doubao/DataEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Framework/Module/FlowModule.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ComputeSystem.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingDatabase.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillEnum.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/ArchiveSystem.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/Doubao/ExcelImpoter.cs" />
     <Compile Include="Assets/Scripts/Core/Camera/CameraHandler.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/UnitMover.cs" />
@@ -136,6 +139,7 @@
     <Compile Include="Assets/Scripts/Framework/Entity/EntityGererator.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Sample/PlayerCombat.cs" />
     <Compile Include="Assets/Scripts/Extension/MethodExtension.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/Doubao/DataManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ResourceSystem/ResourceManager.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/LevelDataSO.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/Unit.cs" />
@@ -153,6 +157,7 @@
     <Compile Include="Assets/Scripts/Framework/Entity/EntityRoot.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Sample/Tower.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/WaveDataSO.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/Gemini/DataManager.cs" />
     <Compile Include="Assets/Scripts/Framework/Audio/AudioManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillInstance.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerData.Archive.gen.cs" />
@@ -168,6 +173,7 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldJobRunner.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/AstarPathfinder.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/Gemini/DataEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillSelectionUI.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/GridManager.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitData.cs" />

@@ -67,6 +67,7 @@
     <Compile Include="Assets/Editor/Json/GeneralEditorWindow.cs" />
     <Compile Include="Assets/Editor/Json/ExcelDataUtility.cs" />
     <Compile Include="Assets/Editor/Excel2Database/ExcelConverter.cs" />
+    <Compile Include="Assets/Editor/Excel2Database/Check.cs" />
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/CharacterSO.cs" />
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SODatabase.cs" />
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SOBulkEditor.cs" />

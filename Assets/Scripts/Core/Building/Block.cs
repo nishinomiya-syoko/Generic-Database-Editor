@@ -23,7 +23,7 @@ namespace Top
         void Start()
         {
             modelInstance = gameObject;
-            SizeIndicatorPrefab = GlobalManager.Instance.poolManager.Spawn("Indicator", transform.position);
+            SizeIndicatorPrefab = GlobalManager.Instance.PoolManager.Spawn("Indicator", transform.position);
             SizeIndicatorPrefab.transform.SetParent(transform);
             SizeIndicatorPrefab.SetActive(false);
         }

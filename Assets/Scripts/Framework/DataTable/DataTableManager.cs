@@ -49,7 +49,7 @@ namespace DataCenter
             // string path = $"{b}/{tableName}{extension}";
             string path = tableName;
 
-            TextAsset asset = GlobalManager.Instance.dataLoader.LoadAssetAsync<TextAsset>(path); 
+            TextAsset asset = GlobalManager.Instance.DataLoader.LoadAssetAsync<TextAsset>(path); 
             DebugInfo.Log($"[DataTableManager] 加载：{tableName}");
             if (asset == null)
             {

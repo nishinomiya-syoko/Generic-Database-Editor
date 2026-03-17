@@ -5,7 +5,7 @@ using System.Collections;
 namespace Top
 {
     // 游戏事件系统
-    public class EventManager
+    public class EventManager:MonoBehaviour
     {
         // 资源事件
         public Action<ResourceType, int> OnResourceChanged;

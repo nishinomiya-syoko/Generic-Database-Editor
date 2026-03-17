@@ -52,7 +52,7 @@ public class WaveManager : MonoBehaviour{
     {
         // Unit unit = GameManager.Instance?.UnitManager?.DeployUnit(spawnData.unitId, spawnData.spawnPosition);
         // GameObject unit = EntityGenerator.Instance.Generate(spawnData.unitId, spawnPosition);
-        GameObject unit = GlobalManager.Instance.entityManager.ShowEntity(spawnData.unitId.ToString(), spawnPosition);
+        GameObject unit = GlobalManager.Instance.EntityManager.ShowEntity(spawnData.unitId.ToString(), spawnPosition);
         if (unit != null)
         {
             spawnedUnits.Add(unit);
