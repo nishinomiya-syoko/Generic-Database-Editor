@@ -5,20 +5,22 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System;
 using UnityEngine;
+using UnityEditor;
 
 public class ExcelImporter
 {
     // 定义生成路径（统一使用Path.Combine保证跨平台）
     public static string ExcelPath = Constant.EXCEL_PATH;
-    public static string ScriptOutputPath = Path.Combine(Application.dataPath, "Scripts/Data/");
-    public static string TxtOutputPath = Path.Combine(Application.dataPath, "Data/Txt/");
-    public static string BinaryOutputPath = Path.Combine(Application.dataPath, "Data/Binary/");
+    public static string ScriptOutputPath = Constant.DATA_CLASS_PATH;
+    public static string TxtOutputPath = Constant.ASSET_TXT_PATH;
+    public static string BinaryOutputPath = Constant.DATA_BINARY_PATH;
 
 
 
     // 确保目录存在
     static ExcelImporter()
     {
+        Directory.CreateDirectory(ExcelPath);
         Directory.CreateDirectory(ScriptOutputPath);
         Directory.CreateDirectory(TxtOutputPath);
         Directory.CreateDirectory(BinaryOutputPath);
@@ -33,6 +35,7 @@ public class ExcelImporter
             return;
         }
         List<string> excelFiles = new List<string>();
+        excelFiles.Clear();
         try
         {
             string[] files = Directory.GetFiles(excelFolder, "*.xlsx", SearchOption.AllDirectories);
@@ -54,18 +57,18 @@ public class ExcelImporter
         {
             Debug.LogWarning($"在 {excelFolder} 目录下未找到 Excel 文件");
         }
-        if (!Directory.Exists(ScriptOutputPath))
-        {
-            Directory.CreateDirectory(ScriptOutputPath);
-        }
-        if (!Directory.Exists(TxtOutputPath))
-        {
-            Directory.CreateDirectory(TxtOutputPath);
-        }
-        if (!Directory.Exists(BinaryOutputPath))
-        {
-            Directory.CreateDirectory(BinaryOutputPath);
-        }
+        // if (!Directory.Exists(ScriptOutputPath))
+        // {
+        //     Directory.CreateDirectory(ScriptOutputPath);
+        // }
+        // if (!Directory.Exists(TxtOutputPath))
+        // {
+        //     Directory.CreateDirectory(TxtOutputPath);
+        // }
+        // if (!Directory.Exists(BinaryOutputPath))
+        // {
+        //     Directory.CreateDirectory(BinaryOutputPath);
+        // }
         try
         {
             foreach (string file in excelFiles)
@@ -115,6 +118,12 @@ public class ExcelImporter
                     string fieldName = sheet.Cells[1, col].Text?.Trim() ?? $"UnnamedCol{col}";
                     string fieldType = sheet.Cells[2, col].Text?.Trim() ?? "string";
                     string fieldComment = sheet.Cells[3, col].Text?.Trim() ?? "无注释";
+                    if (
+                        fieldName.StartsWith("#") || fieldName.StartsWith("//") || fieldName == "" ||
+                        fieldType.StartsWith("#") || fieldType.StartsWith("//") || fieldType == "" ||
+                        fieldComment.StartsWith("#") || fieldComment.StartsWith("//") || fieldComment == ""
+                    )
+                        continue;
 
                     fields.Add(new FieldInfoData
                     {
@@ -123,7 +132,9 @@ public class ExcelImporter
                         Comment = fieldComment
                     });
                 }
-
+                //删除所有生成的类
+                FileUtil.DeleteFileOrDirectory(ScriptOutputPath);
+                Directory.CreateDirectory(ScriptOutputPath);
                 // 1. 生成 C# 解析类
                 GenerateCSharpClass(className, fields);
 
@@ -141,7 +152,8 @@ public class ExcelImporter
         sb.AppendLine("using System.Collections.Generic;");
         sb.AppendLine("");
         sb.AppendLine("[Serializable]");
-        sb.AppendLine($"public class {className} {{");
+        sb.AppendLine($"public class {className} ");
+        sb.AppendLine("{");
 
         foreach (var field in fields)
         {
@@ -156,6 +168,75 @@ public class ExcelImporter
         File.WriteAllText(classPath, sb.ToString(), Encoding.UTF8); // 显式指定UTF8避免乱码
     }
 
+    // private static void ExportData(ExcelWorksheet sheet, string className, List<FieldInfoData> fields, int rowCount, int colCount)
+    // {
+    //     List<object> allData = new List<object>();
+    //     Type dataType = Type.GetType(className);
+    //     if (dataType == null)
+    //     {
+    //         Debug.LogError($"找不到生成的类 {className}，请检查类名是否正确");
+    //         return;
+    //     }
+
+    //     // 读取数据 (从第4行开始，前三行是表头)
+    //     for (int row = 4; row <= rowCount; row++)
+    //     {
+    //         object dataItem = Activator.CreateInstance(dataType);
+    //         bool isEmptyRow = true;
+
+    //         for (int col = 1; col <= colCount; col++)
+    //         {
+    //             string cellValue = sheet.Cells[row, col].Text?.Trim() ?? "";
+    //             if (!string.IsNullOrEmpty(cellValue)&&!cellValue.StartsWith("#")) isEmptyRow = false;
+
+    //             FieldInfoData field = fields[col - 1];
+    //             object parsedValue = ParseType(cellValue, field.Type);
+
+    //             // 反射设置字段值
+    //             var fieldInfo = dataType.GetField(field.Name);
+    //             if (fieldInfo != null && parsedValue != null)
+    //             {
+    //                 fieldInfo.SetValue(dataItem, parsedValue);
+    //             }
+    //         }
+
+    //         // 跳过空行
+    //         if (!isEmptyRow)
+    //         {
+    //             allData.Add(dataItem);
+    //         }
+    //     }
+
+    //     // 导出 TXT (JSON 格式)
+    //     string json = JsonConvert.SerializeObject(allData, Formatting.Indented);
+    //     string txtPath = Path.Combine(TxtOutputPath, $"{className}.txt");
+    //     File.WriteAllText(txtPath, json, Encoding.UTF8);
+
+    //     // 导出 Binary (补全二进制写入逻辑)
+    //     string binaryPath = Path.Combine(BinaryOutputPath, $"{className}.bytes");
+    //     using (FileStream fs = new FileStream(binaryPath, FileMode.Create, FileAccess.Write))
+    //     using (BinaryWriter bw = new BinaryWriter(fs, Encoding.UTF8))
+    //     {
+    //         // 写入数据总数
+    //         bw.Write(allData.Count);
+
+    //         // 遍历每一行数据
+    //         foreach (var dataItem in allData)
+    //         {
+    //             // 遍历每个字段
+    //             foreach (var field in fields)
+    //             {
+    //                 var fieldInfo = dataType.GetField(field.Name);
+    //                 if (fieldInfo == null) continue;
+
+    //                 object fieldValue = fieldInfo.GetValue(dataItem);
+    //                 WriteBinaryData(bw, fieldValue, field.Type);
+    //             }
+    //         }
+    //     }
+    // }
+
+    // 基础类型解析工具 (支持 array, list, dictionary)
     private static void ExportData(ExcelWorksheet sheet, string className, List<FieldInfoData> fields, int rowCount, int colCount)
     {
         List<object> allData = new List<object>();
@@ -166,18 +247,22 @@ public class ExcelImporter
             return;
         }
 
-        // 读取数据 (从第4行开始，前三行是表头)
+        // 读取数据 (从第 4 行开始，前三行是表头)
         for (int row = 4; row <= rowCount; row++)
         {
             object dataItem = Activator.CreateInstance(dataType);
             bool isEmptyRow = true;
 
-            for (int col = 1; col <= colCount; col++)
+            // ✅ 修改：遍历 fields 而不是 colCount，避免索引越界
+            for (int colIndex = 0; colIndex < fields.Count; colIndex++)
             {
-                string cellValue = sheet.Cells[row, col].Text?.Trim() ?? "";
-                if (!string.IsNullOrEmpty(cellValue)) isEmptyRow = false;
+                int excelCol = colIndex + 1; // Excel 列从 1 开始
+                string cellValue = sheet.Cells[row, excelCol].Text?.Trim() ?? "";
 
-                FieldInfoData field = fields[col - 1];
+                if (!string.IsNullOrEmpty(cellValue) && !cellValue.StartsWith("#"))
+                    isEmptyRow = false;
+
+                FieldInfoData field = fields[colIndex]; // ✅ 安全访问
                 object parsedValue = ParseType(cellValue, field.Type);
 
                 // 反射设置字段值
@@ -200,18 +285,15 @@ public class ExcelImporter
         string txtPath = Path.Combine(TxtOutputPath, $"{className}.txt");
         File.WriteAllText(txtPath, json, Encoding.UTF8);
 
-        // 导出 Binary (补全二进制写入逻辑)
+        // 导出 Binary
         string binaryPath = Path.Combine(BinaryOutputPath, $"{className}.bytes");
         using (FileStream fs = new FileStream(binaryPath, FileMode.Create, FileAccess.Write))
         using (BinaryWriter bw = new BinaryWriter(fs, Encoding.UTF8))
         {
-            // 写入数据总数
             bw.Write(allData.Count);
 
-            // 遍历每一行数据
             foreach (var dataItem in allData)
             {
-                // 遍历每个字段
                 foreach (var field in fields)
                 {
                     var fieldInfo = dataType.GetField(field.Name);
@@ -223,8 +305,6 @@ public class ExcelImporter
             }
         }
     }
-
-    // 基础类型解析工具 (支持 array, list, dictionary)
     private static object ParseType(string value, string type)
     {
         if (string.IsNullOrEmpty(value))

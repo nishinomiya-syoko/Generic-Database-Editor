@@ -23,11 +23,11 @@ namespace Test
         {
             return Addressables.LoadAssetAsync<T>(path).WaitForCompletion();
         }
-        [Button]
-        public void LoadTable()
-        {
-            var bu = DataTableManager.GetTable<BuildingDataTable>("Assets/Data/TXT/BuildingData.txt");
-            Debug.Log(bu.Count.ToString());
-        }
+        // [Button]
+        // public void LoadTable()
+        // {
+        //     var bu = DataTableManager.GetTable<BuildingDataTable>("Assets/Data/TXT/BuildingData.txt");
+        //     Debug.Log(bu.Count.ToString());
+        // }
     }
 }

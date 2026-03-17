@@ -39,36 +39,17 @@ public class DataTableCheckerWindow : EditorWindow
     private string _scanFilter = "";
 
     // 样式定义
-    private readonly GUIStyle _errorStyle = new GUIStyle
-    {
-        normal = { textColor = Color.red },
-        wordWrap = true
-    };
-    private readonly GUIStyle _successStyle = new GUIStyle
-    {
-        normal = { textColor = Color.green },
-        wordWrap = true
-    };
-    private readonly GUIStyle _warningStyle = new GUIStyle
-    {
-        normal = { textColor = Color.yellow },
-        wordWrap = true
-    };
-    private readonly GUIStyle _titleStyle = new GUIStyle
-    {
-        fontSize = 14,
-        fontStyle = FontStyle.Bold,
-        normal = { textColor = Color.white }
-    };
-    private readonly GUIStyle _centerStyle = new GUIStyle
-    {
-        alignment = TextAnchor.MiddleCenter,
-        normal = { textColor = Color.white }
-    };
+    private GUIStyle _errorStyle;
+    private GUIStyle _successStyle;
+    private GUIStyle _warningStyle;
+    private GUIStyle _titleStyle;
+    private GUIStyle _centerStyle;
+    
 
     [MenuItem("Tools/数据工具/数据表检查器")]
     public static void OpenWindow()
     {
+    
         DataTableCheckerWindow window = GetWindow<DataTableCheckerWindow>("数据表检查器");
         window.minSize = new Vector2(900, 650);
         window.Show();
@@ -76,9 +57,42 @@ public class DataTableCheckerWindow : EditorWindow
 
     private void OnEnable()
     {
+        if (!Application.isPlaying)
+        {
+            return;
+        }
+
+        // Initialize GUI Styles here
+        _errorStyle = new GUIStyle
+        {
+            normal = { textColor = Color.red },
+            wordWrap = true
+        };
+        _successStyle = new GUIStyle
+        {
+            normal = { textColor = Color.green },
+            wordWrap = true
+        };
+        _warningStyle = new GUIStyle
+        {
+            normal = { textColor = Color.yellow },
+            wordWrap = true
+        };
+        _titleStyle = new GUIStyle
+        {
+            fontSize = 14,
+            fontStyle = FontStyle.Bold,
+            normal = { textColor = Color.white }
+        };
+        _centerStyle = new GUIStyle
+        {
+            alignment = TextAnchor.MiddleCenter,
+            normal = { textColor = Color.white }
+        };
+
         // 初始化时获取缓存信息
         RefreshCacheInfo();
-        
+
         // 自动扫描所有数据表
         if (_autoScanOnEnable)
         {
@@ -88,6 +102,12 @@ public class DataTableCheckerWindow : EditorWindow
 
     private void OnGUI()
     {
+        //检查是否运行
+        if( !Application.isPlaying)
+        {
+            EditorGUILayout.HelpBox("请先运行游戏", MessageType.Warning);
+            return;
+        }
         DrawHeader();
         GUILayout.Space(10);
         

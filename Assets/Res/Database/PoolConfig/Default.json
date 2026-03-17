@@ -2,6 +2,7 @@
   "id": "",
   "name": "",
   "prefab": null,
+  "prefabPath": "",
   "initialSize": 0,
   "expandIfEmpty": true,
   "maxSize": 0,

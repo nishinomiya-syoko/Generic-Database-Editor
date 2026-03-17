@@ -66,7 +66,6 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/Framework/Entity/Sample/Enemy.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BuildingPlacer.cs" />
-    <Compile Include="Assets/Scripts/Generate/DataTable/PoolDataTestRow.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/Gemini/ExcelImporter.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/Doubao/DataEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Framework/Module/FlowModule.cs" />
@@ -116,7 +115,6 @@
     <Compile Include="Assets/Scripts/Framework/Pool/IReference.cs" />
     <Compile Include="Assets/Scripts/Framework/Extension/Constant.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/LevelDatabase.cs" />
-    <Compile Include="Assets/Scripts/Generate/DataTable/PlayerDataRow.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldVisualizer.cs" />
     <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/ScriptableObjectBase.cs" />
@@ -126,9 +124,9 @@
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/ConditionDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/AreaEffect.cs" />
     <Compile Include="Assets/Scripts/Framework/Extension/DataLoader.cs" />
+    <Compile Include="Assets/Scripts/Generate/DataTable/BuildingData.cs" />
     <Compile Include="Assets/Scripts/Framework/Module/ModuleManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestDatabase.cs" />
-    <Compile Include="Assets/Scripts/Generate/DataTable/GameConfigRow.cs" />
     <Compile Include="Assets/Scripts/Core/Quest/QuestManager.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/DataTableManager.cs" />
     <Compile Include="Assets/Scripts/Test/DataLoader.cs" />
@@ -152,7 +150,6 @@
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EventSystem/GameEventSystem.cs" />
     <Compile Include="Assets/Scripts/Core/LiveEntity.cs" />
-    <Compile Include="Assets/Scripts/Generate/DataTable/BuildingDataRow.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipEnum.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityRoot.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Sample/Tower.cs" />
@@ -231,7 +228,6 @@
     <None Include="Assets/Packages/System.Text.Encoding.CodePages.4.7.0/lib/netstandard2.0/System.Text.Encoding.CodePages.xml" />
     <None Include="Assets/Packages/System.Text.Json.4.7.0/THIRD-PARTY-NOTICES.TXT" />
     <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/lib/netstandard2.1/System.Text.Encodings.Web.xml" />
-    <None Include="Assets/Data/TXT/PlayerData.txt" />
     <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Cng.dll" />
     <None Include="Assets/Packages/System.Text.Encoding.CodePages.4.7.0/THIRD-PARTY-NOTICES.TXT" />
     <None Include="Assets/Packages/Microsoft.Extensions.FileProviders.Physical.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileProviders.Physical.dll" />
@@ -248,7 +244,6 @@
     <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/THIRD-PARTY-NOTICES.TXT" />
     <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/LICENSE.TXT" />
     <None Include="Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Pkcs.dll" />
-    <None Include="Assets/Data/TXT/GameConfig.txt" />
     <None Include="Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/LICENSE.TXT" />
     <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/LICENSE.TXT" />
     <None Include="Assets/Packages/System.Runtime.CompilerServices.Unsafe.4.7.0/LICENSE.TXT" />
@@ -256,7 +251,6 @@
     <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/version.txt" />
     <None Include="Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/THIRD-PARTY-NOTICES.TXT" />
     <None Include="Assets/Packages/System.Xml.XPath.XmlDocument.4.3.0/dotnet_library_license.txt" />
-    <None Include="Assets/Data/TXT/BuildingData.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

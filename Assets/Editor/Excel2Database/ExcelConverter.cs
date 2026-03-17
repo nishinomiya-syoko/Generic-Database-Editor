@@ -219,7 +219,7 @@ namespace Top
             return _jsonSettings;
         }
 
-        [MenuItem("Tools/Excel2Datatable/Choose Excel File Window")]
+        [MenuItem("Tools/Excel2DataTable/Choose Excel File Window")]
         public static void ShowWindow()
         {
             var window = GetWindow<ExcelDataTableTool>("Excel 数据表工具");
@@ -315,7 +315,7 @@ namespace Top
             }
         }
 
-        [MenuItem("Tools/Excel2Datatable/Fast Generate Code (批量生成) _F5")]
+        [MenuItem("Tools/Excel2DataTable/Fast Generate Code (批量生成) _F5")]
         public static void FastGenerate()
         {
             string excelFolder = Constant.EXCEL_PATH;
