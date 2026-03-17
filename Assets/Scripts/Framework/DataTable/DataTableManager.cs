@@ -12,7 +12,7 @@ namespace DataCenter
     /// <summary>
     /// 全局数据表管理器
     /// </summary>
-    public static class DataTableManager
+    public class DataTableManager:MonoBehaviour
     {
         public static readonly string DATA_BINARY_NAMEEND = Constant.DATA_BINARY_NAMEEND;
         public static readonly string DATA_BINARY_PATH = Constant.DATA_BINARY_PATH;
@@ -26,6 +26,113 @@ namespace DataCenter
         public static void SetDefaultFormat(bool useBinary)
         {
             _defaultUseBinary = useBinary;
+        }
+        public static void LoadAllTable()
+        {
+
+        }
+        [Sirenix.OdinInspector.Button]
+        /// <summary>
+        /// 加载所有带有 [EditableData] 属性的数据表
+        /// </summary>
+        /// <param name="useBinary">是否使用二进制格式，null 则使用默认设置</param>
+        /// <returns>加载成功的数据表数量</returns>
+        public static int LoadAllTables(bool? useBinary = null)
+        {
+            int successCount = 0;
+            int failCount = 0;
+
+            // 获取 EditableDataAttribute 类型
+            Type editableDataType = Type.GetType("DataCenter.EditableDataAttribute, Assembly-CSharp");
+
+            if (editableDataType == null)
+            {
+                // 尝试在其他程序集中查找
+                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    editableDataType = assembly.GetTypes()
+                        .FirstOrDefault(t => t.Name == "EditableDataAttribute");
+                    if (editableDataType != null) break;
+                }
+            }
+
+            if (editableDataType == null)
+            {
+                Debug.LogError("[DataTableManager] 未找到 EditableDataAttribute 类型");
+                return 0;
+            }
+
+            // 扫描所有带有该属性的类
+            var dataTypes = new List<Type>();
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                try
+                {
+                    var types = assembly.GetTypes()
+                        .Where(t => t.GetCustomAttribute(editableDataType) != null)
+                        .Where(t => !t.IsAbstract && !t.IsInterface);
+                    dataTypes.AddRange(types);
+                }
+                catch (ReflectionTypeLoadException)
+                {
+                    // 跳过无法加载的程序集
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning($"[DataTableManager] 扫描程序集 {assembly.GetName().Name} 时出错：{ex.Message}");
+                }
+            }
+
+            Debug.Log($"[DataTableManager] 找到 {dataTypes.Count} 个数据表类型，开始加载...");
+
+            // 遍历每个数据表类型并加载
+            foreach (var dataType in dataTypes)
+            {
+                try
+                {
+                    // 从属性获取表名
+                    var attr = dataType.GetCustomAttribute(editableDataType);
+                    string tableName = dataType.Name;
+
+                    if (attr != null)
+                    {
+                        var tableNameProp = editableDataType.GetProperty("TableName");
+                        if (tableNameProp != null)
+                        {
+                            tableName = tableNameProp.GetValue(attr)?.ToString() ?? dataType.Name;
+                        }
+                    }
+
+                    // 调用 GetTable 方法加载
+                    MethodInfo getTableMethod = typeof(DataTableManager)
+                        .GetMethod("GetTable", BindingFlags.Public | BindingFlags.Static);
+
+                    if (getTableMethod != null)
+                    {
+                        var genericMethod = getTableMethod.MakeGenericMethod(dataType);
+                        var result = genericMethod.Invoke(null, new object[] { tableName, useBinary });
+
+                        if (result != null)
+                        {
+                            successCount++;
+                            Debug.Log($"[DataTableManager] 加载成功：{tableName}");
+                        }
+                        else
+                        {
+                            failCount++;
+                            Debug.LogWarning($"[DataTableManager] 加载返回空：{tableName}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    failCount++;
+                    Debug.LogError($"[DataTableManager] 加载失败：{dataType.Name}, 错误：{ex.Message}");
+                }
+            }
+
+            Debug.Log($"[DataTableManager] 加载完成，成功：{successCount}, 失败：{failCount}");
+            return successCount;
         }
 
         public static List<T> GetTable<T>(string tableName, bool? useBinary = null) where T : class, new()

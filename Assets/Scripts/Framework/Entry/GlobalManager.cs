@@ -1,6 +1,7 @@
 using Logic;
 using UnityEngine;
 using Top;
+using DataCenter;
 public class GlobalManager : MonoBehaviour
 {
 
@@ -9,6 +10,9 @@ public class GlobalManager : MonoBehaviour
     public GridManager GridManager;
     public MapManager MapManager;
     public AudioManager AudioManager;
+
+    [Header("游戏系统")]
+    public DataTableManager DataTableManager;
 
     [Header("关卡系统")]
     public LevelManager LevelManager;
@@ -42,6 +46,7 @@ public class GlobalManager : MonoBehaviour
         MapManager = GetComponentInChildren<MapManager>();
         GridManager = GetComponentInChildren<GridManager>();
         AudioManager = GetComponentInChildren<AudioManager>();
+        DataTableManager = GetComponentInChildren<DataTableManager>();
 
     }
 }

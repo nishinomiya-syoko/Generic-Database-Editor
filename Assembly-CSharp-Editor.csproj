@@ -67,14 +67,12 @@
     <Compile Include="Assets/Editor/Json/GeneralEditorWindow.cs" />
     <Compile Include="Assets/Editor/Json/ExcelDataUtility.cs" />
     <Compile Include="Assets/Editor/Excel2Database/ExcelConverter.cs" />
-    <Compile Include="Assets/Editor/Excel2Database/Check.cs" />
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/CharacterSO.cs" />
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SODatabase.cs" />
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SOBulkEditor.cs" />
     <Compile Include="Assets/Editor/SO2Excel/Moon.cs" />
     <Compile Include="Assets/Editor/AssetPreviewWindow.cs" />
     <Compile Include="Assets/Editor/Camera/CamerHandlerEditor.cs" />
-    <Compile Include="Assets/Editor/Excel2Database/CheckWindow.cs" />
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SORuntimeManager.cs" />
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/ItemSO.cs" />
     <Compile Include="Assets/Editor/Excel2Database/DataTableCheckWindow.cs" />
@@ -85,8 +83,10 @@
     <Compile Include="Assets/Editor/DataContainer/DataContainerGenerator.cs" />
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/QuestSO.cs" />
     <Compile Include="Assets/Editor/UnityScriptableObjectEditor/SOTestDataGenerator.cs" />
+    <Compile Include="Assets/Editor/Excel2Database/ConverterExtension.cs" />
     <Compile Include="Assets/Editor/PivotEditor.cs" />
     <Compile Include="Assets/Editor/Asset/AssetLoader.cs" />
+    <Compile Include="Assets/Editor/Excel2Database/CodeGenerator.cs" />
     <Compile Include="Assets/Editor/SaveHelper/ArchiveCodeGenerator.cs" />
   </ItemGroup>
   <ItemGroup>

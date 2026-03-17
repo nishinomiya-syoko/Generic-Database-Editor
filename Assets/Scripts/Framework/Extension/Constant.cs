@@ -9,6 +9,8 @@ public static class Constant
 
     public static readonly string DATA_NAMESPACE = "DataCenter";
     // public static readonly string DATA_BINARY_PATH = Application.streamingAssetsPath + "/Bianry/";
+    public static readonly string DATA_TABLE_END = "Table";
+    public static readonly string DATA_ROW_END = "Row";
     public static readonly string DATA_BINARY_PATH = Application.dataPath + "/Data/Binary/";
     public static readonly string DATA_BINARY_NAMEEND = ".pve";
     public static readonly string DATA_TXT_PATH = Application.dataPath + "/Data/TXT/";
