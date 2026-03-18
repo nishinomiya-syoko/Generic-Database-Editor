@@ -1,0 +1,5 @@
+﻿#实例名	id	name		prefabPath	initialSize	expandIfEmpty	maxSize	
+#类型	string	string		string	int	bool	int	
+#注释	序号			预制体路径				
+1	22	p			2	1	2	
+Default					0	1	0	

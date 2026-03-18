@@ -67,9 +67,12 @@
     <Compile Include="Assets/Scripts/Framework/Entity/Sample/Enemy.cs" />
     <Compile Include="Assets/Scripts/Generate/DataTable/PoolConfig.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BuildingPlacer.cs" />
+    <Compile Include="Assets/Scripts/Generate/DataTable/GameConfig.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/My/ConvertExcelToText.cs" />
     <Compile Include="Assets/Scripts/Framework/Module/FlowModule.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ComputeSystem.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingDatabase.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/Excel2Txt/TableCodeGeneratorWindow.cs" />
     <Compile Include="Assets/Scripts/Framework/Preformance/MobileOptimise.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Building.cs" />
     <Compile Include="Assets/Scripts/Framework/Entry/GlobalManager.cs" />
@@ -85,11 +88,14 @@
     <Compile Include="Assets/Scripts/Core/Building/BuildingData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/UnitMover.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitDatabase.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/Excel2Txt/ExcelToTxtEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Indicator.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/LevelManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/PathPool.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/Excel2Txt/ExcelToTxtConverter.cs" />
     <Compile Include="Assets/Scripts/Framework/Pool/PoolManager.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/WaveManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/Excel2Txt/TableManager.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitAI.Search.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingEnum.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/ISkillModifier.cs" />
@@ -104,6 +110,7 @@
     <Compile Include="Assets/Scripts/Core/Building/Decoration.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestData.cs" />
     <Compile Include="Assets/Scripts/Framework/Json/EditableAttribute.cs" />
+    <Compile Include="Assets/Scripts/Table/BuildingData.cs" />
     <Compile Include="Assets/Scripts/Framework/UI/UIManager.Extension.cs" />
     <Compile Include="Assets/Scripts/Framework/Json/GenericDataPersistance.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/SavableAttribute.cs" />
@@ -124,7 +131,6 @@
     <Compile Include="Assets/Scripts/Framework/Extension/DataLoader.cs" />
     <Compile Include="Assets/Scripts/Framework/Module/ModuleManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestDatabase.cs" />
-    <Compile Include="Assets/Scripts/Generate/DataTable/GameConfigRow.cs" />
     <Compile Include="Assets/Scripts/Core/Quest/QuestManager.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/DataTableManager.cs" />
     <Compile Include="Assets/Scripts/Test/DataLoader.cs" />
@@ -136,6 +142,9 @@
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Sample/PlayerCombat.cs" />
     <Compile Include="Assets/Scripts/Extension/MethodExtension.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ResourceSystem/ResourceManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/My/TableManager.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/My/DataTableParser.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/Excel2Txt/TxtTableParser.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/LevelDataSO.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/Unit.cs" />
     <Compile Include="Assets/Scripts/Core/SO/BuildingDataSO.cs" />
@@ -146,19 +155,19 @@
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EventSystem/GameEventSystem.cs" />
     <Compile Include="Assets/Scripts/Core/LiveEntity.cs" />
-    <Compile Include="Assets/Scripts/Generate/DataTable/BuildingDataRow.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipEnum.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityRoot.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Sample/Tower.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/WaveDataSO.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/CSharpTypeToString.cs" />
     <Compile Include="Assets/Scripts/Framework/Audio/AudioManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillInstance.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerData.Archive.gen.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/BFSPathfinder.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/RewardDataSO.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/My/DataTableCodeGenerator.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/DataTableBase.cs" />
-    <Compile Include="Assets/Scripts/Generate/DataTable/PoolConfigRow.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BinaryHeapPriorityQueue.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/NativeBinaryHeap.cs" />
     <Compile Include="Assets/Scripts/Framework/Audio/AudioDatabase.cs" />
@@ -171,6 +180,7 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/GridManager.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldMap.cs" />
+    <Compile Include="Assets/Scripts/Framework/DataTable/My/ExcelToTextWindow.cs" />
     <Compile Include="Assets/Scripts/Core/SO/UnitDataSO.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +196,8 @@
     <None Include="Assets/Packages/Newtonsoft.Json.13.0.4/lib/netstandard2.0/Newtonsoft.Json.dll" />
     <None Include="Assets/Packages/Microsoft.Extensions.FileSystemGlobbing.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll" />
     <None Include="Assets/Packages/System.Drawing.Common.4.7.0/LICENSE.TXT" />
+    <None Include="Assets/Data/TXT/PoolConfig.txt" />
+    <None Include="Assets/Data/Excel/BuildingData.txt" />
     <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/version.txt" />
     <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/useSharedDesignerContext.txt" />
     <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll" />

@@ -1,1 +1,6 @@
-﻿[]
+﻿#实例名	Id	DisplayName	Description	IconPath	buildingType	size	prefabPath	buildTime	buildCosts	costs	maxLevel	levelData	hitPoints	armor	range	isResourceProducer	producedResource	buildingSkills
+#类型	string	string	string	string	BuildingType	Vector2Int	string	int	ResourceCost[]	Dictionary<string,int>	int	BuildingLevelData[]	int	int	float	bool	ResourceType	string[]
+#注释								建造信息			升级信息		特殊属性					建筑技能
+Default	111				Resource	(2, 2)		60	Top.ResourceCost	22=22|ss=33|s2=3	10	Top.BuildingLevelData	100	0	5	0	Block	spe|gg
+NewInstance					Resource	(2, 2)		60			10		100	0	5	0	Block	
+NewInstance1					Resource	(2, 2)		60	Top.ResourceCost		10		100	0	5	0	Block	
