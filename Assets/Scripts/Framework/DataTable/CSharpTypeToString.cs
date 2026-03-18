@@ -14,6 +14,11 @@ public static class CSharpTypeToString
         { "Rect", typeof(Rect) },
         { "Quaternion", typeof(Quaternion) }
     };
+    public static string GetCSharpTypeName(string type)
+    {
+        var t = GetCSharpType(type);
+        return GetCSharpTypeName(t);
+    }
 
     /// <summary>
     /// 获取C#类型名（处理数组、泛型、Unity类型、基础类型）
@@ -181,6 +186,7 @@ public static class CSharpTypeToString
                 throw new Exception($"未知类型：{name}");
         }
     }
+
     
     /// <summary>
     /// 将数据表类型转换为C#类型（扩展支持更多类型+枚举）

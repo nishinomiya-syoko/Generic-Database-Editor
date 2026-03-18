@@ -29,6 +29,7 @@ public class TableCodeGeneratorWindow : EditorWindow
     {
         try
         {
+            InitEnum();
             if (!Directory.Exists(_txtFilePath))
             {
                 EditorUtility.DisplayDialog("错误", "TXT文件夹不存在！", "确定");
@@ -98,7 +99,7 @@ public class TableCodeGeneratorWindow : EditorWindow
         }
     }
 
-    private void OnEnable()
+    private static void InitEnum()
     {
         // 初始化枚举类型列表
         _enumTypes = CSharpTypeToString.GetAllEnumTypes();
@@ -209,7 +210,7 @@ public class TableCodeGeneratorWindow : EditorWindow
                     continue;
 
                 // 使用增强版类型转换（传入枚举列表）
-                string csType = CSharpTypeToString.GetCSharpTypeName(fieldType, _enumTypes);
+                string csType = CSharpTypeToString.GetCSharpTypeName(fieldType);
                 Debug.Log($"字段类型：{fieldType} -> {csType}");
 
                 // 写入XML注释
@@ -233,12 +234,13 @@ public class TableCodeGeneratorWindow : EditorWindow
             {
                 string fieldName = fieldNames[i];
                 string fieldType = fieldTypes[i];
-                string csType = CSharpTypeToString.GetCSharpTypeName(fieldType, _enumTypes);
 
                 if(fieldName.StartsWith("//") || fieldName.StartsWith("#") || fieldName == string.Empty)
                     continue;
-                if(fieldType.StartsWith("//") || fieldType.StartsWith("#") || fieldType == string.Empty)
+                if (fieldType.StartsWith("//") || fieldType.StartsWith("#") || fieldType == string.Empty)
                     continue;
+                string csType = CSharpTypeToString.GetCSharpTypeName(fieldType);
+                    
                 // 生成默认值赋值
                 string defaultValue = GetDefaultValueCode(csType);
                 sb.AppendLine($"        {fieldName} = {defaultValue};");

@@ -68,7 +68,6 @@
     <Compile Include="Assets/Scripts/Generate/DataTable/PoolConfig.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BuildingPlacer.cs" />
     <Compile Include="Assets/Scripts/Generate/DataTable/GameConfig.cs" />
-    <Compile Include="Assets/Scripts/Framework/DataTable/My/ConvertExcelToText.cs" />
     <Compile Include="Assets/Scripts/Framework/Module/FlowModule.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ComputeSystem.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingDatabase.cs" />
@@ -129,6 +128,7 @@
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/ConditionDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/AreaEffect.cs" />
     <Compile Include="Assets/Scripts/Framework/Extension/DataLoader.cs" />
+    <Compile Include="Assets/Scripts/Generate/DataTable/BuildingData.cs" />
     <Compile Include="Assets/Scripts/Framework/Module/ModuleManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestDatabase.cs" />
     <Compile Include="Assets/Scripts/Core/Quest/QuestManager.cs" />
@@ -142,8 +142,6 @@
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Sample/PlayerCombat.cs" />
     <Compile Include="Assets/Scripts/Extension/MethodExtension.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ResourceSystem/ResourceManager.cs" />
-    <Compile Include="Assets/Scripts/Framework/DataTable/My/TableManager.cs" />
-    <Compile Include="Assets/Scripts/Framework/DataTable/My/DataTableParser.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/Excel2Txt/TxtTableParser.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/LevelDataSO.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/Unit.cs" />
@@ -165,7 +163,6 @@
     <Compile Include="Assets/Scripts/Framework/SaveHelper/Sample/PlayerData.Archive.gen.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/BFSPathfinder.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/RewardDataSO.cs" />
-    <Compile Include="Assets/Scripts/Framework/DataTable/My/DataTableCodeGenerator.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/DataTableBase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BinaryHeapPriorityQueue.cs" />
@@ -180,7 +177,6 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/GridManager.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldMap.cs" />
-    <Compile Include="Assets/Scripts/Framework/DataTable/My/ExcelToTextWindow.cs" />
     <Compile Include="Assets/Scripts/Core/SO/UnitDataSO.cs" />
   </ItemGroup>
   <ItemGroup>
