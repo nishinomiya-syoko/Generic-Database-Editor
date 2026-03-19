@@ -100,6 +100,8 @@ namespace DataCenter
                     // 给实体类赋值
                     foreach (var fieldName in fieldNames)
                     {
+                        if (fieldName == string.Empty)
+                            continue;
                         var property = typeof(T).GetProperty(fieldName);
                         if (property == null)
                         {

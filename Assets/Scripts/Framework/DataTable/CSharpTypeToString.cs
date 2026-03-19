@@ -5,10 +5,13 @@ using System.Collections.Generic;
 public static class CSharpTypeToString
 {
     // 预定义支持的Unity常用类型（可扩展）
+    // 预定义支持的Unity常用类型（可扩展）
     private static readonly Dictionary<string, Type> UnityCommonTypes = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
     {
         { "Vector2", typeof(Vector2) },
+        { "Vector2Int", typeof(Vector2Int) }, // 新增
         { "Vector3", typeof(Vector3) },
+        { "Vector3Int", typeof(Vector3Int) }, // 新增
         { "Vector4", typeof(Vector4) },
         { "Color", typeof(Color) },
         { "Rect", typeof(Rect) },
@@ -187,7 +190,7 @@ public static class CSharpTypeToString
         }
     }
 
-    
+
     /// <summary>
     /// 将数据表类型转换为C#类型（扩展支持更多类型+枚举）
     /// </summary>
