@@ -212,6 +212,52 @@ namespace Top
         /// <summary>
         /// 获取友好的类型名称（支持泛型、数组、List、Dictionary）
         /// </summary>
+        // private static string GetFriendlyTypeName(Type type)
+        // {
+        //     // 处理可空类型
+        //     if (Nullable.GetUnderlyingType(type) != null)
+        //         return $"{GetFriendlyTypeName(Nullable.GetUnderlyingType(type))}?";
+
+        //     // 处理数组
+        //     if (type.IsArray)
+        //     {
+        //         Type elemType = type.GetElementType();
+        //         return $"{GetFriendlyTypeName(elemType)}[]";
+        //     }
+
+        //     // 处理泛型类型（List、Dictionary）
+        //     if (type.IsGenericType)
+        //     {
+        //         string genericName = type.GetGenericTypeDefinition().Name;
+        //         // 去掉泛型后缀（如 List`1 → List）
+        //         genericName = genericName.Substring(0, genericName.IndexOf('`'));
+        //         // 获取泛型参数
+        //         Type[] genericArgs = type.GetGenericArguments();
+        //         string argsStr = string.Join(",", genericArgs.Select(GetFriendlyTypeName));
+        //         return $"{genericName}<{argsStr}>";
+        //     }
+
+        //     // 基础类型映射
+        //     return type.Name switch
+        //     {
+        //         "String" => "string",
+        //         "Int32" => "int",
+        //         "Single" => "float",
+        //         "Boolean" => "bool",
+        //         "Double" => "double",
+        //         "Int64" => "long",
+        //         "Vector2" => "Vector2",
+        //         "Vector3" => "Vector3",
+        //         "Vector4" => "Vector4",
+        //         "Color" => "Color",
+        //         _ => type.Name
+        //     };
+        // }
+
+
+        /// <summary>
+        /// 获取友好的类型名称（支持泛型、数组、List、Dictionary，用户自定义类型自动拼接namespace）
+        /// </summary>
         private static string GetFriendlyTypeName(Type type)
         {
             // 处理可空类型
@@ -231,14 +277,14 @@ namespace Top
                 string genericName = type.GetGenericTypeDefinition().Name;
                 // 去掉泛型后缀（如 List`1 → List）
                 genericName = genericName.Substring(0, genericName.IndexOf('`'));
-                // 获取泛型参数
+                // 获取泛型参数（递归处理泛型参数中的自定义类型）
                 Type[] genericArgs = type.GetGenericArguments();
                 string argsStr = string.Join(",", genericArgs.Select(GetFriendlyTypeName));
                 return $"{genericName}<{argsStr}>";
             }
 
-            // 基础类型映射
-            return type.Name switch
+            // 1. 基础类型映射（保持原有逻辑）
+            var basicTypeName = type.Name switch
             {
                 "String" => "string",
                 "Int32" => "int",
@@ -250,8 +296,34 @@ namespace Top
                 "Vector3" => "Vector3",
                 "Vector4" => "Vector4",
                 "Color" => "Color",
-                _ => type.Name
+                _ => null
             };
+
+            // 匹配到基础类型直接返回
+            if (basicTypeName != null)
+                return basicTypeName;
+
+            // 2. 判断是否为系统/框架内置类型（非用户自定义）
+            if (IsSystemBuiltInType(type))
+                return type.Name;
+
+            // 3. 用户自定义类型：拼接命名空间 + 类型名
+            return $"{type.Namespace}.{type.Name}";
+        }
+
+        /// <summary>
+        /// 辅助方法：判断是否为系统/框架内置类型（非用户自定义）
+        /// </summary>
+        private static bool IsSystemBuiltInType(Type type)
+        {
+            if (string.IsNullOrEmpty(type.Namespace))
+                return true; // 极少数无命名空间的基础类型
+
+            // 可根据项目扩展（如Unity、ASP.NET等框架类型）
+            return type.Namespace.StartsWith("System")       // .NET系统类型
+                || type.Namespace.StartsWith("UnityEngine")  // Unity引擎类型
+                || type.Namespace.StartsWith("UnityEditor")  // Unity编辑器类型
+                || type.Namespace.StartsWith("Microsoft");   // Microsoft框架类型
         }
 
         /// <summary>

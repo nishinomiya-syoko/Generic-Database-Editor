@@ -12,7 +12,16 @@
   "requiredPlayerLevel": 0,
   "isRepeatable": false,
   "repeatInterval": 0,
-  "objectives": null,
+  "objectives": [
+    {
+      "type": 0,
+      "targetId": "",
+      "requiredAmount": 0,
+      "currentAmount": 0,
+      "description": "",
+      "IsCompleted": true
+    }
+  ],
   "rewards": null,
   "questColor": {
     "r": 1.0,

@@ -1,6 +1,6 @@
 ﻿// ============================================================
 // 自动生成的数据表类 - BuildingData
-// 生成时间：2026-03-18 21:53:57
+// 生成时间：2026-03-19 20:46:01
 // 请勿手动修改，修改会被覆盖
 // ============================================================
 
@@ -15,7 +15,7 @@ namespace DataCenter
     /// </summary>
     public class BuildingData
     {
-      public string Id { get; set; }
+      public int Id { get; set; }
 
       public string DisplayName { get; set; }
 
@@ -23,9 +23,9 @@ namespace DataCenter
 
       public string IconPath { get; set; }
 
-      public Vector2Int size { get; set; }
+      public Top.BuildingType buildingType { get; set; }
 
-      public string prefabPath { get; set; }
+      public Vector2Int size { get; set; }
 
       /// <summary>
       /// 建造信息
@@ -50,6 +50,8 @@ namespace DataCenter
 
       public bool isResourceProducer { get; set; }
 
+      public Top.ResourceType producedResource { get; set; }
+
       /// <summary>
       /// 建筑技能
       /// </summary>
@@ -60,12 +62,12 @@ namespace DataCenter
       /// </summary>
       public BuildingData()
       {
-        Id = string.Empty;
+        Id = 0;
         DisplayName = string.Empty;
         Description = string.Empty;
         IconPath = string.Empty;
+        buildingType = default;
         size = default;
-        prefabPath = string.Empty;
         buildTime = 0;
         costs = default;
         maxLevel = 0;
@@ -73,6 +75,7 @@ namespace DataCenter
         armor = 0;
         range = 0f;
         isResourceProducer = false;
+        producedResource = default;
         buildingSkills = default;
       }
     }

@@ -65,13 +65,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/Framework/Entity/Sample/Enemy.cs" />
-    <Compile Include="Assets/Scripts/Generate/DataTable/PoolConfig.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BuildingPlacer.cs" />
-    <Compile Include="Assets/Scripts/Generate/DataTable/GameConfig.cs" />
     <Compile Include="Assets/Scripts/Framework/Module/FlowModule.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ComputeSystem.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingDatabase.cs" />
-    <Compile Include="Assets/Scripts/Framework/DataTable/Excel2Txt/TableCodeGeneratorWindow.cs" />
     <Compile Include="Assets/Scripts/Framework/Preformance/MobileOptimise.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Building.cs" />
     <Compile Include="Assets/Scripts/Framework/Entry/GlobalManager.cs" />
@@ -87,7 +84,6 @@
     <Compile Include="Assets/Scripts/Core/Building/BuildingData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/UnitMover.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitDatabase.cs" />
-    <Compile Include="Assets/Scripts/Framework/DataTable/Excel2Txt/ExcelToTxtEditorWindow.cs" />
     <Compile Include="Assets/Scripts/Core/Building/Indicator.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/LevelManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/PathPool.cs" />
@@ -192,8 +188,6 @@
     <None Include="Assets/Packages/Newtonsoft.Json.13.0.4/lib/netstandard2.0/Newtonsoft.Json.dll" />
     <None Include="Assets/Packages/Microsoft.Extensions.FileSystemGlobbing.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll" />
     <None Include="Assets/Packages/System.Drawing.Common.4.7.0/LICENSE.TXT" />
-    <None Include="Assets/Data/TXT/PoolConfig.txt" />
-    <None Include="Assets/Data/Excel/BuildingData.txt" />
     <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/version.txt" />
     <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/useSharedDesignerContext.txt" />
     <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll" />
@@ -248,7 +242,6 @@
     <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/THIRD-PARTY-NOTICES.TXT" />
     <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/LICENSE.TXT" />
     <None Include="Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Pkcs.dll" />
-    <None Include="Assets/Data/TXT/GameConfig.txt" />
     <None Include="Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/LICENSE.TXT" />
     <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/LICENSE.TXT" />
     <None Include="Assets/Packages/System.Runtime.CompilerServices.Unsafe.4.7.0/LICENSE.TXT" />

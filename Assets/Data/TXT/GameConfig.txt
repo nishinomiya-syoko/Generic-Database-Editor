@@ -1,5 +1,0 @@
-﻿#实例名	musicVolume	sfxVolume	maxPlayerCount	screenResolution
-#类型	float	float	int	Vector2
-#注释				
-22s2tance	0.8	1	4	1920,1080
-NewInstance	0.8	1	4	1920,1080
