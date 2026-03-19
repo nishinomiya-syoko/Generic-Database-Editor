@@ -68,6 +68,7 @@
     <Compile Include="Assets/Editor/Json/ExcelDataUtility.cs" />
     <Compile Include="Assets/Editor/AssetPreviewWindow.cs" />
     <Compile Include="Assets/Editor/Camera/CamerHandlerEditor.cs" />
+    <Compile Include="Assets/Editor/IDE/IDEOpenHelper.cs" />
     <Compile Include="Assets/Editor/DataContainer/DataContainerGenerator.cs" />
     <Compile Include="Assets/Editor/Excel2Text/ExcelToTxtEditorWindow.cs" />
     <Compile Include="Assets/Editor/PivotEditor.cs" />

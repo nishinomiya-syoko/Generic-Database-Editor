@@ -14,7 +14,7 @@ public class TableCodeGeneratorWindow : EditorWindow
     // 新增：枚举类型列表
     private static List<Type> _enumTypes;
 
-    [MenuItem("Tools/数据表工具/代码生成器")]
+    [MenuItem("Tools/DataTable/代码生成器")]
     public static void ShowWindow()
     {
         GetWindow<TableCodeGeneratorWindow>("数据表代码生成器");
@@ -24,7 +24,7 @@ public class TableCodeGeneratorWindow : EditorWindow
     /// </summary>
     /// <param name="_txtFilePath">TXT根文件夹</param>
     /// <param name="_outputCsPath">CS输出文件夹</param>
-    [MenuItem("Tools/数据表工具/批量生成代码")]
+    [MenuItem("Tools/DataTable/批量生成代码")]
     public static void BatchGenerateDataClasses()
     {
         try

@@ -20,9 +20,13 @@ public class ExcelToTxtEditorWindow : EditorWindow
         private int totalSheets = 0;
         private int successSheets = 0;
 
-
+    [MenuItem("Tools/DataTable/编辑文件路径")]
+    public static void OpenConstant()
+    {
+        IDEOpenHelper.OpenScriptAtLine(Application.dataPath +"/Scripts/Framework/Extension/Constant.cs");
+    }
     // 在Unity编辑器菜单中添加入口
-    [MenuItem("Tools/数据表工具/Excel To TXT Converter")]
+    [MenuItem("Tools/DataTable/Excel To TXT Converter")]
     public static void ShowWindow()
     {
         // 打开编辑器窗口
@@ -33,7 +37,7 @@ public class ExcelToTxtEditorWindow : EditorWindow
     /// </summary>
     /// <param name="_excelFilePath">Excel根文件夹</param>
     /// <param name="_outputTxtPath">TXT输出根文件夹</param>
-    [MenuItem("Tools/数据表工具/Excel批量处理")]
+    [MenuItem("Tools/DataTable/Excel批量处理")]
     public static void BatchConvertExcelToTxt()
     {
         try
