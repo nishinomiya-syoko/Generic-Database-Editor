@@ -117,7 +117,6 @@
     <Compile Include="Assets/Scripts/Framework/Level/LevelDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipmentDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldVisualizer.cs" />
-    <Compile Include="Assets/Scripts/Framework/SO/UnityScriptableObjectEditor/ScriptableObjectBase.cs" />
     <Compile Include="Assets/Scripts/Core/Pool/PoolData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestManager.cs" />
@@ -128,7 +127,6 @@
     <Compile Include="Assets/Scripts/Framework/Module/ModuleManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestDatabase.cs" />
     <Compile Include="Assets/Scripts/Core/Quest/QuestManager.cs" />
-    <Compile Include="Assets/Scripts/Framework/DataTable/DataTableManager.cs" />
     <Compile Include="Assets/Scripts/Test/DataLoader.cs" />
     <Compile Include="Assets/Scripts/Core/Map/MapManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ResourceSystem/ResourceProducer.cs" />
@@ -160,7 +158,6 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/BFSPathfinder.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/RewardDataSO.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestDataSO.cs" />
-    <Compile Include="Assets/Scripts/Framework/DataTable/DataTableBase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BinaryHeapPriorityQueue.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/NativeBinaryHeap.cs" />
     <Compile Include="Assets/Scripts/Framework/Audio/AudioDatabase.cs" />

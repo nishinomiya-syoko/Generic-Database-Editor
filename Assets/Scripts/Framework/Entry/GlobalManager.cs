@@ -12,7 +12,7 @@ public class GlobalManager : MonoBehaviour
     public AudioManager AudioManager;
 
     [Header("游戏系统")]
-    public DataTableManager DataTableManager;
+    public TableManager DataTableManager;
 
     [Header("关卡系统")]
     public LevelManager LevelManager;
@@ -46,7 +46,7 @@ public class GlobalManager : MonoBehaviour
         MapManager = GetComponentInChildren<MapManager>();
         GridManager = GetComponentInChildren<GridManager>();
         AudioManager = GetComponentInChildren<AudioManager>();
-        DataTableManager = GetComponentInChildren<DataTableManager>();
+        DataTableManager = GetComponentInChildren<TableManager>();
 
     }
 }
