@@ -4,7 +4,7 @@
 	1	AssetPath	Assets/Data/TXT/AssetPath.txt
 	2	BuildingData	Assets/Data/TXT/BuildingData.txt
 	3	BuildingLevelData	Assets/Data/TXT/BuildingLevelData.txt
-#			
+#	4	PoolConfig	Assets/Data/TXT/PoolConfig.txt
 #			
 #			
 	101		Assets/Res/Prefab/jidi.prefab

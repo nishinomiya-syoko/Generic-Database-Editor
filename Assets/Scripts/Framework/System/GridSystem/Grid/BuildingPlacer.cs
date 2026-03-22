@@ -1,6 +1,7 @@
 using UnityEngine;
 using Top;
 using Sirenix.OdinInspector;
+using DataCenter;
 
 /// <summary>
 /// 负责在格子上放置占格建筑（可在编辑器或运行时调用）
@@ -76,10 +77,20 @@ public class BuildingPlacer : MonoBehaviour
         }
     }
     [Button]
+    public void LoadAsset()
+    {
+        var path = GlobalManager.Instance.DataTableManager.GetDataById<AssetPath>(101);
+        var asset = GlobalManager.Instance.AssetLoader.LoadAsset<GameObject>(path.Path);
+        GameObject.Instantiate(asset);
+    }
+    
+    [Button]
     public void CheckTable()
     {
         var p = GlobalManager.Instance.DataTableManager.GetDataById<DataCenter.BuildingLevelData>(1);
         Debug.Log(p.Id);
         Debug.Log(p.block);
+        var q = GlobalManager.Instance.PoolManager.Spawn("101");
+        Debug.Log(q.name);
     }
 }

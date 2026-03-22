@@ -22,7 +22,7 @@ namespace Logic
 
             [Tooltip("要池化的预制件（需要挂有实现 IReference 的脚本，如 EntityBase 的子类）")]
             public GameObject prefab;
-            public string prefabPath;
+            // public string prefabPath;
 
             [Tooltip("初始预创建数量")]
             public int initialSize = 0;
@@ -44,6 +44,7 @@ namespace Logic
 
         // 单例（可选）
         public static PoolManager Instance { get; private set; }
+        private bool preWarmed = false;
 
         private void Awake()
         {
@@ -61,6 +62,33 @@ namespace Logic
         {
             if (Instance == this)
                 Instance = null;
+        }
+        public void PreWarm()
+        {
+            if (preWarmed)
+                return;
+            preWarmed = true;
+            LoadPoolConfigs();
+            InitializePools();
+        }
+        private void LoadPoolConfigs()
+        {
+            var p = GlobalManager.Instance.DataTableManager.GetAllData<DataCenter.PoolConfig>();
+            foreach (var item in p)
+            {
+                 var q = GlobalManager.Instance.DataTableManager.GetDataById<DataCenter.AssetPath>(item.Id);
+
+                var poolConfig = new PoolConfig()
+                {
+                    id = item.Id.ToString(),
+                    name = item.DisplayName,
+                    prefab = GlobalManager.Instance.AssetLoader.LoadAsset<GameObject>(q.Path),
+                    initialSize = item.InitialSize,
+                    expandIfEmpty = item.expandIfEmpty,
+                    maxSize = item.maxSize
+                };
+                pools.Add(poolConfig);
+            }
         }
 
         /// <summary>

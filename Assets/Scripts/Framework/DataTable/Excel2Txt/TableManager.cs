@@ -40,6 +40,7 @@ namespace DataCenter
 
             LoadTable<BuildingData>();
             LoadTable<BuildingLevelData>();
+            LoadTable<PoolConfig>();
         }
         public bool LoadTable<T>() where T : class,new()
         {

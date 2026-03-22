@@ -1,0 +1,4 @@
+﻿#实例名	Id	DisplayName	InitialSize	expandIfEmpty	maxSize
+#类型	int	string	int	bool	int
+#注释	资源id				
+	101	jidi	2	True	5

@@ -69,6 +69,7 @@ public class GlobalManager : Singleton<GlobalManager>
     {
         await DataTableManager.LoadAllTables();
         await UniTask.WaitForSeconds(1);
+        PoolManager.PreWarm();
 
     }
 }

@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/Framework/Entity/Sample/Enemy.cs" />
+    <Compile Include="Assets/Scripts/Generate/DataTable/PoolConfig.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/BuildingPlacer.cs" />
     <Compile Include="Assets/Scripts/Framework/Module/FlowModule.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ComputeSystem.cs" />
@@ -235,6 +236,7 @@
     <None Include="Assets/Packages/Microsoft.Extensions.FileSystemGlobbing.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.xml" />
     <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.xml" />
     <None Include="Assets/Packages/System.Text.Json.4.7.0/lib/netstandard2.0/System.Text.Json.dll" />
+    <None Include="Assets/Data/TXT/PoolConfig.txt" />
     <None Include="Assets/Packages/System.Runtime.CompilerServices.Unsafe.4.7.0/THIRD-PARTY-NOTICES.TXT" />
     <None Include="Assets/Packages/EPPlus.4.5.3.3/lib/netstandard2.1/EPPlus.dll" />
     <None Include="Assets/Packages/System.Text.Json.4.7.0/LICENSE.TXT" />
