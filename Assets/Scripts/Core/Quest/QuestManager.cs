@@ -123,9 +123,9 @@ namespace Top
             if (resourceManager != null)
             {
                 // 发放资源奖励
-                foreach (var resource in reward.resources)
+                foreach (var resource in reward.resources.cost)
                 {
-                    resourceManager.AddResource(resource.resourceType, resource.amount);
+                    resourceManager.AddResource(resource.Key, resource.Value);
                 }
 
                 // 发放宝石奖励

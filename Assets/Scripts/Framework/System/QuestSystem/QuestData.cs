@@ -68,7 +68,7 @@ namespace Top
     [System.Serializable]
     public class QuestReward
     {
-        public ResourceCost[] resources;    // 资源奖励
+        public ResourceCost resources;    // 资源奖励
         public string[] unlockContent;      // 解锁内容
         public int experience;              // 经验奖励
         public string[] equipmentIds;       // 装备奖励

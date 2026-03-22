@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 namespace Top
 {
@@ -10,6 +11,7 @@ namespace Top
     {
         [Header("建筑信息")]
         public BuildingData data;
+        public EntityStat stats;
         public int currentLevel = 1;
 
         [Header("组件引用")]
@@ -18,10 +20,7 @@ namespace Top
         public ParticleSystem upgradeEffect;
 
         // 事件
-        public event Action<Building> OnBuildingPlaced;
-        public event Action<Building> OnBuildingUpgraded;
-        public event Action<Building> OnBuildingDestroyed;
-        public event Action<Building, int> OnBuildingDamaged;
+        
 
         private Coroutine buildCoroutine;
         private Coroutine upgradeCoroutine;
@@ -50,7 +49,7 @@ namespace Top
         {
             if (data != null)
             {
-                MaxHitPoints = GetMaxHitPoints();
+                MaxHitPoints = GetMaxHP();
                 CurrentHitPoints = MaxHitPoints;
 
             }
@@ -124,7 +123,7 @@ namespace Top
             if (buildEffect != null)
                 buildEffect.Stop();
 
-            OnBuildingPlaced?.Invoke(this);
+            // GM.evOnBuildingPlaced?.Invoke(this);
             GM.EventManager?.OnBuildingPlaced?.Invoke(this);
         }
 
@@ -174,7 +173,7 @@ namespace Top
 
             // 升级完成
             currentLevel++;
-            MaxHitPoints = GetMaxHitPoints();
+            MaxHitPoints = GetMaxHP();
             CurrentHitPoints = MaxHitPoints;
 
 
@@ -185,7 +184,7 @@ namespace Top
             if (upgradeEffect != null)
                 upgradeEffect.Stop();
 
-            OnBuildingUpgraded?.Invoke(this);
+            // OnBuildingUpgraded?.Invoke(this);
             GM.EventManager?.OnBuildingUpgraded?.Invoke(this);
         }
 
@@ -198,11 +197,12 @@ namespace Top
             if (currentState == UnitState.Dead )
                 return;
 
-            int actualDamage = Mathf.Max(1, damage - data.hitPoints);
+            int actualDamage = Mathf.Max(1, damage - stats.GetStat("armor"));
             CurrentHitPoints -= actualDamage;
 
 
-            OnBuildingDamaged?.Invoke(this, actualDamage);
+            // OnBuildingDamaged?.Invoke(this, actualDamage);
+            GM.EventManager?.OnBuildingDamaged?.Invoke(this, actualDamage);
 
             if (CurrentHitPoints <= 0)
             {
@@ -222,7 +222,7 @@ namespace Top
             if (buildingRenderer != null)
                 buildingRenderer.gameObject.SetActive(false);
 
-            OnBuildingDestroyed?.Invoke(this);
+            // OnBuildingDestroyed?.Invoke(this);
             GM.EventManager?.OnBuildingDestroyed?.Invoke(this);
 
             // 延迟销毁对象
@@ -242,10 +242,10 @@ namespace Top
 
         #region 辅助方法
 
-        private int GetMaxHitPoints()
+        private int GetMaxHP()
         {
             var levelData = data.GetLevelData(currentLevel);
-            return levelData != null ? levelData.hitPoints : data.hitPoints;
+            return levelData != null ? levelData.stats.hp : 1;
         }
 
         private void UpdateUnitState()
@@ -296,7 +296,7 @@ namespace Top
                    GM.ResourceManager?.CanAfford(data.GetLevelData(currentLevel + 1)?.upgradeCosts) == true;
         }
 
-        public ResourceCost[] GetUpgradeCosts() 
+        public ResourceCost GetUpgradeCosts() 
         {
             var levelData = data.GetLevelData(currentLevel + 1);
             return levelData?.upgradeCosts;

@@ -31,7 +31,12 @@ public class AssetLoader : MonoBehaviour
             else
             {
                 Debug.LogError($"Addressables加载资源失败：{path}，状态：{handle.Status}");
+#if UNITY_EDITOR
+                Debug.LogError($"尝试使用UnityEditor.AssetDatabase加载资源：{path}");
+                return UnityEditor.AssetDatabase.LoadAssetAtPath<T>(path);
+#else
                 return null;
+#endif
             }
         }
         catch (System.Exception e)
@@ -67,7 +72,12 @@ public class AssetLoader : MonoBehaviour
             else
             {
                 Debug.LogError($"Addressables加载资源失败：{path}，状态：{handle.Status}");
+#if UNITY_EDITOR
+                Debug.LogError($"尝试使用UnityEditor.AssetDatabase加载资源：{path}");
+                return UnityEditor.AssetDatabase.LoadAssetAtPath<T>(path);
+#else
                 return null;
+#endif
             }
         }
         catch (System.Exception e)

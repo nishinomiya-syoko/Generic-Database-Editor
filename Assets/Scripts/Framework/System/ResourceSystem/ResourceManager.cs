@@ -19,15 +19,24 @@ namespace Top
 
     // 资源成本结构
     [System.Serializable]
-    public struct ResourceCost
+    public class ResourceCost
     {
-        public ResourceType resourceType;
-        public int amount;
-
-        public ResourceCost(ResourceType type, int cost)
+        public Dictionary<ResourceType, int> cost;
+        public ResourceCost(Dictionary<ResourceType, int> cost)
         {
-            resourceType = type;
-            amount = cost;
+            this.cost = cost;
+        }
+        public ResourceCost(int block = 0, int screw = 0, int crystal = 0, int plastic = 0, int gold = 0)
+        {
+            this.cost = new Dictionary<ResourceType, int>();
+            cost.Add(ResourceType.Block, block);
+            cost.Add(ResourceType.Screw, screw);
+            cost.Add(ResourceType.Crystal, crystal);
+            cost.Add(ResourceType.Plastic, plastic);
+        }
+        public int GetAmount(ResourceType resourceType)
+        {
+            return cost[resourceType];
         }
     }
 
@@ -179,24 +188,24 @@ namespace Top
             OnResourceChanged?.Invoke(type, resources.GetResource(type));
         }
 
-        public bool CanAfford(ResourceCost[] costs)
+        public bool CanAfford(ResourceCost costs)
         {
-            foreach (var cost in costs)
+            foreach (var cost in costs.cost)
             {
-                if (!HasEnoughResource(cost.resourceType, cost.amount))
+                if (!HasEnoughResource(cost.Key,cost.Value))
                     return false;
             }
             return true;
         }
 
-        public bool SpendResources(ResourceCost[] costs)
+        public bool SpendResources(ResourceCost costs)
         {
             if (!CanAfford(costs))
                 return false;
 
-            foreach (var cost in costs)
+            foreach (var cost in costs.cost)
             {
-                SpendResource(cost.resourceType, cost.amount);
+                SpendResource(cost.Key, cost.Value);
             }
             return true;
         }

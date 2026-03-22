@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEditor.VersionControl;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
+using System.Linq;
 
 namespace DataCenter
 {
@@ -22,14 +25,29 @@ namespace DataCenter
 
         private void Awake()
         {
-            
+
         }
+        
         public void PreWarm()
         {
             if (preWarmed)
                 return;
             preWarmed = true;
-                LoadTable<AssetPath>(Constant.ASSET_PATH_CONFIG);
+            LoadTable<AssetPath>(Constant.ASSET_PATH_CONFIG);
+        }
+        public async UniTask LoadAllTables()
+        {
+            PreWarm();
+            await UniTask.WaitForSeconds(0.1f);
+
+            LoadTable<BuildingData>();
+            LoadTable<BuildingLevelData>();
+        }
+        public bool LoadTable<T>() where T : class,new()
+        {
+            var p = GetAllData<AssetPath>();
+            var path = p.Any(x => x.DisplayName == typeof(T).Name) ? p.First(x => x.DisplayName == typeof(T).Name).Path : null;
+            return LoadTable<T>(path);
         }
         public bool LoadTable<T>(int id) where T : class, new()
         {
@@ -64,7 +82,7 @@ namespace DataCenter
                 TextAsset txtAsset = GlobalManager.Instance.AssetLoader.LoadAssetAsync<TextAsset>(txtPath).Result;
                 if (txtAsset == null)
                 {
-                    Debug.LogError($"Resources中未找到TXT文件：{txtPath}");
+                    Debug.LogError($"未找到TXT文件：{txtPath}");
                     return false;
                 }
 
@@ -214,7 +232,7 @@ namespace DataCenter
 
         // 编辑器扩展：一键加载所有数据表
         [Sirenix.OdinInspector.Button("加载所有数据表")]
-        public static void LoadAllTables()
+        public static void LoadTestTables()
         {
             // 示例：加载角色数据表（需根据实际类名和路径修改）
             // Instance.LoadTable<RoleTable>("Tables/RoleTable");

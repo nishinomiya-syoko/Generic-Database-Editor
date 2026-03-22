@@ -37,18 +37,18 @@ public class AssetLoaderEditor : Editor
     }
 
     // 重写加载逻辑（仅编辑器生效）
-    public T LoadAssetEditor<T>(string path) where T : Object
-    {
-        if (AssetLoader.editorMode)
-        {
-            T asset = AssetDatabase.LoadAssetAtPath<T>(path);
-            if (asset == null)
-            {
-                Debug.LogError($"编辑器模式加载资源失败：路径[{path}]不存在！");
-            }
-            return asset;
-        }
-        // 非编辑器模式，调用原方法
-        return _target.LoadAsset<T>(path);
-    }
+    // public T LoadAssetEditor<T>(string path) where T : Object
+    // {
+    //     if (AssetLoader.editorMode)
+    //     {
+    //         T asset = AssetDatabase.LoadAssetAtPath<T>(path);
+    //         if (asset == null)
+    //         {
+    //             Debug.LogError($"编辑器模式加载资源失败：路径[{path}]不存在！");
+    //         }
+    //         return asset;
+    //     }
+    //     // 非编辑器模式，调用原方法
+    //     return _target.LoadAsset<T>(path);
+    // }
 }

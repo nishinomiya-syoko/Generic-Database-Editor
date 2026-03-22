@@ -31,21 +31,21 @@ public class LevelManager : MonoBehaviour
     private int unitsLostInLevel = 0;
 
     private WaveManager waveManager;
-    void Start()
-    {
-        if (levelDatabase == null)
-        {
-            // var levelData = Resources.LoadAll<LevelData>("SO");
-            var levelData = GlobalManager.Instance.DataTableManager.GetAllData<LevelData>();
-            levelDatabase = new LevelDatabase();
-            for (int i = 0; i < levelData.Count; i++)
-            {
-                levelDatabase.levels.Add(levelData[i]);
-            }
-        }
+    // void Start()
+    // {
+    //     if (levelDatabase == null)
+    //     {
+    //         // var levelData = Resources.LoadAll<LevelData>("SO");
+    //         var levelData = GlobalManager.Instance.DataTableManager.GetAllData<LevelData>();
+    //         levelDatabase = new LevelDatabase();
+    //         for (int i = 0; i < levelData.Count; i++)
+    //         {
+    //             levelDatabase.levels.Add(levelData[i]);
+    //         }
+    //     }
 
-        waveManager = GlobalManager.Instance.WaveManager;
-    }
+    //     waveManager = GlobalManager.Instance.WaveManager;
+    // }
     public void StartLevel(int levelId)
     {
         LevelData levelData = levelDatabase.GetLevelData(levelId);

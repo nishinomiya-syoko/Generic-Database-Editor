@@ -3,6 +3,7 @@ using UnityEngine;
 using Top;
 using DataCenter;
 using RTS.TargetSearch;
+using Cysharp.Threading.Tasks;
 
 public class GlobalManager : Singleton<GlobalManager>
 {
@@ -23,6 +24,7 @@ public class GlobalManager : Singleton<GlobalManager>
     public EntityManager EntityManager;
     public WaveManager WaveManager;
     public PoolManager PoolManager;
+    public BuildingManager BuildingManager;
 
     [Header("")]
     public BatchedSearchManager BatchedSearchManager;
@@ -57,6 +59,16 @@ public class GlobalManager : Singleton<GlobalManager>
         GridManager = GetComponentInChildren<GridManager>();
         AudioManager = GetComponentInChildren<AudioManager>();
         DataTableManager = GetComponentInChildren<TableManager>();
+
+    }
+    void Start()
+    {
+        Init().Forget();
+    }
+    public async UniTask Init()
+    {
+        await DataTableManager.LoadAllTables();
+        await UniTask.WaitForSeconds(1);
 
     }
 }

@@ -349,6 +349,7 @@ public static class TxtTableParser
                 for (int j = 0; j < fieldNames.Count; j++)
                 {
                     string fieldName = fieldNames[j];
+                    Debug.Log($"fieldName:{fieldName}");
                     string fieldType = fieldTypes[j];
                     if (string.IsNullOrEmpty(fieldName) || fieldName.Trim().StartsWith("//") || fieldName.Trim().StartsWith("#"))
                         continue;

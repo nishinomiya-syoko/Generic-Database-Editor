@@ -15,6 +15,7 @@ namespace Top
         // 建筑事件
         public Action<Building> OnBuildingPlaced;
         public Action<Building> OnBuildingUpgraded;
+        public Action<Building,int> OnBuildingDamaged;
         public Action<Building> OnBuildingDestroyed;
 
         // 单位事件

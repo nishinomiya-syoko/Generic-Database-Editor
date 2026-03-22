@@ -1,10 +1,10 @@
 ﻿#实例名	Id	DisplayName	Path		
 #类型	int	string	string		
 #注释	资源id		资源路径Assets/开头		
+	1	AssetPath	Assets/Data/TXT/AssetPath.txt		
+	2	BuildingData	Assets/Data/TXT/BuildingData.txt		
+	3	BuildingLevelData	Assets/Data/TXT/BuildingLevelData.txt		
 					
 					
 					
 					
-					
-					
-					s

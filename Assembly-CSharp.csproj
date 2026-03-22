@@ -109,7 +109,6 @@
     <Compile Include="Assets/Scripts/Core/Building/Decoration.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestData.cs" />
     <Compile Include="Assets/Scripts/Framework/Json/EditableAttribute.cs" />
-    <Compile Include="Assets/Scripts/Table/BuildingData.cs" />
     <Compile Include="Assets/Scripts/Framework/UI/UIManager.Extension.cs" />
     <Compile Include="Assets/Scripts/Framework/Json/GenericDataPersistance.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/SavableAttribute.cs" />
@@ -125,6 +124,7 @@
     <Compile Include="Assets/Scripts/Core/EnemyDetector/BatchedSeeker.cs" />
     <Compile Include="Assets/Scripts/Core/Pool/PoolData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/SkillManager.cs" />
+    <Compile Include="Assets/Scripts/Core/EntityStat.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/QuestManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/AreaEffect.cs" />
     <Compile Include="Assets/Scripts/Generate/DataTable/BuildingData.cs" />
@@ -163,6 +163,7 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/NativeBinaryHeap.cs" />
     <Compile Include="Assets/Scripts/Framework/Audio/AudioDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/AchievementData.cs" />
+    <Compile Include="Assets/Scripts/Generate/DataTable/BuildingLevelData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldJobRunner.cs" />
     <Compile Include="Assets/Scripts/Framework/System/QuestSystem/AchievementDatabase.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityManager.cs" />
@@ -212,6 +213,7 @@
     <None Include="Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/version.txt" />
     <None Include="Assets/Packages/System.Xml.XPath.XmlDocument.4.3.0/ThirdPartyNotices.txt" />
     <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/LICENSE.TXT" />
+    <None Include="Assets/Data/TXT/BuildingLevelData.txt" />
     <None Include="Assets/Packages/System.Drawing.Common.4.7.0/lib/netstandard2.0/System.Drawing.Common.dll" />
     <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/lib/netstandard2.1/System.Text.Encodings.Web.dll" />
     <None Include="Assets/Packages/System.Text.Encoding.CodePages.4.7.0/lib/netstandard2.0/System.Text.Encoding.CodePages.dll" />

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Top;
+using Sirenix.OdinInspector;
 
 /// <summary>
 /// 负责在格子上放置占格建筑（可在编辑器或运行时调用）
@@ -21,12 +22,12 @@ public class BuildingPlacer : MonoBehaviour
     public GameObject PlaceBuilding(int gridX, int gridY)
     {
         if (!GridManager.Instance) return null;
-       
-        if(!GridManager.Instance.CheckRegionPlaceable(gridX, gridY, size.x, size.y))
-        return null;
+
+        if (!GridManager.Instance.CheckRegionPlaceable(gridX, gridY, size.x, size.y))
+            return null;
         // 标记格子为阻挡
         GridManager.Instance.SetRegionPlaced(gridX, gridY, size.x, size.y, true, allowOverlapPartial);
-        GridManager.Instance.SetRegionBlocked(gridX, gridY, size.x, size.y,true, walkableWidth);
+        GridManager.Instance.SetRegionBlocked(gridX, gridY, size.x, size.y, true, walkableWidth);
 
         // 实例化视觉对象（中心对齐）
         Vector3 worldPos = GridManager.Instance.GetWorldPosition(gridX + size.x / 2, gridY + size.y / 2);
@@ -45,25 +46,40 @@ public class BuildingPlacer : MonoBehaviour
     //     Destroy(b.gameObject);
     // }
 
+    // void Update()
+    // {
+    //     if (Input.GetKeyDown(keyCode))
+    //     {
+    //         buildingMode = !buildingMode;
+    //     }
+    //     if (!buildingMode)
+    //         return;
+
+    //     if (Input.GetMouseButtonDown(0))
+    //     {
+    //         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //         RaycastHit hit;
+    //         LayerMask layerMask = 1 << 6;
+    //         if (Physics.Raycast(ray,out hit,int.MaxValue,layerMask))
+    //         {
+    //             var p = GridManager.Instance.GetNodeFromWorldPos(hit.point);
+    //             PlaceBuilding(p.x, p.y);
+    //         }
+    //     }
+    // }
     void Update()
     {
-        if (Input.GetKeyDown(keyCode))
+
+        if (Input.GetKeyDown(KeyCode.B))
         {
-            buildingMode = !buildingMode;
+            GlobalManager.Instance.BuildingManager.StartBuildingPlacement(1);
         }
-        if (!buildingMode)
-            return;
-        
-        if (Input.GetMouseButtonDown(0))
-        {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            LayerMask layerMask = 1 << 6;
-            if (Physics.Raycast(ray,out hit,int.MaxValue,layerMask))
-            {
-                var p = GridManager.Instance.GetNodeFromWorldPos(hit.point);
-                PlaceBuilding(p.x, p.y);
-            }
-        }
+    }
+    [Button]
+    public void CheckTable()
+    {
+        var p = GlobalManager.Instance.DataTableManager.GetDataById<BuildingLevelData>(1);
+        Debug.Log(p.levelId);
+        Debug.Log(p.upgradeCosts.cost[0]);
     }
 }
