@@ -21,6 +21,8 @@ public static class Constant
     // 资源
     public static readonly string ASSET_BINARY_PATH = "Assets/Data/Binary/";
     public static readonly string ASSET_TXT_PATH = "Assets/Data/TXT/";
+    // 路径配置表
+    public static readonly string ASSET_PATH_CONFIG = "Assets/Data/TXT/AssetPaths.txt";
 
     // 技能
     public const string SKILL_PATH = "Assets/Res/SO/Skills/";

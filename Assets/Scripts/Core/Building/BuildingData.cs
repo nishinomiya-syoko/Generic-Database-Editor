@@ -12,17 +12,13 @@ namespace Top
         public string IconPath;
         public BuildingType buildingType;
         public Vector2Int size = new Vector2Int(2, 2);
-        // public GameObject prefab;
+        public GameObject prefab;
         public string prefabPath;
 
-        [Header("建造信息")]
-        public int buildTime = 60; // 秒
-        public ResourceCost[] buildCosts = new ResourceCost[0];
-        public Dictionary<string, int> costs;
-
-        [Header("升级信息")]
-        public int maxLevel = 10;
+        
+        public int maxLevel => levelData.Length;
         public BuildingLevelData[] levelData = new BuildingLevelData[0];
+        public string LevelId;
 
         [Header("特殊属性")]
         public int hitPoints = 100;

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using DG.Tweening;
 
 namespace Top
 {
@@ -13,7 +14,8 @@ namespace Top
         public Vector2Int gridPosition; // 网格坐标
         public Vector3 worldPosition; // 世界坐标
 
-        private GameObject SizeIndicatorPrefab; // 大小指示器预制体
+        private GameObject m_sizeIndicatorPrefab; // 大小指示器预制体
+        private GameObject m_rangeIndicatorPrefab;
         private GameObject modelInstance; // 视觉模型实例
         public void GenerateId()
         {
@@ -23,17 +25,40 @@ namespace Top
         void Start()
         {
             modelInstance = gameObject;
-            SizeIndicatorPrefab = GlobalManager.Instance.PoolManager.Spawn("Indicator", transform.position);
-            SizeIndicatorPrefab.transform.SetParent(transform);
-            SizeIndicatorPrefab.SetActive(false);
+            m_sizeIndicatorPrefab = GlobalManager.Instance.PoolManager.Spawn("Indicator", transform.position);
+            m_sizeIndicatorPrefab.transform.SetParent(transform);
+            m_sizeIndicatorPrefab.SetActive(false);
         }
 
         public void SetMoving(bool isMoving)
         {
-            if (SizeIndicatorPrefab != null)
+            if (isMoving)
             {
-                SizeIndicatorPrefab.SetActive(isMoving);
+                ShowRangeIndicator();
+                ShowSizeIndicator();
             }
+            else
+            {
+                HideIndicator();
+            }
+
+        }
+        public void ShowRangeIndicator()
+        {
+            if (m_rangeIndicatorPrefab == null)
+                return;
+            m_rangeIndicatorPrefab.transform.localScale *= .5f;
+            m_rangeIndicatorPrefab.transform.DOScale(1f, 0.5f);
+        }
+        public void ShowSizeIndicator()
+        {
+            m_sizeIndicatorPrefab?.SetActive(true);
+        }
+        public void HideIndicator()
+        {
+            m_rangeIndicatorPrefab?.SetActive(false);
+            m_sizeIndicatorPrefab?.SetActive(false);
+            
         }
         public void PreviewMode()
         {

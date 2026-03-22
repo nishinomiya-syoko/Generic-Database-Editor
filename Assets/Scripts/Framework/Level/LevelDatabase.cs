@@ -7,14 +7,14 @@ using System.Collections.Generic;
 
     public class LevelDatabase 
     {
-        public List<LevelDataSO> levels = new List<LevelDataSO>();
+        public List<LevelData> levels = new List<LevelData>();
 
-        public LevelDataSO GetLevelData(int levelId)
+        public LevelData GetLevelData(int levelId)
         {
             return levels.Find(l => l.levelId == levelId);
         }
 
-        public List<LevelDataSO> GetLevelsByType(LevelType type)
+        public List<LevelData> GetLevelsByType(LevelType type)
         {
             return levels.FindAll(l => l.levelType == type);
         }

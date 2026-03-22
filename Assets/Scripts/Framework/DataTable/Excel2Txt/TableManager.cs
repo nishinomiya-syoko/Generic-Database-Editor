@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace DataCenter
@@ -13,43 +14,38 @@ namespace DataCenter
     public class TableManager : MonoBehaviour
     {
         // 单例实例
-        private static TableManager _instance;
-        public static TableManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    // 自动创建管理器对象
-                    GameObject obj = new GameObject("TableManager");
-                    _instance = obj.AddComponent<TableManager>();
-                    DontDestroyOnLoad(obj);
-                }
-                return _instance;
-            }
-        }
+        
+        private bool preWarmed = false;
 
         // 数据缓存：key=数据表名称（类名），value=数据字典（key=ID，value=数据实体）
         private Dictionary<string, Dictionary<int, object>> _tableDataCache = new Dictionary<string, Dictionary<int, object>>();
 
         private void Awake()
         {
-            if (_instance == null)
+            
+        }
+        public void PreWarm()
+        {
+            if (preWarmed)
+                return;
+            preWarmed = true;
+                LoadTable<AssetPath>(Constant.ASSET_PATH_CONFIG);
+        }
+        public bool LoadTable<T>(int id) where T : class, new()
+        {
+            var p = GetDataById<AssetPath>(id);
+            if (p == null)
             {
-                _instance = this;
-                DontDestroyOnLoad(gameObject);
+                return false;
             }
-            else if (_instance != this)
-            {
-                Destroy(gameObject);
-            }
+            return LoadTable<T>(p.Path);
         }
 
         /// <summary>
-        /// 加载指定的TXT数据表
+        /// 加载指定的TXT数据表 路径格式：（Assets/  ******  .txt ）
         /// </summary>
         /// <typeparam name="T">数据实体类类型</typeparam>
-        /// <param name="txtPath">TXT文件路径（Resources目录下的相对路径，不带.txt后缀）</param>
+        /// <param name="txtPath">TXT文件路径（Assets/  ******  .txt ）</param>
         /// <returns>是否加载成功</returns>
         public bool LoadTable<T>(string txtPath) where T : class, new()
         {
@@ -65,7 +61,7 @@ namespace DataCenter
             {
                 // 读取Resources中的TXT文件（需将TXT放入Resources目录）
                 // TextAsset txtAsset = Resources.Load<TextAsset>(txtPath);
-                TextAsset txtAsset = GlobalManager.Instance.DataLoader.LoadAssetAsync<TextAsset>(txtPath);
+                TextAsset txtAsset = GlobalManager.Instance.AssetLoader.LoadAssetAsync<TextAsset>(txtPath).Result;
                 if (txtAsset == null)
                 {
                     Debug.LogError($"Resources中未找到TXT文件：{txtPath}");
@@ -222,16 +218,15 @@ namespace DataCenter
         {
             // 示例：加载角色数据表（需根据实际类名和路径修改）
             // Instance.LoadTable<RoleTable>("Tables/RoleTable");
-            Instance.LoadTable<BuildingData>("Assets/Data/TXT/BuildingData.txt");
+            GlobalManager.Instance.DataTableManager.LoadTable<BuildingData>("Assets/Data/TXT/BuildingData.txt");
             // var p = Instance.GetDataById<BuildingData>(111);
-            // Debug.Log(p.Id);
-            // Debug.Log("请在代码中配置需要加载的数据表路径后调用此方法");
         }
         [Sirenix.OdinInspector.Button("读取")]
         public static void Read()
         {
-            var p = Instance.GetDataById<BuildingData>(111);
+            var p = GlobalManager.Instance.DataTableManager.GetDataById<BuildingData>(111);
             Debug.Log(p.Id);
+            Debug.Log(p.buildingType);
         }   
     }
 }

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public abstract class EntityBase : MonoBehaviour, IReference
 {
+    public GlobalManager GM => GlobalManager.Instance;
+
     public string id;
     public int instanceId;
     public bool ownedByPlayer;

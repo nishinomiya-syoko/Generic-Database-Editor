@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace Top
 {
     // 任务数据库
-    [CreateAssetMenu(fileName = "QuestDatabase", menuName = "Top/Quest Database")]
-    public class QuestDatabase : ScriptableObject
+    // [CreateAssetMenu(fileName = "QuestDatabase", menuName = "Top/Quest Database")]
+    public class QuestDatabase 
     {
         public List<QuestData> quests = new List<QuestData>();
 

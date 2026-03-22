@@ -5,8 +5,8 @@ using System.Collections;
 namespace Top
 {
     // 音频数据库
-    [CreateAssetMenu(fileName = "AudioDatabase", menuName = "Top/Audio Database")]
-    public class AudioDatabase : ScriptableObject
+    // [CreateAssetMenu(fileName = "AudioDatabase", menuName = "Top/Audio Database")]
+    public class AudioDatabase
     {
         [Header("背景音乐")]
         public AudioClip mainTheme;

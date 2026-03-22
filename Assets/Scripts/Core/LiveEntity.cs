@@ -1,8 +1,9 @@
+using RTS.TargetSearch;
 using UnityEngine;
 
 namespace Top
 {
-    public class LiveEntity : EntityBase
+    public class LiveEntity : EntityBase,ITargetable
     {
         public UnitState currentState = UnitState.Idle;
 
@@ -18,6 +19,12 @@ namespace Top
 
         public UnitType UnitType { get; protected set; }
         public UnitType PreferredTarget { get; protected set; }
+
+        // 方法
+        public int Id{get;}
+        public Vector3 Position{ get; }
+        public int TeamId{ get; }
+        // public GameObject Owner { get; }
 
     }
 }

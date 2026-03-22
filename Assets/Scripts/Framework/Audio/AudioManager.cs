@@ -39,7 +39,7 @@ namespace Top
             // 加载音频数据库
             if (audioDatabase == null)
             {
-                audioDatabase = Resources.Load<AudioDatabase>("AudioDatabase");
+                // audioDatabase = Resources.Load<AudioDatabase>("AudioDatabase");
             }
         }
 

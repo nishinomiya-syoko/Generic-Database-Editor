@@ -11,17 +11,11 @@ namespace Top
         [Header("建筑信息")]
         public BuildingData data;
         public int currentLevel = 1;
-        // public UnitState currentState = UnitState.Idle;
 
         [Header("组件引用")]
         public Renderer buildingRenderer;
         public ParticleSystem buildEffect;
         public ParticleSystem upgradeEffect;
-
-        // // 属性
-        // public int CurrentHitPoints { get; private set; }
-        // public int MaxHitPoints { get; private set; }
-        
 
         // 事件
         public event Action<Building> OnBuildingPlaced;
@@ -103,7 +97,7 @@ namespace Top
 
         private IEnumerator BuildingProcess()
         {
-            float buildTime = data.buildTime;
+            float buildTime = data.GetLevelData(currentLevel).upgradeTime;
             float elapsedTime = 0f;
 
             // 建造动画
@@ -131,7 +125,7 @@ namespace Top
                 buildEffect.Stop();
 
             OnBuildingPlaced?.Invoke(this);
-            GlobalManager.Instance?.EventManager?.OnBuildingPlaced?.Invoke(this);
+            GM.EventManager?.OnBuildingPlaced?.Invoke(this);
         }
 
         public void StartUpgrade()
@@ -192,7 +186,7 @@ namespace Top
                 upgradeEffect.Stop();
 
             OnBuildingUpgraded?.Invoke(this);
-            GlobalManager.Instance?.EventManager?.OnBuildingUpgraded?.Invoke(this);
+            GM.EventManager?.OnBuildingUpgraded?.Invoke(this);
         }
 
         #endregion
@@ -229,7 +223,7 @@ namespace Top
                 buildingRenderer.gameObject.SetActive(false);
 
             OnBuildingDestroyed?.Invoke(this);
-            GlobalManager.Instance?.EventManager?.OnBuildingDestroyed?.Invoke(this);
+            GM.EventManager?.OnBuildingDestroyed?.Invoke(this);
 
             // 延迟销毁对象
             Destroy(gameObject, 2f);
@@ -299,7 +293,7 @@ namespace Top
         {
             return currentState == UnitState.Working &&
                    currentLevel < data.maxLevel &&
-                   GlobalManager.Instance?.ResourceManager?.CanAfford(data.GetLevelData(currentLevel + 1)?.upgradeCosts) == true;
+                   GM.ResourceManager?.CanAfford(data.GetLevelData(currentLevel + 1)?.upgradeCosts) == true;
         }
 
         public ResourceCost[] GetUpgradeCosts() 

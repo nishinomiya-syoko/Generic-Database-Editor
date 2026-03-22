@@ -10,7 +10,7 @@ namespace Top
     {
         [Header("任务设置")]
         public QuestDatabase questDatabase;
-        public AchievementSO achievementDatabase;
+        public AchievementDatabase achievementDatabase;
         public int maxActiveQuests = 10;
 
         private Dictionary<string, PlayerQuestData> activeQuests = new Dictionary<string, PlayerQuestData>();

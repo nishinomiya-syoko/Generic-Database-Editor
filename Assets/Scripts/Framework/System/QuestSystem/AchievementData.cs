@@ -6,8 +6,9 @@ using System.Collections.Generic;
 namespace Top
 {
     // 成就数据
-    [CreateAssetMenu(fileName = "AchievementData", menuName = "Top/Achievement Data")]
-    public class AchievementData : ScriptableObject
+    // [CreateAssetMenu(fileName = "AchievementData", menuName = "Top/Achievement Data")]
+    [EditableData]
+    public class AchievementData
     {
         [Header("基本信息")]
         public string id;

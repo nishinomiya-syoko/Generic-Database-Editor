@@ -2,14 +2,18 @@ using Logic;
 using UnityEngine;
 using Top;
 using DataCenter;
-public class GlobalManager : MonoBehaviour
-{
+using RTS.TargetSearch;
 
-    public static GlobalManager Instance;
+public class GlobalManager : Singleton<GlobalManager>
+{
     [Header("地图系统")]
     public GridManager GridManager;
     public MapManager MapManager;
     public AudioManager AudioManager;
+    [Header("流程")]
+    public ProcedureManager ProcedureManager;
+    [Header("模块")]
+    public ModuleManager ModuleManager;
 
     [Header("游戏系统")]
     public TableManager DataTableManager;
@@ -20,25 +24,31 @@ public class GlobalManager : MonoBehaviour
     public WaveManager WaveManager;
     public PoolManager PoolManager;
 
+    [Header("")]
+    public BatchedSearchManager BatchedSearchManager;
+
     public EventManager EventManager;
     public ResourceManager ResourceManager;
     public QuestManager QuestManager;
     public UIManager UIManager;
 
 
-    public DataLoader DataLoader;
+    public AssetLoader AssetLoader;
 
     public int level = 1;
 
-    void Awake()
+    public override void Awake()
     {
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
+        base.Awake();
+        ModuleManager = GetComponentInChildren<ModuleManager>();
+        ProcedureManager = GetComponentInChildren<ProcedureManager>();
+
         LevelManager = GetComponentInChildren<LevelManager>();
         EntityManager = GetComponentInChildren<EntityManager>();
         WaveManager = GetComponentInChildren<WaveManager>();
         PoolManager = GetComponentInChildren<PoolManager>();
-        DataLoader = GetComponentInChildren<DataLoader>();
+
+        AssetLoader = GetComponentInChildren<AssetLoader>();
         EventManager = GetComponentInChildren<EventManager>();
         ResourceManager = GetComponentInChildren<ResourceManager>();
         QuestManager = GetComponentInChildren<QuestManager>();

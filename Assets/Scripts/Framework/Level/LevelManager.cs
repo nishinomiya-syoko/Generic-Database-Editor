@@ -25,7 +25,7 @@ public class LevelManager : MonoBehaviour
     public Dictionary<int, int> levelStars = new Dictionary<int, int>(); // levelId -> stars
 
     [Header("当前关卡")]
-    public LevelDataSO currentLevel;
+    public LevelData currentLevel;
     public LevelState currentLevelState = LevelState.NotStarted;
     private float levelStartTime;
     private int unitsLostInLevel = 0;
@@ -35,9 +35,10 @@ public class LevelManager : MonoBehaviour
     {
         if (levelDatabase == null)
         {
-            var levelData = Resources.LoadAll<LevelDataSO>("SO");
+            // var levelData = Resources.LoadAll<LevelData>("SO");
+            var levelData = GlobalManager.Instance.DataTableManager.GetAllData<LevelData>();
             levelDatabase = new LevelDatabase();
-            for (int i = 0; i < levelData.Length; i++)
+            for (int i = 0; i < levelData.Count; i++)
             {
                 levelDatabase.levels.Add(levelData[i]);
             }
@@ -47,7 +48,7 @@ public class LevelManager : MonoBehaviour
     }
     public void StartLevel(int levelId)
     {
-        LevelDataSO levelData = levelDatabase.GetLevelData(levelId);
+        LevelData levelData = levelDatabase.GetLevelData(levelId);
         if (levelData == null)
         {
             // Debug.LogError("Level data not found for level ID: " + levelId);
@@ -73,10 +74,10 @@ public class LevelManager : MonoBehaviour
             StartDefenseLevel(levelData);
         }
     }
-    private void StartAttackLevel(LevelDataSO levelData)
+    private void StartAttackLevel(LevelData levelData)
     { 
     }
-    private void StartDefenseLevel(LevelDataSO levelData)
+    private void StartDefenseLevel(LevelData levelData)
     {
         waveManager.StartWave(levelData.waves[0], 0);
     }

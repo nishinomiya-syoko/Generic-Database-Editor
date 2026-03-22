@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace Top
 {
     // 装备数据库
-    [CreateAssetMenu(fileName = "EquipmentDatabase", menuName = "Top/Equipment Database")]
-    public class EquipmentDatabase : ScriptableObject
+    // [CreateAssetMenu(fileName = "EquipmentDatabase", menuName = "Top/Equipment Database")]
+    public class EquipmentDatabase 
     {
         public List<EquipmentData> equipment = new List<EquipmentData>();
 
