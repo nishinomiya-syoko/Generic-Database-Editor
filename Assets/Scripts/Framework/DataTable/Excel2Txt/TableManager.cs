@@ -128,6 +128,7 @@ namespace DataCenter
                         if (fieldName.ToLower() == "id")
                         {
                             id = (int)value;
+                            Debug.Log($"ID:{id}");
                         }
                     }
 

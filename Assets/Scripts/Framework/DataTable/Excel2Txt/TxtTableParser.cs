@@ -298,7 +298,7 @@ public static class TxtTableParser
         try
         {
             string[] allLines = File.ReadAllLines(txtPath, Encoding.UTF8);
-            
+
             if (allLines.Length < 3)
             {
                 Debug.LogError("TXT数据表表头不完整（至少需要3行：变量名、类型、注释）");
@@ -337,28 +337,32 @@ public static class TxtTableParser
         try
         {
             string[] allLines = File.ReadAllLines(txtPath, Encoding.UTF8);
-            
+
             for (int i = 3; i < allLines.Length; i++)
             {
-                string line = allLines[i].Trim();
+                string line = allLines[i];
                 if (string.IsNullOrEmpty(line)) continue;
+                // if(line.StartsWith("//")||line.StartsWith("#")) continue;
                 List<string> cellValues = SplitLineByTab(line);
                 Dictionary<string, object> dataDict = new Dictionary<string, object>();
-                
+
                 // 逐列转换数据类型
-                for (int j = 0; j < fieldNames.Count; j++)
+                for (int j = 1; j < fieldNames.Count; j++)
                 {
                     string fieldName = fieldNames[j];
-                    // Debug.Log($"fieldName:{fieldName}");
                     string fieldType = fieldTypes[j];
-                    if (string.IsNullOrEmpty(fieldName) || fieldName.Trim().StartsWith("//") || fieldName.Trim().StartsWith("#"))
+                    Debug.Log($"fieldName:{fieldName} fieldType:{fieldType} cellValue:{cellValues[j]} 行列：{i},{j}");
+
+                    if (string.IsNullOrEmpty(fieldName) || fieldName.StartsWith("//") || fieldName.StartsWith("#"))
                         continue;
-                    if (string.IsNullOrEmpty(fieldType) || fieldType.Trim().StartsWith("//") || fieldType.Trim().StartsWith("#"))
+                    if (string.IsNullOrEmpty(fieldType) || fieldType.StartsWith("//") || fieldType.StartsWith("#"))
                         continue;
-                    string cellValue = j < cellValues.Count ? cellValues[j].Trim() : string.Empty;
-                    
-                    object value = ConvertValueToType(cellValue, fieldType);
-                    Debug.Log($"字段名：{fieldName} 字段类型：{fieldType} 值：{value}");
+                    if (cellValues[0].StartsWith("//") || cellValues[0].StartsWith("#"))
+                        continue;
+                    // string cellValue = j < cellValues.Count ? cellValues[j].Trim() : string.Empty;
+
+                    object value = ConvertValueToType(cellValues[j], fieldType);
+                    // Debug.Log($"字段名：{fieldName} 字段类型：{fieldType} 值：{value} 行：{i} 列：{j}");
                     dataDict.Add(fieldName, value);
                 }
                 dataList.Add(dataDict);
@@ -372,4 +376,5 @@ public static class TxtTableParser
             return dataList;
         }
     }
+    
 }

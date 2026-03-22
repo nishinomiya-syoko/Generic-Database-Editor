@@ -66,12 +66,12 @@ public static class ExcelToTxtConverter
                     for (int col = 1; col <= colCount; col++)
                     {
                         // 获取单元格值，空单元格用[空格]替换
-                        var cellValue = worksheet.Cells[row, col].Text ?? " ";
+                        var cellValue = worksheet.Cells[row, col].Text ?? string.Empty;
                         // 第一行第二行是字段名
                         // if (cellValue.StartsWith("#") || cellValue.StartsWith("$") || cellValue.StartsWith("//"))
                         //     break;
                         // 替换单元格内的换行符（避免破坏TXT布局）
-                        cellValue = cellValue.Replace("\n", " ").Replace("\r", "");
+                        cellValue = cellValue.Replace("\n", ",").Replace("\r", "");
                         // 添加单元格值，列之间用制表符分隔
                         sb.Append(cellValue);
 
