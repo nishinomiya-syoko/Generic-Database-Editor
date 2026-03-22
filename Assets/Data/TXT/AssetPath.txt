@@ -5,5 +5,7 @@
 	2	BuildingData	Assets/Data/TXT/BuildingData.txt
 	3	BuildingLevelData	Assets/Data/TXT/BuildingLevelData.txt
 #			
+#			
+#			
 	101		Assets/Res/Prefab/jidi.prefab
 	102		

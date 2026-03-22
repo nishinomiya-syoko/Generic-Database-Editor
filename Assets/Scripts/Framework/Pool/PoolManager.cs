@@ -54,7 +54,7 @@ namespace Logic
             }
             Instance = this;
 
-            InitializePools();
+            // InitializePools();
         }
 
         private void OnDestroy()

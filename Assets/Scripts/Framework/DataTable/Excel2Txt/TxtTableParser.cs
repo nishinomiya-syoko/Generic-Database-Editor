@@ -277,7 +277,8 @@ public static class TxtTableParser
         for (int i = 0; i < parts.Count; i++)
         {
             // 仅当单元格内容**整行**是注释时，才置空（避免集合内有//被误判）
-            string val = parts[i].Trim();
+            string val = parts[i];
+            // string val = parts[i].Trim();
             if (val.StartsWith("//") || val.StartsWith("#"))
                 parts[i] = string.Empty;
         }

@@ -131,6 +131,9 @@ namespace DataCenter
                             Debug.Log($"ID:{id}");
                         }
                     }
+                    //临时对策
+                    if (id == 0)
+                        continue;
 
                     // 检查ID唯一性
                     if (dataDict.ContainsKey(id))
