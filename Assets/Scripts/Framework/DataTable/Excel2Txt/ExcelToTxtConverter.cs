@@ -65,13 +65,11 @@ public static class ExcelToTxtConverter
                     // 逐列读取单元格
                     for (int col = 1; col <= colCount; col++)
                     {
-                        // 获取单元格值，空单元格用空字符串替代
-                        var cellValue = worksheet.Cells[row, col].Text ?? string.Empty;
+                        // 获取单元格值，空单元格用[空格]替换
+                        var cellValue = worksheet.Cells[row, col].Text ?? " ";
                         // 第一行第二行是字段名
-                        // if(row <= 2 && cellValue == string.Empty)
-                        // {
-                        //     continue;
-                        // }
+                        // if (cellValue.StartsWith("#") || cellValue.StartsWith("$") || cellValue.StartsWith("//"))
+                        //     break;
                         // 替换单元格内的换行符（避免破坏TXT布局）
                         cellValue = cellValue.Replace("\n", " ").Replace("\r", "");
                         // 添加单元格值，列之间用制表符分隔

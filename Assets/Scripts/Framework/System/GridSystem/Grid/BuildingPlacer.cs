@@ -78,8 +78,8 @@ public class BuildingPlacer : MonoBehaviour
     [Button]
     public void CheckTable()
     {
-        var p = GlobalManager.Instance.DataTableManager.GetDataById<BuildingLevelData>(1);
-        Debug.Log(p.levelId);
-        Debug.Log(p.upgradeCosts.cost[0]);
+        var p = GlobalManager.Instance.DataTableManager.GetDataById<DataCenter.BuildingLevelData>(1);
+        Debug.Log(p.Id);
+        Debug.Log(p.block);
     }
 }

@@ -1,6 +1,6 @@
 ﻿// ============================================================
 // 自动生成的数据表类 - BuildingLevelData
-// 生成时间：2026-03-22 16:55:33
+// 生成时间：2026-03-22 19:59:03
 // 请勿手动修改，修改会被覆盖
 // ============================================================
 
@@ -18,7 +18,7 @@ namespace DataCenter
       /// <summary>
       /// 资源id
       /// </summary>
-      public int levelId { get; set; }
+      public int Id { get; set; }
 
       public string DisplayName { get; set; }
 
@@ -45,7 +45,7 @@ namespace DataCenter
       /// </summary>
       public BuildingLevelData()
       {
-        levelId = 0;
+        Id = 0;
         DisplayName = string.Empty;
         block = 0;
         screw = 0;
