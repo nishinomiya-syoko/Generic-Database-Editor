@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+// using Sirenix.OdinInspector;
 
 namespace Top
 {
@@ -315,14 +316,17 @@ namespace Top
 
         #region 调试功能
 
-        [ContextMenu("Add Test Resources")]
+        [Sirenix.OdinInspector.Button("Add Test Resources")]
         public void AddTestResources()
         {
             AddResource(ResourceType.Gold, 1000);
-           
+            AddResource(ResourceType.Block, 1000);
+            AddResource(ResourceType.Crystal, 1000);
+            AddResource(ResourceType.Plastic, 1000);
+            AddResource(ResourceType.Screw, 1000);
         }
 
-        [ContextMenu("Reset All Resources")]
+        [Sirenix.OdinInspector.Button("Reset All Resources")]
         public void DebugResetResources()
         {
             ResetResources();

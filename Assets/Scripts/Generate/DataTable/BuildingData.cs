@@ -1,6 +1,6 @@
 // ============================================================
 // 自动生成的数据表类 - BuildingData
-// 生成时间：2026-03-23 22:37:33
+// 生成时间：2026-03-23 22:43:49
 // 请勿手动修改，修改会被覆盖
 // ============================================================
 
@@ -37,7 +37,7 @@ namespace DataCenter
         /// <summary>
         /// 升级信息
         /// </summary>
-        public int levelIdl { get; set; }
+        public int[] levelId { get; set; }
 
         /// <summary>
         /// 特殊属性
@@ -70,7 +70,7 @@ namespace DataCenter
             size = default;
             buildTime = 0;
             costs = default;
-            levelIdl = 0;
+            levelId = default;
             hitPoints = 0;
             armor = 0;
             range = 0f;

@@ -52,7 +52,7 @@ namespace Top
 
         public void StartBuildingPlacement(int buildingId)
         {
-            var p = GlobalManager.Instance.DataTableManager.GetDataById<BuildingData>(buildingId);
+            var p = GlobalManager.Instance.DataTableManager.GetDataById<DataCenter.BuildingData>(buildingId);
             if (p == null)
             {
                 DebugInfo.LogWarning("Invalid building id!");
@@ -60,13 +60,31 @@ namespace Top
             }
             BuildingData buildingData = new BuildingData()
             {
-                Id = p.Id,
+                Id = p.Id.ToString(),
                 DisplayName = p.DisplayName,
                 Description = p.Description,
                 IconPath = p.IconPath,
-                prefabPath = p.prefabPath,
-               
+                // prefabPath = p.prefabPath,
+                buildingType = p.buildingType,
+                size = p.size,
             };
+            List<Top.BuildingLevelData> levelTemp = new List<Top.BuildingLevelData>();
+            foreach (var id in p.levelId)
+            {
+                var i = GlobalManager.Instance.DataTableManager.GetDataById<DataCenter.BuildingLevelData>(id);
+                levelTemp.Add(new Top.BuildingLevelData()
+                {
+                    levelId = i.Id,
+                    upgradeCosts = new ResourceCost(i.block, i.screw, i.crystal, i.plastic, i.gold),
+                    // upgradeTime = i.upgradeTime,
+                    stats = new BuildingStats()
+                    {
+                        attackRange = i.attackRange,
+                        attackSpeed = i.attackSpeed,
+                    }
+                }
+                );
+            }
             StartBuildingPlacement(buildingData);
         }
 
