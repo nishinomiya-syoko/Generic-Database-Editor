@@ -61,6 +61,7 @@ public class GlobalManager : Singleton<GlobalManager>
         DataTableManager = GetComponentInChildren<TableManager>();
 
         BatchedSearchManager = GetComponentInChildren<BatchedSearchManager>();
+        BuildingManager = GetComponentInChildren<BuildingManager>();
 
     }
     void Start()

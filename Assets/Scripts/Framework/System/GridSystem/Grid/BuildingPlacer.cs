@@ -73,7 +73,7 @@ public class BuildingPlacer : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.B))
         {
-            GlobalManager.Instance.BuildingManager.StartBuildingPlacement(1);
+            GlobalManager.Instance.BuildingManager.StartBuildingPlacement(111);
         }
     }
     [Button]
