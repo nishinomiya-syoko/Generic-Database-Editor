@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
-using System.Linq;
-using System.Reflection;
 using System.Collections;
 
 public static class TxtTableParser
@@ -293,7 +291,7 @@ public static class TxtTableParser
         fieldComments = new List<string>();
         if (!File.Exists(txtPath))
         {
-            Debug.LogError($"TXT文件不存在：{txtPath}");
+            DebugInfo.LogError($"TXT文件不存在：{txtPath}");
             return false;
         }
         try
@@ -311,18 +309,18 @@ public static class TxtTableParser
 
             if (fieldNames.Count != fieldTypes.Count || fieldNames.Count != fieldComments.Count)
             {
-                Debug.LogError("表头行的列数不一致，请检查TXT文件");
+                DebugInfo.LogError("表头行的列数不一致，请检查TXT文件");
                 return false;
             }
             if (!fieldNames.Contains("ID"))
             {
-                Debug.LogWarning("数据表未包含ID字段，建议添加ID作为唯一标识");
+                DebugInfo.LogWarning("数据表未包含ID字段，建议添加ID作为唯一标识");
             }
             return true;
         }
         catch (Exception e)
         {
-            Debug.LogError($"解析表头失败：{e.Message}\n{e.StackTrace}");
+            DebugInfo.LogError($"解析表头失败：{e.Message}\n{e.StackTrace}");
             return false;
         }
     }
@@ -332,7 +330,7 @@ public static class TxtTableParser
         List<Dictionary<string, object>> dataList = new List<Dictionary<string, object>>();
         if (!File.Exists(txtPath))
         {
-            Debug.LogError($"TXT文件不存在：{txtPath}");
+            DebugInfo.LogError($"TXT文件不存在：{txtPath}");
             return dataList;
         }
         try
@@ -352,7 +350,7 @@ public static class TxtTableParser
                 {
                     string fieldName = fieldNames[j];
                     string fieldType = fieldTypes[j];
-                    Debug.Log($"fieldName:{fieldName} fieldType:{fieldType} cellValue:{cellValues[j]} 行列：{i},{j}");
+                    // Debug.Log($"fieldName:{fieldName} fieldType:{fieldType} cellValue:{cellValues[j]} 行列：{i},{j}");
 
                     if (string.IsNullOrEmpty(fieldName) || fieldName.StartsWith("//") || fieldName.StartsWith("#"))
                         continue;
@@ -368,12 +366,12 @@ public static class TxtTableParser
                 }
                 dataList.Add(dataDict);
             }
-            Debug.Log($"解析数据完成，共加载{dataList.Count}行数据");
+            DebugInfo.Log($"解析数据完成，共加载{dataList.Count}行数据");
             return dataList;
         }
         catch (Exception e)
         {
-            Debug.LogError($"解析数据行失败：{e.Message}\n{e.StackTrace}");
+            DebugInfo.LogError($"解析数据行失败：{e.Message}\n{e.StackTrace}");
             return dataList;
         }
     }

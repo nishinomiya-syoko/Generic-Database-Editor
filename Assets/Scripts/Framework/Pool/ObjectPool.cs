@@ -19,18 +19,21 @@ namespace Logic
     public class ObjectPool<T> : IPoolWrapper where T : MonoBehaviour, IReference
     {
         private readonly Queue<T> _pool = new Queue<T>();
+        // private readonly Queue<T> _inUse = new Queue<T>();
 
         private readonly GameObject _prefab;
         private readonly Transform _parent;
         private readonly bool _expandIfEmpty;
+        private readonly int _expandCount;
         private readonly int _maxSize;          // <=0 表示不限制
         private int _totalCount;               // 已实例化总数（包括在用和在池里的）
 
-        public ObjectPool(T prefab, int initialSize, Transform parent, bool expandIfEmpty, int maxSize)
+        public ObjectPool(T prefab, int initialSize, Transform parent, bool expandIfEmpty,int expandCount, int maxSize)
         {
             _prefab = prefab.gameObject;
             _parent = parent;
             _expandIfEmpty = expandIfEmpty;
+            _expandCount = expandCount;
             _maxSize = maxSize;
 
             Prewarm(initialSize);
@@ -62,6 +65,7 @@ namespace Logic
             if (_pool.Count > 0)
             {
                 entity = _pool.Dequeue();
+                // _inUse.Enqueue(entity);
             }
             else
             {
@@ -72,9 +76,18 @@ namespace Logic
                 if (_maxSize > 0 && _totalCount >= _maxSize)
                     return null;
 
-                entity = Object.Instantiate(_prefab, _parent).GetComponent<T>();
-                if (entity != null)
+                for (int i = 0; i < _expandCount; i++)
+                {
+                    var p = Object.Instantiate(_prefab, _parent).GetComponent<T>();
+                    _pool.Enqueue(p);
                     _totalCount++;
+                }
+
+                // entity = Object.Instantiate(_prefab, _parent).GetComponent<T>();
+                entity = _pool.Dequeue();
+                // _inUse.Enqueue(entity);
+                // if (entity != null)
+                //     _totalCount++;
             }
 
             if (!entity) return null;
@@ -120,6 +133,12 @@ namespace Logic
                 if (e)
                     Object.Destroy(e.gameObject);
             }
+            // while (_inUse.Count > 0)
+            // {
+            //     var e = _inUse.Dequeue();
+            //     if (e)
+            //         Object.Destroy(e.gameObject);
+            // }
         }
 
         // ----------------- IPoolWrapper 显式实现 -----------------

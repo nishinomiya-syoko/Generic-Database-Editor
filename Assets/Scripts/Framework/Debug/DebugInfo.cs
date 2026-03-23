@@ -48,7 +48,7 @@ public class DebugInfo : MonoBehaviour
     }
     public static void LogWarning(string message)
     {
-        message += "<color=yellow>Warning: " + message + "</color>\n";
+        message = "<color=yellow>Warning: " + message + "</color>\n";
         Instance.logList.Add(message);
 #if UNITY_EDITOR
         Debug.LogWarning(message);
@@ -56,7 +56,7 @@ public class DebugInfo : MonoBehaviour
     }
     public static void LogError(string message)
     {
-        message += "<color=red>Error: " + message + "</color>\n";
+        message = "<color=red>Error: " + message + "</color>\n";
         Instance.logList.Add(message);
 #if UNITY_EDITOR
         Debug.LogError(message);

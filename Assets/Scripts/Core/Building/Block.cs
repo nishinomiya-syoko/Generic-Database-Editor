@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 
 namespace Top
 {
@@ -21,10 +22,14 @@ namespace Top
         {
             Id = Guid.NewGuid().ToString("N").Substring(0, 8);
         }
-
         void Start()
         {
+            SpawnIndicator().Forget();
+        }
+        async UniTask SpawnIndicator()
+        {
             modelInstance = gameObject;
+            await UniTask.WaitWhile(() => GlobalManager.Instance.PoolManager.Prewarmed);
             m_sizeIndicatorPrefab = GlobalManager.Instance.PoolManager.Spawn("Indicator", transform.position);
             m_sizeIndicatorPrefab.transform.SetParent(transform);
             m_sizeIndicatorPrefab.SetActive(false);

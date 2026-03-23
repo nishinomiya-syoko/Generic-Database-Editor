@@ -11,18 +11,16 @@ public abstract class EntityBase : MonoBehaviour, IReference
     public bool isActive = true;
     private void Start()
     {
-        OnStart();
+        // OnStart();
     }
     private void OnDestroy()
     {
         // OnRecycle();
     }
 
-
-    public virtual void OnStart() { }
-    // public virtual void OnSpawn() {OnStart(); isActive = true;GlobalManager.Instance.entityManager.Register(this);}
     public virtual void OnSpawn() { }
+    public virtual void OnStart() { }
     public virtual void OnUpdate(float deltaTime) { }
-    public virtual void OnTick(float tickTime) {}
+    public virtual void OnTick(float tickTime) { }
     public virtual void OnRecycle() { }
 }

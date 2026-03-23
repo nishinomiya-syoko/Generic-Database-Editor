@@ -83,7 +83,7 @@ public class BuildingPlacer : MonoBehaviour
         var asset = GlobalManager.Instance.AssetLoader.LoadAsset<GameObject>(path.Path);
         GameObject.Instantiate(asset);
     }
-    
+
     [Button]
     public void CheckTable()
     {
@@ -92,5 +92,12 @@ public class BuildingPlacer : MonoBehaviour
         Debug.Log(p.block);
         var q = GlobalManager.Instance.PoolManager.Spawn("101");
         Debug.Log(q.name);
+    }
+    [Button]
+    public void SpawnBuilding()
+    {
+        var q = GlobalManager.Instance.PoolManager.Spawn("101");
+        var q2 = GlobalManager.Instance.PoolManager.Spawn("102");
+        Debug.Log(q2.name);
     }
 }

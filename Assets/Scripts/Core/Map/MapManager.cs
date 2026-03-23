@@ -129,6 +129,9 @@ namespace Top
         public string sceneName;
         public Sprite backgroundImage;
         public Material groundMaterial;
+        /// <summary>
+        /// 环境光照
+        /// </summary>
         public Color ambientColor;
         public AudioClip backgroundMusic;
         public int unlockLevel;

@@ -1,6 +1,6 @@
 ﻿// ============================================================
 // 自动生成的数据表类 - PoolConfig
-// 生成时间：2026-03-22 22:07:40
+// 生成时间：2026-03-23 20:30:31
 // 请勿手动修改，修改会被覆盖
 // ============================================================
 
@@ -22,9 +22,13 @@ namespace DataCenter
 
       public string DisplayName { get; set; }
 
+      public string EntityType { get; set; }
+
       public int InitialSize { get; set; }
 
       public bool expandIfEmpty { get; set; }
+
+      public int expandRate { get; set; }
 
       public int maxSize { get; set; }
 
@@ -35,8 +39,10 @@ namespace DataCenter
       {
         Id = 0;
         DisplayName = string.Empty;
+        EntityType = string.Empty;
         InitialSize = 0;
         expandIfEmpty = false;
+        expandRate = 0;
         maxSize = 0;
       }
     }

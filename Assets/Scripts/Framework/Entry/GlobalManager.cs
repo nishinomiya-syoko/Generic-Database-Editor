@@ -26,7 +26,7 @@ public class GlobalManager : Singleton<GlobalManager>
     public PoolManager PoolManager;
     public BuildingManager BuildingManager;
 
-    [Header("")]
+    [Header("fight")]
     public BatchedSearchManager BatchedSearchManager;
 
     public EventManager EventManager;
@@ -60,6 +60,8 @@ public class GlobalManager : Singleton<GlobalManager>
         AudioManager = GetComponentInChildren<AudioManager>();
         DataTableManager = GetComponentInChildren<TableManager>();
 
+        BatchedSearchManager = GetComponentInChildren<BatchedSearchManager>();
+
     }
     void Start()
     {
@@ -67,7 +69,7 @@ public class GlobalManager : Singleton<GlobalManager>
     }
     public async UniTask Init()
     {
-        await DataTableManager.LoadAllTables();
+        DataTableManager.PreWarm();
         await UniTask.WaitForSeconds(1);
         PoolManager.PreWarm();
 

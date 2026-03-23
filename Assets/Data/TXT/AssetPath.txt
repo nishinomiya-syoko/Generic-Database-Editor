@@ -8,4 +8,4 @@
 #			
 #			
 	101		Assets/Res/Prefab/jidi.prefab
-	102		
+	102		Assets/Res/Prefab/Cylinder.prefab

@@ -140,7 +140,6 @@
     <Compile Include="Assets/Scripts/Core/Unit/UnitAI.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityGererator.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Sample/PlayerCombat.cs" />
-    <Compile Include="Assets/Scripts/Extension/MethodExtension.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ResourceSystem/ResourceManager.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/Excel2Txt/TxtTableParser.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/Unit.cs" />
@@ -175,6 +174,7 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/GridManager.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldMap.cs" />
+    <Compile Include="Assets/Scripts/Framework/Extension/MethodExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Packages/Microsoft.Extensions.Configuration.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.dll" />

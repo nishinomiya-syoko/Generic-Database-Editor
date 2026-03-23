@@ -32,10 +32,11 @@ namespace DataCenter
                 return;
             preWarmed = true;
             LoadTable<AssetPath>(Constant.ASSET_PATH_CONFIG);
+            LoadAllTables().Forget();
         }
         public async UniTask LoadAllTables()
         {
-            PreWarm();
+            // PreWarm();
             await UniTask.WaitForSeconds(0.1f);
 
             LoadTable<BuildingData>();
@@ -233,21 +234,21 @@ namespace DataCenter
             Debug.Log("所有数据表缓存已清空");
         }
 
-        // 编辑器扩展：一键加载所有数据表
-        [Sirenix.OdinInspector.Button("加载所有数据表")]
-        public static void LoadTestTables()
-        {
-            // 示例：加载角色数据表（需根据实际类名和路径修改）
-            // Instance.LoadTable<RoleTable>("Tables/RoleTable");
-            GlobalManager.Instance.DataTableManager.LoadTable<BuildingData>("Assets/Data/TXT/BuildingData.txt");
-            // var p = Instance.GetDataById<BuildingData>(111);
-        }
-        [Sirenix.OdinInspector.Button("读取")]
-        public static void Read()
-        {
-            var p = GlobalManager.Instance.DataTableManager.GetDataById<BuildingData>(111);
-            Debug.Log(p.Id);
-            Debug.Log(p.buildingType);
-        }   
+        // // 编辑器扩展：一键加载所有数据表
+        // [Sirenix.OdinInspector.Button("加载所有数据表")]
+        // public static void LoadTestTables()
+        // {
+        //     // 示例：加载角色数据表（需根据实际类名和路径修改）
+        //     // Instance.LoadTable<RoleTable>("Tables/RoleTable");
+        //     GlobalManager.Instance.DataTableManager.LoadTable<BuildingData>("Assets/Data/TXT/BuildingData.txt");
+        //     // var p = Instance.GetDataById<BuildingData>(111);
+        // }
+        // [Sirenix.OdinInspector.Button("读取")]
+        // public static void Read()
+        // {
+        //     var p = GlobalManager.Instance.DataTableManager.GetDataById<BuildingData>(111);
+        //     Debug.Log(p.Id);
+        //     Debug.Log(p.buildingType);
+        // }   
     }
 }

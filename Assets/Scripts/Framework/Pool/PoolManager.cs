@@ -10,7 +10,6 @@ namespace Logic
     /// </summary>
     public class PoolManager : MonoBehaviour
     {
-        [EditableData]
         [Serializable]
         public class PoolConfig
         {
@@ -23,12 +22,15 @@ namespace Logic
             [Tooltip("要池化的预制件（需要挂有实现 IReference 的脚本，如 EntityBase 的子类）")]
             public GameObject prefab;
             // public string prefabPath;
+            public string entityType;
 
             [Tooltip("初始预创建数量")]
             public int initialSize = 0;
 
             [Tooltip("池空时是否允许继续实例化")]
             public bool expandIfEmpty = true;
+            [Tooltip("创建数量（当 expandIfEmpty 为 true 时生效）")]
+            public int expandCount = 0;
 
             [Tooltip("最大实例数量（<=0 表示不限）")]
             public int maxSize = 0;
@@ -45,6 +47,7 @@ namespace Logic
         // 单例（可选）
         public static PoolManager Instance { get; private set; }
         private bool preWarmed = false;
+        public bool Prewarmed => preWarmed;
 
         private void Awake()
         {
@@ -56,6 +59,7 @@ namespace Logic
             Instance = this;
 
             // InitializePools();
+            pools.Clear();
         }
 
         private void OnDestroy()
@@ -67,9 +71,11 @@ namespace Logic
         {
             if (preWarmed)
                 return;
-            preWarmed = true;
+            // preWarmed = true;
+
             LoadPoolConfigs();
             InitializePools();
+            preWarmed = true;
         }
         private void LoadPoolConfigs()
         {
@@ -83,8 +89,10 @@ namespace Logic
                     id = item.Id.ToString(),
                     name = item.DisplayName,
                     prefab = GlobalManager.Instance.AssetLoader.LoadAsset<GameObject>(q.Path),
+                    entityType = item.EntityType,
                     initialSize = item.InitialSize,
                     expandIfEmpty = item.expandIfEmpty,
+                    expandCount = item.expandRate,
                     maxSize = item.maxSize
                 };
                 pools.Add(poolConfig);
@@ -120,6 +128,25 @@ namespace Logic
                 containerGo.transform.SetParent(transform, false);
                 cfg.container = containerGo.transform;
 
+                if (!string.IsNullOrEmpty(cfg.entityType))
+                {
+                    Type entityType = Type.GetType(cfg.entityType);
+                    if (entityType == null)
+                        entityType = Type.GetType($"Top.{cfg.entityType}");
+                    // DebugInfo.LogWarning($"string: {cfg.entityType} type name: '{cfg.entityType}'.");
+                    if (entityType == null)
+                    {
+                        DebugInfo.LogError($"[PoolManager] Failed to find entity type for id '{cfg.id}', type name: '{cfg.entityType}'."); return;
+                    }
+                    var entity = cfg.prefab;
+                    Component existingComponent = entity.GetComponent(entityType);
+                    // DebugInfo.Log($"[PoolManager] Find component '{entityType.Name}' on '{entity.name}'.");
+                    if(existingComponent == null)
+                    {
+                        var p = entity.AddComponent(entityType);
+                        // DebugInfo.Log($"[PoolManager] Add component '{entityType.Name}' to '{entity.name}'.");
+                    }
+                }
                 // 从 prefab 上找到第一个实现 IReference 的脚本，用作 T
                 var monoBehaviours = cfg.prefab.GetComponents<MonoBehaviour>();
                 Component templateComponent = null;
@@ -143,10 +170,10 @@ namespace Logic
                 var componentType = templateComponent.GetType();
                 var genericType = typeof(ObjectPool<>).MakeGenericType(componentType);
 
-                // 构造函数签名：(T prefab, int initialSize, Transform parent, bool expandIfEmpty, int maxSize)
+                // 构造函数签名：(T prefab, int initialSize, Transform parent, bool expandIfEmpty,int expandCount, int maxSize)
                 var poolInstance = Activator.CreateInstance(
                     genericType,
-                    new object[] { templateComponent, cfg.initialSize, cfg.container, cfg.expandIfEmpty, cfg.maxSize }
+                    new object[] { templateComponent, cfg.initialSize, cfg.container, cfg.expandIfEmpty,cfg.expandCount, cfg.maxSize }
                 ) as IPoolWrapper;
 
                 if (poolInstance == null)
