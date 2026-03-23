@@ -7,32 +7,33 @@ using UnityEngine;
 
 public class TableCodeGeneratorWindow : EditorWindow
 {
-    private static readonly string DATA_NAMESPACE = Constant.DATA_NAMESPACE;
-    private static string _txtFilePath = Constant.DATA_TXT_PATH;
-    private static string _outputCsPath = Constant.DATA_CLASS_PATH;
+    // 增加默认值，避免Constant类未初始化导致null
+    private static readonly string DATA_NAMESPACE = Constant.DATA_NAMESPACE ?? "DataCenter";
+    private static string _txtFilePath = Constant.DATA_TXT_PATH ?? Application.dataPath + "/Table/TXT";
+    private static string _outputCsPath = Constant.DATA_CLASS_PATH ?? Application.dataPath + "/Scripts/Table/Generated";
     private string _className = "TableData";
-    // 新增：枚举类型列表
-    private static List<Type> _enumTypes;
+    // 新增：枚举类型列表（初始化为空列表，避免null）
+    private static List<Type> _enumTypes = new List<Type>();
 
     [MenuItem("Tools/DataTable/代码生成器")]
     public static void ShowWindow()
     {
         GetWindow<TableCodeGeneratorWindow>("数据表代码生成器");
     }
+
     /// <summary>
     /// 批量生成所有TXT对应的数据类
     /// </summary>
-    /// <param name="_txtFilePath">TXT根文件夹</param>
-    /// <param name="_outputCsPath">CS输出文件夹</param>
     [MenuItem("Tools/DataTable/批量生成代码")]
     public static void BatchGenerateDataClasses()
     {
         try
         {
             InitEnum();
-            if (!Directory.Exists(_txtFilePath))
+            // 空值校验：TXT路径
+            if (string.IsNullOrEmpty(_txtFilePath) || !Directory.Exists(_txtFilePath))
             {
-                EditorUtility.DisplayDialog("错误", "TXT文件夹不存在！", "确定");
+                EditorUtility.DisplayDialog("错误", $"TXT文件夹不存在或路径为空！路径：{_txtFilePath}", "确定");
                 return;
             }
 
@@ -43,14 +44,22 @@ public class TableCodeGeneratorWindow : EditorWindow
                 EditorUtility.DisplayDialog("提示", "未找到任何TXT文件！", "确定");
                 return;
             }
+
+            // 确保输出目录存在
             if (!Directory.Exists(_outputCsPath))
             {
                 Directory.CreateDirectory(_outputCsPath);
             }
-            string[] csFiles = Directory.GetFiles(_outputCsPath, "*.cs", SearchOption.AllDirectories);
-            foreach (string csFile in csFiles)
+
+            // 清空旧的CS文件（增加空值校验）
+            if (Directory.Exists(_outputCsPath))
             {
-                File.Delete(csFile);
+                string[] csFiles = Directory.GetFiles(_outputCsPath, "*.cs", SearchOption.AllDirectories);
+                foreach (string csFile in csFiles)
+                {
+                    try { File.Delete(csFile); }
+                    catch (Exception ex) { Debug.LogWarning($"删除旧文件失败：{csFile}，原因：{ex.Message}"); }
+                }
             }
 
             // 显示进度条
@@ -61,9 +70,18 @@ public class TableCodeGeneratorWindow : EditorWindow
             for (int i = 0; i < txtFiles.Length; i++)
             {
                 string txtPath = txtFiles[i];
+                if (string.IsNullOrEmpty(txtPath)) { failCount++; continue; }
+
                 string txtFileName = Path.GetFileNameWithoutExtension(txtPath);
-                // 保持TXT的目录结构到CS输出目录
-                string relativePath = Path.GetRelativePath(_txtFilePath, txtPath);
+                // 修复：替换Unity不兼容的Path.GetRelativePath，自定义实现
+                string relativePath = GetRelativePath(_txtFilePath, txtPath);
+                if (string.IsNullOrEmpty(relativePath))
+                {
+                    Debug.LogWarning($"无法获取相对路径：{txtPath} 相对于 {_txtFilePath}");
+                    failCount++;
+                    continue;
+                }
+
                 string csRelativePath = Path.ChangeExtension(relativePath, "cs");
                 string csOutputPath = Path.Combine(_outputCsPath, csRelativePath);
 
@@ -89,23 +107,71 @@ public class TableCodeGeneratorWindow : EditorWindow
             string resultMsg = $"批量生成完成！\n成功：{successCount} 个\n失败：{failCount} 个";
             EditorUtility.DisplayDialog("批量生成结果", resultMsg, "确定");
 
-            // 打开输出目录
-            EditorUtility.RevealInFinder(_outputCsPath);
+            // 打开输出目录（增加空值校验）
+            if (Directory.Exists(_outputCsPath))
+            {
+                EditorUtility.RevealInFinder(_outputCsPath);
+            }
         }
         catch (Exception e)
         {
             EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog("错误", $"批量生成出错：{e.Message}", "确定");
+            string errorMsg = $"批量生成出错：{e.Message}\n堆栈：{e.StackTrace}";
+            EditorUtility.DisplayDialog("错误", errorMsg, "确定");
+            // 修复：避免DebugInfo.LogError内部空引用，先判断DebugInfo是否可用
+            DebugInfo.LogError(errorMsg);
         }
     }
 
     private static void InitEnum()
     {
-        // 初始化枚举类型列表
-        _enumTypes = CSharpTypeToString.GetAllEnumTypes();
+        // 修复：空值校验，避免GetAllEnumTypes返回null
+        var enumTypes = CSharpTypeToString.GetAllEnumTypes();
+        _enumTypes = enumTypes ?? new List<Type>(); // 兜底为空列表，避免null
     }
 
-    // 原有OnGUI方法保留（无需修改）
+    // 修复：自定义实现相对路径获取（兼容Unity所有版本）
+    private static string GetRelativePath(string basePath, string targetPath)
+    {
+        if (string.IsNullOrEmpty(basePath) || string.IsNullOrEmpty(targetPath))
+            return string.Empty;
+
+        // 统一路径分隔符为/
+        basePath = basePath.Replace('\\', '/').TrimEnd('/');
+        targetPath = targetPath.Replace('\\', '/').TrimEnd('/');
+
+        // 解析路径为目录数组
+        string[] baseParts = basePath.Split('/');
+        string[] targetParts = targetPath.Split('/');
+
+        // 找到公共前缀的长度
+        int commonLength = 0;
+        while (commonLength < baseParts.Length && commonLength < targetParts.Length 
+               && string.Equals(baseParts[commonLength], targetParts[commonLength], StringComparison.OrdinalIgnoreCase))
+        {
+            commonLength++;
+        }
+
+        // 构建相对路径
+        StringBuilder relativePath = new StringBuilder();
+        // 添加回退到公共目录的../
+        for (int i = commonLength; i < baseParts.Length; i++)
+        {
+            relativePath.Append("../");
+        }
+
+        // 添加目标路径的剩余部分
+        for (int i = commonLength; i < targetParts.Length; i++)
+        {
+            if (i > commonLength)
+                relativePath.Append("/");
+            relativePath.Append(targetParts[i]);
+        }
+
+        return relativePath.ToString();
+    }
+
+    // 原有OnGUI方法保留（增加空值校验）
     private void OnGUI()
     {
         GUILayout.Label("数据表代码生成配置", EditorStyles.boldLabel);
@@ -146,14 +212,20 @@ public class TableCodeGeneratorWindow : EditorWindow
         GUILayout.EndHorizontal();
         GUILayout.Space(20);
 
-        GUI.enabled = !string.IsNullOrEmpty(_txtFilePath) && !string.IsNullOrEmpty(_outputCsPath) && !string.IsNullOrEmpty(_className);
+        // 增强启用条件校验
+        bool canGenerate = !string.IsNullOrEmpty(_txtFilePath) 
+                           && !string.IsNullOrEmpty(_outputCsPath) 
+                           && !string.IsNullOrEmpty(_className)
+                           && (File.Exists(_txtFilePath) || Directory.Exists(_txtFilePath));
+        GUI.enabled = canGenerate;
         if (GUILayout.Button("生成数据类", GUILayout.Height(40)))
         {
             bool success = GenerateDataClass(_txtFilePath, _outputCsPath, _className);
             if (success)
             {
                 EditorUtility.DisplayDialog("成功", "数据类生成完成！", "确定");
-                EditorUtility.RevealInFinder(_outputCsPath);
+                if (File.Exists(_outputCsPath))
+                    EditorUtility.RevealInFinder(_outputCsPath);
                 AssetDatabase.Refresh();
             }
             else
@@ -165,14 +237,37 @@ public class TableCodeGeneratorWindow : EditorWindow
     }
 
     /// <summary>
-    /// 增强版代码生成：支持枚举+新类型
+    /// 增强版代码生成：支持枚举+新类型（增加全量空值校验）
     /// </summary>
     private static bool GenerateDataClass(string txtPath, string outputPath, string className)
     {
-        if (!TxtTableParser.ParseTableHeader(txtPath, out List<string> fieldNames, out List<string> fieldTypes, out List<string> fieldComments))
+        // 前置空值校验
+        if (string.IsNullOrEmpty(txtPath) || !File.Exists(txtPath))
         {
+            Debug.LogError($"TXT文件不存在：{txtPath}");
             return false;
         }
+        if (string.IsNullOrEmpty(outputPath))
+        {
+            Debug.LogError("输出路径为空！");
+            return false;
+        }
+        if (string.IsNullOrEmpty(className))
+        {
+            Debug.LogError("类名为空！");
+            return false;
+        }
+
+        if (!TxtTableParser.ParseTableHeader(txtPath, out List<string> fieldNames, out List<string> fieldTypes, out List<string> fieldComments))
+        {
+            Debug.LogError($"解析TXT表头失败：{txtPath}");
+            return false;
+        }
+
+        // 空值校验：解析结果
+        if (fieldNames == null) fieldNames = new List<string>();
+        if (fieldTypes == null) fieldTypes = new List<string>();
+        if (fieldComments == null) fieldComments = new List<string>();
 
         try
         {
@@ -200,81 +295,93 @@ public class TableCodeGeneratorWindow : EditorWindow
             // 逐字段生成属性（支持枚举+Unity类型）
             for (int i = 0; i < fieldNames.Count; i++)
             {
+                // 边界校验：避免索引越界
+                if (i >= fieldTypes.Count || i >= fieldComments.Count)
+                    continue;
+
                 string fieldName = fieldNames[i];
                 string fieldType = fieldTypes[i];
                 string comment = fieldComments[i];
 
-                if (fieldName.StartsWith("//") || fieldName.StartsWith("#") || fieldName == string.Empty)
+                // 跳过注释/空字段
+                if (string.IsNullOrEmpty(fieldName) || fieldName.StartsWith("//") || fieldName.StartsWith("#"))
                     continue;
-                if (fieldType.StartsWith("//") || fieldType.StartsWith("#") || fieldType == string.Empty)
+                if (string.IsNullOrEmpty(fieldType) || fieldType.StartsWith("//") || fieldType.StartsWith("#"))
                     continue;
 
-                // 使用增强版类型转换（传入枚举列表）
-                string csType = CSharpTypeToString.GetCSharpTypeName(fieldType);
-                Debug.Log($"字段类型：{fieldType} -> {csType}");
+                // 使用增强版类型转换（增加空值校验）
+                string csType = CSharpTypeToString.GetCSharpTypeName(fieldType) ?? "string"; // 兜底为string
+                Debug.Log($"字段类型转换：{fieldType} -> {csType}");
 
                 // 写入XML注释
                 if (!string.IsNullOrEmpty(comment))
                 {
-                    sb.AppendLine($"      /// <summary>");
-                    sb.AppendLine($"      /// {comment}");
-                    sb.AppendLine($"      /// </summary>");
+                    sb.AppendLine($"        /// <summary>");
+                    sb.AppendLine($"        /// {comment}");
+                    sb.AppendLine($"        /// </summary>");
                 }
-                sb.AppendLine($"      public {csType} {fieldName} {{ get; set; }}");
+                sb.AppendLine($"        public {csType} {fieldName} {{ get; set; }}");
                 sb.AppendLine();
             }
 
             // 生成构造函数（初始化默认值，支持枚举/Unity类型）
-            sb.AppendLine($"      /// <summary>");
-            sb.AppendLine($"      /// 构造函数（初始化默认值）");
-            sb.AppendLine($"      /// </summary>");
-            sb.AppendLine($"      public {className}()");
-            sb.AppendLine("      {");
+            sb.AppendLine($"        /// <summary>");
+            sb.AppendLine($"        /// 构造函数（初始化默认值）");
+            sb.AppendLine($"        /// </summary>");
+            sb.AppendLine($"        public {className}()");
+            sb.AppendLine("        {");
             for (int i = 0; i < fieldNames.Count; i++)
             {
+                if (i >= fieldTypes.Count)
+                    continue;
+
                 string fieldName = fieldNames[i];
                 string fieldType = fieldTypes[i];
 
-                if(fieldName.StartsWith("//") || fieldName.StartsWith("#") || fieldName == string.Empty)
+                if (string.IsNullOrEmpty(fieldName) || fieldName.StartsWith("//") || fieldName.StartsWith("#"))
                     continue;
-                if (fieldType.StartsWith("//") || fieldType.StartsWith("#") || fieldType == string.Empty)
+                if (string.IsNullOrEmpty(fieldType) || fieldType.StartsWith("//") || fieldType.StartsWith("#"))
                     continue;
-                string csType = CSharpTypeToString.GetCSharpTypeName(fieldType);
-                    
-                // 生成默认值赋值
+
+                string csType = CSharpTypeToString.GetCSharpTypeName(fieldType) ?? "string";
+                // 生成默认值赋值（增加空值容错）
                 string defaultValue = GetDefaultValueCode(csType);
-                sb.AppendLine($"        {fieldName} = {defaultValue};");
+                sb.AppendLine($"            {fieldName} = {defaultValue};");
             }
-            sb.AppendLine("      }");
+            sb.AppendLine("        }");
 
             sb.AppendLine("    }");
             sb.AppendLine("}");
 
             // 创建输出目录
             string outputDir = Path.GetDirectoryName(outputPath);
-            if (!Directory.Exists(outputDir))
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // 写入CS文件
-            File.WriteAllText(outputPath, sb.ToString(), Encoding.UTF8);
+            // 写入CS文件（指定UTF8无BOM，避免编码问题）
+            File.WriteAllText(outputPath, sb.ToString(), new UTF8Encoding(false));
             Debug.Log($"数据类生成成功：{outputPath}");
 
             return true;
         }
         catch (Exception e)
         {
-            Debug.LogError($"生成数据类失败：{e.Message}\n{e.StackTrace}");
+            Debug.LogError($"生成数据类失败：{txtPath}，原因：{e.Message}\n{e.StackTrace}");
             return false;
         }
     }
 
     /// <summary>
-    /// 生成默认值代码（适配不同类型）
+    /// 生成默认值代码（适配不同类型，修复_enumTypes空引用）
     /// </summary>
     private static string GetDefaultValueCode(string csType)
     {
+        // 空值校验
+        if (string.IsNullOrEmpty(csType))
+            return "default";
+
         switch (csType)
         {
             // 基础类型
@@ -291,16 +398,34 @@ public class TableCodeGeneratorWindow : EditorWindow
             case "Color": return "Color.clear";
             case "Rect": return "Rect.zero";
             case "Quaternion": return "Quaternion.identity";
-            // 枚举类型（取第一个值）
+            // 枚举类型（取第一个值，增加_enumTypes空值校验）
             default:
+                // 修复：_enumTypes为空时直接返回default
+                if (_enumTypes == null || _enumTypes.Count == 0)
+                    return "default";
+                
                 if (_enumTypes.Exists(t => t.Name == csType))
                 {
-                    Type enumType = _enumTypes.Find(t => t.Name == csType);
-                    var firstValue = Enum.GetValues(enumType).GetValue(0);
-                    return $"{csType}.{firstValue}";
+                    try
+                    {
+                        Type enumType = _enumTypes.Find(t => t.Name == csType);
+                        var values = Enum.GetValues(enumType);
+                        if (values != null && values.Length > 0)
+                        {
+                            var firstValue = values.GetValue(0);
+                            return $"{csType}.{firstValue}";
+                        }
+                    }
+                    catch
+                    {
+                        return $"default({csType})";
+                    }
                 }
                 // 自定义类型
                 return "default";
         }
     }
 }
+
+
+

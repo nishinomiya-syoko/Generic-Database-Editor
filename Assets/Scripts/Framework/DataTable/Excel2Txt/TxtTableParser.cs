@@ -309,18 +309,18 @@ public static class TxtTableParser
 
             if (fieldNames.Count != fieldTypes.Count || fieldNames.Count != fieldComments.Count)
             {
-                DebugInfo.LogError("表头行的列数不一致，请检查TXT文件");
+                Debug.LogError("表头行的列数不一致，请检查TXT文件");
                 return false;
             }
             if (!fieldNames.Contains("ID"))
             {
-                DebugInfo.LogWarning("数据表未包含ID字段，建议添加ID作为唯一标识");
+                Debug.LogWarning("数据表未包含ID字段，建议添加ID作为唯一标识");
             }
             return true;
         }
         catch (Exception e)
         {
-            DebugInfo.LogError($"解析表头失败：{e.Message}\n{e.StackTrace}");
+            Debug.LogError($"解析表头失败：{e.Message}\n{e.StackTrace}");
             return false;
         }
     }

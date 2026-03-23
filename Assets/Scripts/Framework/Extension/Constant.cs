@@ -9,8 +9,8 @@ public static class Constant
 
     public static readonly string DATA_NAMESPACE = "DataCenter";
     // public static readonly string DATA_BINARY_PATH = Application.streamingAssetsPath + "/Bianry/";
-    public static readonly string DATA_TABLE_END = "Table";
-    public static readonly string DATA_ROW_END = "Row";
+    // public static readonly string DATA_TABLE_END = "Table";
+    // public static readonly string DATA_ROW_END = "Row";
     public static readonly string DATA_BINARY_PATH = Application.dataPath + "/Data/Binary/";
     public static readonly string DATA_BINARY_NAMEEND = ".pve";
     public static readonly string DATA_TXT_PATH = Application.dataPath + "/Data/TXT/";
@@ -19,8 +19,8 @@ public static class Constant
     public static readonly string[] SKIP_PREFIXES = { "~", "$", "_" };
 
     // 资源
-    public static readonly string ASSET_BINARY_PATH = "Assets/Data/Binary/";
-    public static readonly string ASSET_TXT_PATH = "Assets/Data/TXT/";
+    // public static readonly string ASSET_BINARY_PATH = "Assets/Data/Binary/";
+    // public static readonly string ASSET_TXT_PATH = "Assets/Data/TXT/";
     // 路径配置表
     public static readonly string ASSET_PATH_CONFIG = "Assets/Data/TXT/AssetPath.txt";
 
