@@ -105,13 +105,14 @@ public class TableCodeGeneratorWindow : EditorWindow
 
             // 显示结果
             string resultMsg = $"批量生成完成！\n成功：{successCount} 个\n失败：{failCount} 个";
-            EditorUtility.DisplayDialog("批量生成结果", resultMsg, "确定");
+            // EditorUtility.DisplayDialog("批量生成结果", resultMsg, "确定");
 
             // 打开输出目录（增加空值校验）
-            if (Directory.Exists(_outputCsPath))
-            {
-                EditorUtility.RevealInFinder(_outputCsPath);
-            }
+            // if (Directory.Exists(_outputCsPath))
+            // {
+            //     EditorUtility.RevealInFinder(_outputCsPath);
+            // }
+            Debug.Log(resultMsg);
         }
         catch (Exception e)
         {
@@ -224,8 +225,9 @@ public class TableCodeGeneratorWindow : EditorWindow
             if (success)
             {
                 EditorUtility.DisplayDialog("成功", "数据类生成完成！", "确定");
-                if (File.Exists(_outputCsPath))
-                    EditorUtility.RevealInFinder(_outputCsPath);
+                // if (File.Exists(_outputCsPath))
+                //     EditorUtility.RevealInFinder(_outputCsPath);
+                Debug.Log("数据类生成完成！");
                 AssetDatabase.Refresh();
             }
             else
@@ -311,7 +313,7 @@ public class TableCodeGeneratorWindow : EditorWindow
 
                 // 使用增强版类型转换（增加空值校验）
                 string csType = CSharpTypeToString.GetCSharpTypeName(fieldType) ?? "string"; // 兜底为string
-                Debug.Log($"字段类型转换：{fieldType} -> {csType}");
+                // Debug.Log($"字段类型转换：{fieldType} -> {csType}");
 
                 // 写入XML注释
                 if (!string.IsNullOrEmpty(comment))

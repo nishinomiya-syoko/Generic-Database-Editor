@@ -75,8 +75,9 @@ namespace Top
                 levelTemp.Add(new Top.BuildingLevelData()
                 {
                     levelId = i.Id,
+                    poolId = i.PoolId,
                     upgradeCosts = new ResourceCost(i.block, i.screw, i.crystal, i.plastic, i.gold),
-                    // upgradeTime = i.upgradeTime,
+                    upgradeTime = i.upgradeTime,
                     stats = new BuildingStats()
                     {
                         attackRange = i.attackRange,
@@ -85,6 +86,7 @@ namespace Top
                 }
                 );
             }
+            buildingData.levelData = levelTemp.ToArray();
             StartBuildingPlacement(buildingData);
         }
 
@@ -98,6 +100,7 @@ namespace Top
             }
 
             selectedBuildingData = buildingData;
+            DebugInfo.LogError("[BuildingManager] Building: " + buildingData.DisplayName);
             isPlacingBuilding = true;
 
             // 创建放置预览
@@ -145,7 +148,7 @@ namespace Top
 
             if (selectedBuildingData != null)
             {
-                currentGhost = PoolManager.Instance.Spawn(selectedBuildingData.Id, transform.position);
+                currentGhost = PoolManager.Instance.Spawn(selectedBuildingData.levelData[0].poolId.ToString(), transform.position);
 
                 currentGhost.name = "PlacementGhost";
             }
@@ -213,7 +216,7 @@ namespace Top
 
             // 实例化建筑
             // GameObject buildingObj = Instantiate(buildingData.prefab, position, Quaternion.identity);
-            GameObject buildingObj = PoolManager.Instance.Spawn(buildingData.Id,position);
+            GameObject buildingObj = PoolManager.Instance.Spawn(buildingData.levelData[0].poolId.ToString(),position);
             Building building = buildingObj.GetComponent<Building>();
 
             if (building == null)
@@ -271,7 +274,8 @@ namespace Top
             placedBuildings.Remove(building);
 
             // 销毁建筑对象
-            Destroy(building.gameObject);
+            // Destroy(building.gameObject);
+            PoolManager.Instance?.Despawn(building.data.Id,building.gameObject);
         }
 
         public List<Building> GetBuildingsOfType(BuildingType type)

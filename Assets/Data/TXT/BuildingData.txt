@@ -1,6 +1,6 @@
-﻿#实例名	Id	DisplayName	Description	IconPath	buildingType	size		buildTime		costs	levelId		hitPoints	armor	range	isResourceProducer	producedResource	buildingSkills
-#类型	int	string	string	string	Top.BuildingType	Vector2Int		int		Dictionary<string,int>	int[]		int	int	float	bool	Top.ResourceType	string[]
-#注释								建造信息			升级信息		特殊属性					建筑技能
-Default	111	s11	asdf	asdf	Resource	(2, 2)		60			1|2		100	0	5	0	Block	spe|gg
-NewInstance	222	s22	sdaf		Resource	(2, 2)		60			2		100	0	5	0	Block	spe|gg
-NewInstance1	333	s33			Resource	(2, 2)		60			3		100	0	5	0	Block	spe|gg
+﻿#实例名	Id	DisplayName	Description	IconPath	buildingType	size		levelId		isResourceProducer	producedResource	buildingSkills
+#类型	int	string	string	string	Top.BuildingType	Vector2Int		int[]		bool	Top.ResourceType	string[]
+#注释								升级信息				建筑技能
+Default	111	s11	asdf	asdf	Resource	(2, 2)		1|2		0	Block	spe|gg
+NewInstance	222	s22	sdaf		Resource	(2, 2)		2		0	Block	spe|gg
+NewInstance1	333	s33			Resource	(2, 2)		3		0	Block	spe|gg

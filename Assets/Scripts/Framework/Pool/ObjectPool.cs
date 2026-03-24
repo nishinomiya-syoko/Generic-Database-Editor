@@ -79,6 +79,7 @@ namespace Logic
                 for (int i = 0; i < _expandCount; i++)
                 {
                     var p = Object.Instantiate(_prefab, _parent).GetComponent<T>();
+                    p.gameObject.SetActive(false);
                     _pool.Enqueue(p);
                     _totalCount++;
                 }

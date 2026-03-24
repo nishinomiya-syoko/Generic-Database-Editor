@@ -93,10 +93,11 @@ public class ExcelToTxtEditorWindow : EditorWindow
 
             // 显示结果
             string resultMsg = $"批量转换完成！\n成功：{successCount} 个\n失败：{failCount} 个";
-            EditorUtility.DisplayDialog("批量转换结果", resultMsg, "确定");
+            // EditorUtility.DisplayDialog("批量转换结果", resultMsg, "确定");
 
             // 打开输出目录
-            EditorUtility.RevealInFinder(_outputTxtPath);
+            // EditorUtility.RevealInFinder(_outputTxtPath);
+            Debug.Log(resultMsg);
         }
         catch (Exception e)
         {

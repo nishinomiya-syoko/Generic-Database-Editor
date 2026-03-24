@@ -42,6 +42,7 @@ namespace Top
     public class BuildingLevelData
     {
         public int levelId;
+        public int poolId;
         public ResourceCost upgradeCosts;
         public int upgradeTime;
         public BuildingStats stats;

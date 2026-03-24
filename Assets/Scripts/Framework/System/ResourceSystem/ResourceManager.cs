@@ -34,6 +34,7 @@ namespace Top
             cost.Add(ResourceType.Screw, screw);
             cost.Add(ResourceType.Crystal, crystal);
             cost.Add(ResourceType.Plastic, plastic);
+            cost.Add(ResourceType.Gold, gold);
         }
         public int GetAmount(ResourceType resourceType)
         {
@@ -91,17 +92,18 @@ namespace Top
     public class ResourceManager : MonoBehaviour
     {
         [Header("Initial Resources")]
-        public int initialGold = 1000;
-        public int initialElixir = 1000;
-        public int initialDarkElixir = 0;
-        public int initialGems = 100;
-
+        private static readonly  int initialBlock = 1000;
+        private static readonly  int initialScrew = 1000;
+        private static readonly  int initialCrystal = 1000;
+        private static readonly  int initialPlastic = 1000;
+        private static readonly  int initialGold = 1000;
         [Header("Initial Max Resources")]
-        public int initialMaxGold = 5000;
-        public int initialMaxElixir = 5000;
-        public int initialMaxDarkElixir = 1000;
+        private static readonly  int initialMaxBlock = 5000;
+        private static readonly  int initialMaxScrew = 5000;
+        private static readonly  int initialMaxCrystal = 5000;
+        private static readonly  int initialMaxPlastic = 5000;
 
-        private ResourceData resources;
+        private ResourceData m_Resources_Inventory;
         private List<IResourceProducer> resourceProducers = new List<IResourceProducer>();
         private Coroutine productionCoroutine;
 
@@ -112,7 +114,7 @@ namespace Top
 
         void Awake()
         {
-            resources = new ResourceData();
+            m_Resources_Inventory = new ResourceData();
             ResetResources();
         }
 
@@ -133,10 +135,10 @@ namespace Top
             if (amount <= 0)
                 return false;
 
-            if (resources.GetResource(type) >= amount)
+            if (m_Resources_Inventory.GetResource(type) >= amount)
             {
-                int newAmount = resources.GetResource(type) - amount;
-                resources.SetResource(type, newAmount);
+                int newAmount = m_Resources_Inventory.GetResource(type) - amount;
+                m_Resources_Inventory.SetResource(type, newAmount);
                 
                 OnResourceChanged?.Invoke(type, newAmount);
                 return true;
@@ -150,12 +152,12 @@ namespace Top
             if (amount <= 0)
                 return;
 
-            int currentAmount = resources.GetResource(type);
-            int maxAmount = resources.GetMaxResource(type);
+            int currentAmount = m_Resources_Inventory.GetResource(type);
+            int maxAmount = m_Resources_Inventory.GetMaxResource(type);
             int addAmount = Mathf.Min(amount, maxAmount - currentAmount);
 
-            resources.SetResource(type, currentAmount + addAmount);
-            OnResourceChanged?.Invoke(type, resources.GetResource(type));
+            m_Resources_Inventory.SetResource(type, currentAmount + addAmount);
+            OnResourceChanged?.Invoke(type, m_Resources_Inventory.GetResource(type));
         }
         public void ProduceResource(ResourceType type, int amount)
         {
@@ -164,29 +166,29 @@ namespace Top
 
         public bool HasEnoughResource(ResourceType type, int amount)
         {
-            return resources.GetResource(type) >= amount;
+            return m_Resources_Inventory.GetResource(type) >= amount;
         }
 
         public int GetResource(ResourceType type)
         {
-            return resources.GetResource(type);
+            return m_Resources_Inventory.GetResource(type);
         }
 
         public int GetMaxResource(ResourceType type)
         {
-            return resources.GetMaxResource(type);
+            return m_Resources_Inventory.GetMaxResource(type);
         }
 
         public float GetResourcePercentage(ResourceType type)
         {
-            return (float)resources.GetResource(type) / resources.GetMaxResource(type);
+            return (float)m_Resources_Inventory.GetResource(type) / m_Resources_Inventory.GetMaxResource(type);
         }
 
         public void IncreaseMaxResource(ResourceType type, int amount)
         {
-            int currentMax = resources.GetMaxResource(type);
-            resources.SetMaxResource(type, currentMax + amount);
-            OnResourceChanged?.Invoke(type, resources.GetResource(type));
+            int currentMax = m_Resources_Inventory.GetMaxResource(type);
+            m_Resources_Inventory.SetMaxResource(type, currentMax + amount);
+            OnResourceChanged?.Invoke(type, m_Resources_Inventory.GetResource(type));
         }
 
         public bool CanAfford(ResourceCost costs)
@@ -289,7 +291,7 @@ namespace Top
 
         public void SaveData()
         {
-            string json = JsonUtility.ToJson(resources);
+            string json = JsonUtility.ToJson(m_Resources_Inventory);
             PlayerPrefs.SetString("ResourceData", json);
             PlayerPrefs.Save();
         }
@@ -299,7 +301,7 @@ namespace Top
             if (PlayerPrefs.HasKey("ResourceData"))
             {
                 string json = PlayerPrefs.GetString("ResourceData");
-                resources = JsonUtility.FromJson<ResourceData>(json);
+                m_Resources_Inventory = JsonUtility.FromJson<ResourceData>(json);
             }
             else
             {
@@ -309,7 +311,29 @@ namespace Top
 
         public void ResetResources()
         {
-            resources = new ResourceData();
+            m_Resources_Inventory = new ResourceData();
+        }
+        public void InitResources()
+        {
+            m_Resources_Inventory = new ResourceData()
+            {
+                customResources = new Dictionary<ResourceType, int>()
+                {
+                    { ResourceType.Block, initialBlock },
+                    { ResourceType.Crystal, initialCrystal },
+                    { ResourceType.Plastic, initialPlastic },
+                    { ResourceType.Screw, initialScrew },
+                    { ResourceType.Gold, initialGold },
+                },
+                maxInventory = new Dictionary<ResourceType, int>()
+                {
+                    { ResourceType.Block, initialMaxBlock },
+                    { ResourceType.Crystal, initialMaxCrystal },
+                    { ResourceType.Plastic, initialMaxPlastic },
+                    { ResourceType.Screw, initialMaxScrew },
+                    { ResourceType.Gold, int.MaxValue },
+                },
+            };
         }
 
         #endregion
@@ -319,18 +343,23 @@ namespace Top
         [Sirenix.OdinInspector.Button("Add Test Resources")]
         public void AddTestResources()
         {
+            InitResources();
             AddResource(ResourceType.Gold, 1000);
             AddResource(ResourceType.Block, 1000);
             AddResource(ResourceType.Crystal, 1000);
             AddResource(ResourceType.Plastic, 1000);
             AddResource(ResourceType.Screw, 1000);
+            foreach (var resource in m_Resources_Inventory.customResources)
+            {
+                DebugInfo.LogWarning($"[ResourceManager] {resource.Key}: {resource.Value}");
+            }
         }
 
         [Sirenix.OdinInspector.Button("Reset All Resources")]
         public void DebugResetResources()
         {
             ResetResources();
-            OnResourceChanged?.Invoke(ResourceType.Gold, resources.GetResource(ResourceType.Gold));
+            OnResourceChanged?.Invoke(ResourceType.Gold, m_Resources_Inventory.GetResource(ResourceType.Gold));
         }
 
         #endregion

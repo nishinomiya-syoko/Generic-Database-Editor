@@ -1,6 +1,6 @@
 // ============================================================
 // 自动生成的数据表类 - BuildingData
-// 生成时间：2026-03-23 22:43:49
+// 生成时间：2026-03-24 19:59:57
 // 请勿手动修改，修改会被覆盖
 // ============================================================
 
@@ -28,25 +28,9 @@ namespace DataCenter
         public Vector2Int size { get; set; }
 
         /// <summary>
-        /// 建造信息
-        /// </summary>
-        public int buildTime { get; set; }
-
-        public Dictionary<string, int> costs { get; set; }
-
-        /// <summary>
         /// 升级信息
         /// </summary>
         public int[] levelId { get; set; }
-
-        /// <summary>
-        /// 特殊属性
-        /// </summary>
-        public int hitPoints { get; set; }
-
-        public int armor { get; set; }
-
-        public float range { get; set; }
 
         public bool isResourceProducer { get; set; }
 
@@ -68,12 +52,7 @@ namespace DataCenter
             IconPath = string.Empty;
             buildingType = default;
             size = default;
-            buildTime = 0;
-            costs = default;
             levelId = default;
-            hitPoints = 0;
-            armor = 0;
-            range = 0f;
             isResourceProducer = false;
             producedResource = default;
             buildingSkills = default;
