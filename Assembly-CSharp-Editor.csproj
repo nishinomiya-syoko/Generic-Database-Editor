@@ -70,6 +70,7 @@
     <Compile Include="Assets/Editor/AssetPreviewWindow.cs" />
     <Compile Include="Assets/Editor/Camera/CamerHandlerEditor.cs" />
     <Compile Include="Assets/Editor/IDE/IDEOpenHelper.cs" />
+    <Compile Include="Assets/Editor/ProceduralAnimation/ProceruralAnimaitonEditor.cs" />
     <Compile Include="Assets/Editor/Excel2Text/ExcelToTxtEditorWindow.cs" />
     <Compile Include="Assets/Editor/Excel2Text/TableCodeGeneratorWindow.cs" />
     <Compile Include="Assets/Editor/SaveHelper/ArchiveCodeGenerator.cs" />
@@ -1284,6 +1285,7 @@
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj" />
     <ProjectReference Include="Assembly-CSharp.csproj" />
+    <ProjectReference Include="Assembly-CSharp-Editor-firstpass.csproj" />
     <ProjectReference Include="UniTask.Addressables.csproj" />
     <ProjectReference Include="UniTask.Linq.csproj" />
     <ProjectReference Include="Sirenix.OdinInspector.Modules.UnityMathematics.csproj" />

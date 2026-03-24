@@ -174,11 +174,13 @@
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/GridManager.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Grid/FlowFieldMap.cs" />
+    <Compile Include="Assets/Scripts/Core/Animation/ProceduralAnimationController.cs" />
     <Compile Include="Assets/Scripts/Framework/Extension/MethodExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/Packages/Microsoft.Extensions.Configuration.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.dll" />
     <None Include="Assets/Packages/Newtonsoft.Json.13.0.4/lib/netstandard2.0/Newtonsoft.Json.xml" />
+    <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
     <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/useSharedDesignerContext.txt" />
     <None Include="Assets/Packages/Microsoft.Extensions.Configuration.Abstractions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.xml" />
     <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/THIRD-PARTY-NOTICES.TXT" />
@@ -226,9 +228,11 @@
     <None Include="Assets/Scripts/Framework/SaveHelper/Readme.txt" />
     <None Include="Assets/Packages/System.Xml.XPath.XmlDocument.4.3.0/lib/netstandard1.3/System.Xml.XPath.XmlDocument.dll" />
     <None Include="Assets/Packages/System.Text.Encoding.CodePages.4.7.0/lib/netstandard2.0/System.Text.Encoding.CodePages.xml" />
+    <None Include="Assets/TextMesh Pro/Shaders/TMP_SDF.shader" />
     <None Include="Assets/Packages/System.Text.Json.4.7.0/THIRD-PARTY-NOTICES.TXT" />
     <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/lib/netstandard2.1/System.Text.Encodings.Web.xml" />
     <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Cng.dll" />
+    <None Include="Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc" />
     <None Include="Assets/Packages/System.Text.Encoding.CodePages.4.7.0/THIRD-PARTY-NOTICES.TXT" />
     <None Include="Assets/Packages/Microsoft.Extensions.FileProviders.Physical.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileProviders.Physical.dll" />
     <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Cng.xml" />
