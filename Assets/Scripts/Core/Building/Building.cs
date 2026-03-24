@@ -216,7 +216,8 @@ namespace Top
             GM.EventManager?.OnBuildingDestroyed?.Invoke(this);
 
             // 延迟销毁对象
-            Destroy(gameObject, 2f);
+            // Destroy(gameObject, 2f);
+            Hide();
         }
 
         public void Repair(int repairAmount)

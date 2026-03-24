@@ -23,4 +23,8 @@ public abstract class EntityBase : MonoBehaviour, IReference
     public virtual void OnUpdate(float deltaTime) { }
     public virtual void OnTick(float tickTime) { }
     public virtual void OnRecycle() { }
+    public void Hide()
+    {
+        GM.EntityManager.HideEntity(this);
+    }
 }
