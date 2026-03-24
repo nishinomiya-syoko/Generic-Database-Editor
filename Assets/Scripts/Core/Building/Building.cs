@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Rendering;
+using Cysharp.Threading.Tasks;
 
 namespace Top
 {
@@ -21,9 +22,6 @@ namespace Top
 
         // 事件
         
-
-        private Coroutine buildCoroutine;
-        private Coroutine upgradeCoroutine;
 
         public override void OnSpawn()
         {
@@ -87,14 +85,10 @@ namespace Top
             if (buildEffect != null)
                 buildEffect.Play();
 
-            // 开始建造计时
-            if (buildCoroutine != null)
-                StopCoroutine(buildCoroutine);
-
-            buildCoroutine = StartCoroutine(BuildingProcess());
+            BuildingProcess().Forget();
         }
 
-        private IEnumerator BuildingProcess()
+        private async UniTask BuildingProcess()
         {
             float buildTime = data.GetLevelData(currentLevel).upgradeTime;
             float elapsedTime = 0f;
@@ -102,7 +96,7 @@ namespace Top
             // 建造动画
             while (elapsedTime < buildTime)
             {
-                elapsedTime += Time.deltaTime;
+                elapsedTime += 0.1f;
                 float progress = elapsedTime / buildTime;
 
                 // 建造进度动画
@@ -112,7 +106,7 @@ namespace Top
                     buildingRenderer.transform.localScale = scale;
                 }
 
-                yield return null;
+                await UniTask.WaitForSeconds(0.1f);
             }
 
             // 建造完成
@@ -123,7 +117,6 @@ namespace Top
             if (buildEffect != null)
                 buildEffect.Stop();
 
-            // GM.evOnBuildingPlaced?.Invoke(this);
             GM.EventManager?.OnBuildingPlaced?.Invoke(this);
         }
 
@@ -138,18 +131,15 @@ namespace Top
             if (upgradeEffect != null)
                 upgradeEffect.Play();
 
-            // 开始升级计时
-            if (upgradeCoroutine != null)
-                StopCoroutine(upgradeCoroutine);
-
-            upgradeCoroutine = StartCoroutine(UpgradeProcess());
+            UpgradeProcess().Forget();
         }
 
-        private IEnumerator UpgradeProcess()
+        private async UniTask UpgradeProcess()
         {
             var levelData = data.GetLevelData(currentLevel + 1);
             if (levelData == null)
-                yield break;
+                //终止 unitask
+                return;
 
             float upgradeTime = levelData.upgradeTime;
             float elapsedTime = 0f;
@@ -157,7 +147,7 @@ namespace Top
             // 升级动画
             while (elapsedTime < upgradeTime)
             {
-                elapsedTime += Time.deltaTime;
+                elapsedTime += 0.1f;
                 float progress = elapsedTime / upgradeTime;
 
                 // 升级进度动画
@@ -168,7 +158,7 @@ namespace Top
                     buildingRenderer.material.color = color;
                 }
 
-                yield return null;
+                await UniTask.WaitForSeconds(0.1f);
             }
 
             // 升级完成

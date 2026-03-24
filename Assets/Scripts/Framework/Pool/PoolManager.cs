@@ -128,6 +128,8 @@ namespace Logic
                 containerGo.transform.SetParent(transform, false);
                 cfg.container = containerGo.transform;
 
+                Component templateComponent = null;
+
                 if (!string.IsNullOrEmpty(cfg.entityType))
                 {
                     Type entityType = Type.GetType(cfg.entityType);
@@ -141,24 +143,25 @@ namespace Logic
                     var entity = cfg.prefab;
                     Component existingComponent = entity.GetComponent(entityType);
                     // DebugInfo.Log($"[PoolManager] Find component '{entityType.Name}' on '{entity.name}'.");
-                    if(existingComponent == null)
+                    if (existingComponent == null)
                     {
                         var p = entity.AddComponent(entityType);
                         // DebugInfo.Log($"[PoolManager] Add component '{entityType.Name}' to '{entity.name}'.");
                     }
+                    templateComponent = existingComponent;
                 }
                 // 从 prefab 上找到第一个实现 IReference 的脚本，用作 T
                 var monoBehaviours = cfg.prefab.GetComponents<MonoBehaviour>();
-                Component templateComponent = null;
-
-                foreach (var mb in monoBehaviours)
-                {
-                    if (mb is IReference)
+                // Component templateComponent = null;
+                if(templateComponent == null)
+                    foreach (var mb in monoBehaviours)
                     {
-                        templateComponent = mb;
-                        break;
+                        if (mb is IReference)
+                        {
+                            templateComponent = mb;
+                            break;
+                        }
                     }
-                }
 
                 if (templateComponent == null)
                 {

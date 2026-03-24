@@ -23,6 +23,10 @@ public class EntityManager : MonoBehaviour
         m_IntervalTime = Constant.DEFAULT_DELTA_TIME;
         m_TickTime = Constant.LONG_DELTA_TIME;
     }
+    void Start()
+    {
+        poolManager = PoolManager.Instance;
+    }
 
     private void Update()
     {

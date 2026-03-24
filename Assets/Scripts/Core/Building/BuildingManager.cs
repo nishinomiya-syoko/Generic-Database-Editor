@@ -214,9 +214,8 @@ namespace Top
                 return null;
             }
 
-            // 实例化建筑
-            // GameObject buildingObj = Instantiate(buildingData.prefab, position, Quaternion.identity);
-            GameObject buildingObj = PoolManager.Instance.Spawn(buildingData.levelData[0].poolId.ToString(),position);
+            // GameObject buildingObj = PoolManager.Instance.Spawn(buildingData.levelData[0].poolId.ToString(),position);
+            GameObject buildingObj = GlobalManager.Instance.EntityManager.ShowEntity(buildingData.levelData[0].poolId.ToString(),position);
             Building building = buildingObj.GetComponent<Building>();
 
             if (building == null)

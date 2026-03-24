@@ -58,7 +58,7 @@ namespace Logic
         /// <summary>
         /// 从池中取出对象（带位置/旋转）。
         /// </summary>
-        public T Get(Vector3 position, Quaternion rotation)
+        public T Get(Vector3 position, Quaternion rotation,bool autoSpawn = false)
         {
             T entity = null;
 
@@ -98,7 +98,9 @@ namespace Logic
             tr.rotation = rotation;
 
             entity.gameObject.SetActive(true);
-            entity.OnSpawn();
+
+            if(autoSpawn)
+                entity.OnSpawn();
 
             return entity;
         }
