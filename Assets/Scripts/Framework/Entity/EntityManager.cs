@@ -87,6 +87,7 @@ public class EntityManager : MonoBehaviour
     {
         GameObject p = poolManager.Spawn(id, position, rotation);
         EntityBase logic = p.GetComponent<EntityBase>();
+        // var logics = p.GetComponents<EntityBase>();
         if(logic != null)  
         {
             logic.OnSpawn();

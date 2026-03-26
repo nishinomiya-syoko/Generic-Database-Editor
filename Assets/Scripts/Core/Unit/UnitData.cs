@@ -6,37 +6,7 @@ using UnityEngine.AI;
 
 namespace Top
 {
-    // 单位类型枚举
-    public enum UnitType
-    {
-        Unit,
-        Infantry,//步兵
-        // Cavalry,//骑兵
-        Ranged,//远程
-        Siege,//攻城
-        Flying,//飞行
-        Hero,//英雄
-
-        Building,
-        Defense,
-        Resource,
-        Wall,
-
-        Any,
-    }
-
-    // 单位状态枚举
-    public enum UnitState
-    {
-        Idle,
-        Moving,
-        Attacking,
-        Dead,
-        Training,
-        //建筑
-        Building,
-        Working,
-    }
+    
 
     // 单位数据
     // [CreateAssetMenu(fileName = "UnitData", menuName = "Top/Unit Data")]
@@ -47,13 +17,12 @@ namespace Top
         public string id;
         public string unitName;
         public string description;
-        public UnitType unitType;
-        public Sprite icon;
-        public GameObject prefab;
+        public string[] unitTags;
+        public string iconPath;
+        public string prefabPath;
 
         [Header("训练信息")]
         public int trainingTime = 30; // 秒
-        // public ResourceCost[] trainingCosts;
         public int housingSpace = 1;
 
         [Header("战斗属性")]
@@ -93,18 +62,6 @@ namespace Top
         }
     }
 
-    // 目标类型
-    // public enum UnitType
-    // {
-    //     Any,
-    //     Building,
-    //     Defense,
-    //     Unit,
-    //     Resource,
-    //     Wall,
-    //     Hero
-    // }
-    
 
     // 可伤害对象接口
     public interface IDamageable

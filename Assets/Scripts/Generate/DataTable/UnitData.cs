@@ -1,5 +1,5 @@
 // ============================================================
-// 自动生成的数据表类 - BuildingData
+// 自动生成的数据表类 - UnitData
 // 生成时间：2026-03-26 20:49:29
 // 请勿手动修改，修改会被覆盖
 // ============================================================
@@ -11,9 +11,9 @@ using UnityEngine;
 namespace DataCenter
 {
     /// <summary>
-    /// BuildingData 数据行
+    /// UnitData 数据行
     /// </summary>
-    public class BuildingData
+    public class UnitData
     {
         public int Id { get; set; }
 
@@ -32,21 +32,17 @@ namespace DataCenter
         /// </summary>
         public int[] levelId { get; set; }
 
-        public bool isResourceProducer { get; set; }
-
-        public Top.ResourceType producedResource { get; set; }
+        public bool isHero { get; set; }
 
         /// <summary>
         /// 建筑技能
         /// </summary>
         public string[] buildingSkills { get; set; }
 
-        public bool isDecoration { get; set; }
-
         /// <summary>
         /// 构造函数（初始化默认值）
         /// </summary>
-        public BuildingData()
+        public UnitData()
         {
             Id = 0;
             DisplayName = string.Empty;
@@ -55,10 +51,8 @@ namespace DataCenter
             unitTags = default;
             size = default;
             levelId = default;
-            isResourceProducer = false;
-            producedResource = default;
+            isHero = false;
             buildingSkills = default;
-            isDecoration = false;
         }
     }
 }

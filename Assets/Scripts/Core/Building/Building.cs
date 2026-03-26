@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Rendering;
 using Cysharp.Threading.Tasks;
+using System.Linq;
 
 namespace Top
 {
@@ -242,18 +243,12 @@ namespace Top
         private void UpdateUnitState()
         {
             // 根据建筑类型更新状态
-            switch (data.buildingType)
-            {
-                case BuildingType.Resource:
-                    UpdateResourceBuilding();
-                    break;
-                case BuildingType.Defense:
-                    UpdateDefenseBuilding();
-                    break;
-                case BuildingType.Military:
-                    UpdateMilitaryBuilding();
-                    break;
-            }
+            if (data.buildingTags.Contains(UnitType.Resource))
+                UpdateResourceBuilding();
+            else if (data.buildingTags.Contains(UnitType.Defense))
+                UpdateDefenseBuilding();
+            // else if (data.buildingTags.Contains(UnitType.Military))
+            //     UpdateMilitaryBuilding();
         }
 
         private void UpdateResourceBuilding()

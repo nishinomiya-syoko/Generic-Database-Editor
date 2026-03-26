@@ -1,0 +1,14 @@
+﻿#实例名	Id	DisplayName	PoolId		block	screw	crystal	plastic	gold	upgradeTime	trainingTime		damage	attackSpeed	attackRange	hp
+#类型	int	string	int		int	int	int	int	int	int	int		int	int	int	int
+#注释	资源id															
+d	1101	sd	101		1	2	3	4	5	5	15		3	4	5	6
+d	1102	dd	102		2	3	4	5	6	10	15		4	5	6	7
+d	1103	df	102		3	4	5	6	7	15	22		5	6	7	8
+	1104	df	103		4	5	6	7	8	16	23		6	7	8	9
+	1105	df	104		5	6	7	8	9	17	24		7	8	9	10
+	1106	df	105		6	7	8	9	10	18	25		8	9	10	11
+																
+																
+																
+																
+																

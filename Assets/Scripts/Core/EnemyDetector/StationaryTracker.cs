@@ -16,7 +16,7 @@ namespace RTS.TargetSearch
 
         private void Awake()
         {
-            targetEntity = GetComponent<TargetEntity>();
+            targetEntity = transform.GetOrAddComponent<TargetEntity>();
             lastPosition = transform.position;
         }
 

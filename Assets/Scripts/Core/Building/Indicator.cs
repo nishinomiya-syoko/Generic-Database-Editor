@@ -34,5 +34,9 @@ namespace Top
             rangeIndcicator.SetActive(true);
             rangeIndcicator.transform.DOScale(new Vector3(m_range, 1, m_range), 0.5f).SetEase(Ease.OutBack);
         }
+        public void SetPosition(Vector3 pos)
+        {
+            transform.position = pos;
+        }
     }
 }

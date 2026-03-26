@@ -1,0 +1,6 @@
+﻿#实例名	Id	DisplayName	Description	IconPath	unitTags	size		levelId		isHero		buildingSkills
+#类型	int	string	string	string	Top.UnitType[]	Vector2Int		int[]		bool		string[]
+#注释								升级信息				建筑技能
+Default	11111	asdf	asdf	asdf	Resource	(2, 2)		1|2		False		spe|gg
+NewInstance	22222	eeewqae	sdaf		Resource	(2, 2)		2		False		spe|gg
+NewInstance1	33333	gdasdfg			Resource	(2, 2)		3		False		spe|gg

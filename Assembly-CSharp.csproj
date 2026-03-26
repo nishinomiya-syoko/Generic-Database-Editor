@@ -97,6 +97,7 @@
     <Compile Include="Assets/Scripts/Framework/DataTable/Excel2Txt/TableManager.cs" />
     <Compile Include="Assets/Scripts/Framework/Level/WaveData.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitAI.Search.cs" />
+    <Compile Include="Assets/Scripts/Core/Enum/UnitEnum.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingEnum.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/ISkillModifier.cs" />
     <Compile Include="Assets/Scripts/Framework/Debug/DebugInfo.cs" />
@@ -112,10 +113,12 @@
     <Compile Include="Assets/Scripts/Framework/Json/EditableAttribute.cs" />
     <Compile Include="Assets/Scripts/Framework/UI/UIManager.Extension.cs" />
     <Compile Include="Assets/Scripts/Framework/Json/GenericDataPersistance.cs" />
+    <Compile Include="Assets/Scripts/Framework/Extension/GM.cs" />
     <Compile Include="Assets/Scripts/Framework/SaveHelper/SavableAttribute.cs" />
     <Compile Include="Assets/Scripts/Core/Building/BuildingManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/AbilitySystem/Projectile.cs" />
     <Compile Include="Assets/Scripts/Framework/UI/UIPanel.cs" />
+    <Compile Include="Assets/Scripts/Generate/DataTable/UnitData.cs" />
     <Compile Include="Assets/Scripts/Framework/Pool/IReference.cs" />
     <Compile Include="Assets/Scripts/Framework/Extension/Constant.cs" />
     <Compile Include="Assets/Scripts/Core/EnemyDetector/AsyncTargetTracker.cs" />
@@ -135,6 +138,7 @@
     <Compile Include="Assets/Scripts/Core/Quest/QuestManager.cs" />
     <Compile Include="Assets/Scripts/Test/DataLoader.cs" />
     <Compile Include="Assets/Scripts/Core/Map/MapManager.cs" />
+    <Compile Include="Assets/Scripts/Core/Unit/UnitManager.cs" />
     <Compile Include="Assets/Scripts/Framework/System/ResourceSystem/ResourceProducer.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Pathfinder/JPSPathfinder.cs" />
     <Compile Include="Assets/Scripts/Core/Unit/UnitAI.cs" />
@@ -150,6 +154,7 @@
     <Compile Include="Assets/Scripts/Core/LiveEntity.cs" />
     <Compile Include="Assets/Scripts/Framework/System/EquipmentSystem/EquipEnum.cs" />
     <Compile Include="Assets/Scripts/Framework/Entity/EntityRoot.cs" />
+    <Compile Include="Assets/Scripts/Generate/DataTable/UnitLevelData.cs" />
     <Compile Include="Assets/Scripts/Framework/System/GridSystem/Sample/Tower.cs" />
     <Compile Include="Assets/Scripts/Framework/DataTable/CSharpTypeToString.cs" />
     <Compile Include="Assets/Scripts/Core/EnemyDetector/TargetSearchSystem.cs" />
@@ -189,6 +194,7 @@
     <None Include="Assets/Packages/System.Text.Json.4.7.0/lib/netstandard2.0/System.Text.Json.xml" />
     <None Include="Assets/Packages/System.Drawing.Common.4.7.0/useSharedDesignerContext.txt" />
     <None Include="Assets/Packages/Newtonsoft.Json.13.0.4/lib/netstandard2.0/Newtonsoft.Json.dll" />
+    <None Include="Assets/Data/TXT/UnitData.txt" />
     <None Include="Assets/Packages/Microsoft.Extensions.FileSystemGlobbing.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll" />
     <None Include="Assets/Packages/System.Drawing.Common.4.7.0/LICENSE.TXT" />
     <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/version.txt" />
@@ -254,6 +260,7 @@
     <None Include="Assets/Packages/System.Runtime.CompilerServices.Unsafe.4.7.0/LICENSE.TXT" />
     <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/useSharedDesignerContext.txt" />
     <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/version.txt" />
+    <None Include="Assets/Data/TXT/UnitLevelData.txt" />
     <None Include="Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/THIRD-PARTY-NOTICES.TXT" />
     <None Include="Assets/Data/TXT/AssetPath.txt" />
     <None Include="Assets/Scripts/Core/EnemyDetector/Sample/readme.txt" />

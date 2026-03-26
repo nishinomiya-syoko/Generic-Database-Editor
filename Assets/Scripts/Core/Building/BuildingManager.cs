@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Logic;
 using DataCenter;
+using System.Linq;
 
 namespace Top
 {
@@ -65,7 +66,7 @@ namespace Top
                 Description = p.Description,
                 IconPath = p.IconPath,
                 // prefabPath = p.prefabPath,
-                buildingType = p.buildingType,
+                buildingTags = p.unitTags,
                 size = p.size,
             };
             List<Top.BuildingLevelData> levelTemp = new List<Top.BuildingLevelData>();
@@ -277,12 +278,12 @@ namespace Top
             PoolManager.Instance?.Despawn(building.data.Id,building.gameObject);
         }
 
-        public List<Building> GetBuildingsOfType(BuildingType type)
+        public List<Building> GetBuildingsOfType(UnitType type)
         {
             List<Building> buildingsOfType = new List<Building>();
             foreach (var building in placedBuildings)
             {
-                if (building.data.buildingType == type)
+                if (building.data.buildingTags.Contains(type))
                 {
                     buildingsOfType.Add(building);
                 }
@@ -326,11 +327,12 @@ namespace Top
             return null;
         }
 
-        public bool HasBuildingType(BuildingType type)
+        public bool HasBuildingType(UnitType type)
         {
             foreach (var building in placedBuildings)
             {
-                if (building.data.buildingType == type)
+                // if (building.data.buildingType == type)
+                if (building.data.buildingTags.Contains(type))
                 {
                     return true;
                 }
@@ -338,12 +340,13 @@ namespace Top
             return false;
         }
 
-        public int GetBuildingCount(BuildingType type)
+        public int GetBuildingCount(UnitType type)
         {
             int count = 0;
             foreach (var building in placedBuildings)
             {
-                if (building.data.buildingType == type)
+                // if (building.data.buildingType == type)
+                if (building.data.buildingTags.Contains(type))
                 {
                     count++;
                 }

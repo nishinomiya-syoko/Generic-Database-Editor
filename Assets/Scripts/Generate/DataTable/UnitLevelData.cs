@@ -1,5 +1,5 @@
 // ============================================================
-// 自动生成的数据表类 - BuildingLevelData
+// 自动生成的数据表类 - UnitLevelData
 // 生成时间：2026-03-26 20:49:29
 // 请勿手动修改，修改会被覆盖
 // ============================================================
@@ -11,9 +11,9 @@ using UnityEngine;
 namespace DataCenter
 {
     /// <summary>
-    /// BuildingLevelData 数据行
+    /// UnitLevelData 数据行
     /// </summary>
-    public class BuildingLevelData
+    public class UnitLevelData
     {
         /// <summary>
         /// 资源id
@@ -36,6 +36,8 @@ namespace DataCenter
 
         public int upgradeTime { get; set; }
 
+        public int trainingTime { get; set; }
+
         public int damage { get; set; }
 
         public int attackSpeed { get; set; }
@@ -47,7 +49,7 @@ namespace DataCenter
         /// <summary>
         /// 构造函数（初始化默认值）
         /// </summary>
-        public BuildingLevelData()
+        public UnitLevelData()
         {
             Id = 0;
             DisplayName = string.Empty;
@@ -58,6 +60,7 @@ namespace DataCenter
             plastic = 0;
             gold = 0;
             upgradeTime = 0;
+            trainingTime = 0;
             damage = 0;
             attackSpeed = 0;
             attackRange = 0;

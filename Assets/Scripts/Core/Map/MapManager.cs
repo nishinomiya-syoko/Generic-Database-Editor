@@ -120,6 +120,11 @@ namespace Top
         {
             return availableScenes;
         }
+
+        public bool CanPlaceUnit(Vector3 position,float radius)
+        {
+            return true;
+        }
     }
 
     // 场景数据

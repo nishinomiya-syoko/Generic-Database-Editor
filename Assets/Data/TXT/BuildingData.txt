@@ -1,6 +1,6 @@
-﻿#实例名	Id	DisplayName	Description	IconPath	buildingType	size		levelId		isResourceProducer	producedResource	buildingSkills
-#类型	int	string	string	string	Top.BuildingType	Vector2Int		int[]		bool	Top.ResourceType	string[]
-#注释								升级信息				建筑技能
-Default	111	s11	asdf	asdf	Resource	(2, 2)		1|2		0	Block	spe|gg
-NewInstance	222	s22	sdaf		Resource	(2, 2)		2		0	Block	spe|gg
-NewInstance1	333	s33			Resource	(2, 2)		3		0	Block	spe|gg
+﻿#实例名	Id	DisplayName	Description	IconPath	unitTags	size		levelId		isResourceProducer	producedResource	buildingSkills		isDecoration
+#类型	int	string	string	string	Top.UnitType[]	Vector2Int		int[]		bool	Top.ResourceType	string[]		bool
+#注释								升级信息				建筑技能		
+Default	111	s11	asdf	asdf	Resource	(2, 2)		1|2		0	Block	spe|gg		0
+NewInstance	222	s22	sdaf		Resource	(2, 2)		2		0	Block	spe|gg		0
+NewInstance1	333	s33			Resource	(2, 2)		3		0	Block	spe|gg		0

@@ -10,12 +10,14 @@ namespace Top
         public string DisplayName;
         public string Description;
         public string IconPath;
-        public BuildingType buildingType;
+        // public BuildingType buildingType;
+        public UnitType[] buildingTags;
+        public BuildingFunction buildingFunction;
         public Vector2Int size = new Vector2Int(2, 2);
         // public GameObject prefab;
         public string prefabPath;
 
-        
+        public int curLevel = 1;
         public int maxLevel => levelData.Length;
         public BuildingLevelData[] levelData;
         public string LevelId;
