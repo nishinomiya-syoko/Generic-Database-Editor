@@ -30,7 +30,8 @@ namespace Top
         {
             modelInstance = gameObject;
             await UniTask.WaitWhile(() => GlobalManager.Instance.PoolManager.Prewarmed);
-            m_sizeIndicatorPrefab = GlobalManager.Instance.PoolManager.Spawn("Indicator", transform.position);
+            await UniTask.WaitForSeconds(5);
+            m_sizeIndicatorPrefab = GlobalManager.Instance.PoolManager.Spawn("9999", transform.position);
             m_sizeIndicatorPrefab.transform.SetParent(transform);
             m_sizeIndicatorPrefab.SetActive(false);
         }

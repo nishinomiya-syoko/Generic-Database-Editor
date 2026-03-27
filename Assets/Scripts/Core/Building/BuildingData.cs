@@ -11,7 +11,8 @@ namespace Top
         public string Description;
         public string IconPath;
         // public BuildingType buildingType;
-        public UnitType[] buildingTags;
+        // public UnitType[] buildingTags;
+        public string[] buildingTags;
         public BuildingFunction buildingFunction;
         public Vector2Int size = new Vector2Int(2, 2);
         // public GameObject prefab;

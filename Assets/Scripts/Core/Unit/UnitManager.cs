@@ -31,6 +31,17 @@ namespace Top
         public void SetIndicator(IndicatorType type)
         {
             m_IndicatorType = type;
+            if (type == IndicatorType.Rectangle)
+            {
+                m_Transform.Find("Circle").gameObject.SetActive(false);
+                m_Transform.Find("Plane").gameObject.SetActive(true);
+            }
+            else
+            {
+                m_Transform.Find("Plane").gameObject.SetActive(false);
+                m_Transform.Find("Circle").gameObject.SetActive(true);
+            }
+            
         }
         public void SetSize(Vector2 size)
         {
@@ -102,12 +113,14 @@ namespace Top
             {
                 var unitData = GlobalManager.Instance.DataTableManager.GetDataById<DataCenter.UnitData>(unitId);
                 // preparedUnits.Add(unitData);
+                DebugInfo.LogWarning($"Prepare unit: {unitData.DisplayName} id: {unitId}");
             }
             StartUnitPlacement();
         }
         private void StartUnitPlacement()
         {
             isPlacing = true;
+            indicatorPrefabInstance = GM.EntityManager.ShowEntity(id: "9999").transform;
             indicatorPrefab = new BattleIndicator(indicatorPrefabInstance.transform, BattleIndicator.IndicatorType.Rectangle, 1, Vector3.zero);
             indicatorPrefab.Show();
             // TryPlaceUnit();
@@ -180,6 +193,11 @@ namespace Top
                 m_mousePosition = hit.point;
             }
             return m_mousePosition;
+        }
+        [Sirenix.OdinInspector.Button]
+        public void DebugShow()
+        {
+            PrepareUnit(new int[] { 1111,2222,2222,3333 });
         }
     }
 }

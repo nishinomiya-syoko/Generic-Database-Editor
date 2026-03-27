@@ -278,12 +278,12 @@ namespace Top
             PoolManager.Instance?.Despawn(building.data.Id,building.gameObject);
         }
 
-        public List<Building> GetBuildingsOfType(UnitType type)
+        public List<Building> GetBuildingsOfType(string type)
         {
             List<Building> buildingsOfType = new List<Building>();
             foreach (var building in placedBuildings)
             {
-                if (building.data.buildingTags.Contains(type))
+                if (building.data.buildingTags.Contains(type.ToString()))
                 {
                     buildingsOfType.Add(building);
                 }
@@ -327,7 +327,7 @@ namespace Top
             return null;
         }
 
-        public bool HasBuildingType(UnitType type)
+        public bool HasBuildingType(string type)
         {
             foreach (var building in placedBuildings)
             {
@@ -340,7 +340,7 @@ namespace Top
             return false;
         }
 
-        public int GetBuildingCount(UnitType type)
+        public int GetBuildingCount(string type)
         {
             int count = 0;
             foreach (var building in placedBuildings)

@@ -179,12 +179,16 @@ public static class CSharpTypeToString
             default:
                 var t = Type.GetType($"{name}");
                 if (t != null) return t;
+                
+                t = Type.GetType($"Top.{name}");
+                if (t != null) return t;
 
                 t = Type.GetType($"UnityEngine.{name}");
                 if (t != null) return t;
 
                 t = Type.GetType($"System.{name}");
                 if (t != null) return t;
+
 
                 throw new Exception($"未知类型：{name}");
         }

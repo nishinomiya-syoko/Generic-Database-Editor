@@ -5,7 +5,18 @@
 	2	BuildingData	Assets/Data/TXT/BuildingData.txt
 	3	BuildingLevelData	Assets/Data/TXT/BuildingLevelData.txt
 #	4	PoolConfig	Assets/Data/TXT/PoolConfig.txt
+	5	UnitData	Assets/Data/TXT/UnitData.txt
+	6	UnitLevelData	Assets/Data/TXT/UnitLevelData.txt
 #			
 #			
 	101		Assets/Res/Prefab/jidi.prefab
 	102		Assets/Res/Prefab/Cylinder.prefab
+	103		Assets/Res/Prefab/Cylinder.prefab
+	104		Assets/Res/Prefab/Cylinder.prefab
+#			
+	1111		Assets/Res/Prefab/独眼.prefab
+	2222		Assets/Res/Prefab/独眼.prefab
+	3333		Assets/Res/Prefab/独眼.prefab
+	109		Assets/Res/Prefab/独眼.prefab
+#			
+	9999		Assets/Res/Prefab/Indicator.prefab

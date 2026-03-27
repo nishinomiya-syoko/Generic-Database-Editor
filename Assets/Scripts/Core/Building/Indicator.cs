@@ -3,7 +3,7 @@ using DG.Tweening;
 
 namespace Top
 {
-    public class Incicator:EntityBase
+    public class Indicator:EntityBase
     {
         [SerializeField]private GameObject rangeIndcicator;
         [SerializeField]private GameObject sizeIndicator;

@@ -1,6 +1,6 @@
 // ============================================================
 // 自动生成的数据表类 - BuildingData
-// 生成时间：2026-03-26 20:49:29
+// 生成时间：2026-03-27 22:27:09
 // 请勿手动修改，修改会被覆盖
 // ============================================================
 
@@ -23,7 +23,7 @@ namespace DataCenter
 
         public string IconPath { get; set; }
 
-        public Top.UnitType[] unitTags { get; set; }
+        public string[] unitTags { get; set; }
 
         public Vector2Int size { get; set; }
 

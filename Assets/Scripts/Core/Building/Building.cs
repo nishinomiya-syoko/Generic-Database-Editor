@@ -243,10 +243,12 @@ namespace Top
         private void UpdateUnitState()
         {
             // 根据建筑类型更新状态
-            if (data.buildingTags.Contains(UnitType.Resource))
+            if (data.buildingTags.Contains(UnitType.Resource.ToString()))
                 UpdateResourceBuilding();
-            else if (data.buildingTags.Contains(UnitType.Defense))
+            else if (data.buildingTags.Contains(UnitType.Defense.ToString()))
                 UpdateDefenseBuilding();
+            else if (data.buildingTags.Contains(BuildingFunction.Military.ToString())) 
+                UpdateMilitaryBuilding();
             // else if (data.buildingTags.Contains(UnitType.Military))
             //     UpdateMilitaryBuilding();
         }
