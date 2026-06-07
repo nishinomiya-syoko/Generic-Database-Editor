@@ -6,12 +6,13 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
+/ProjectSettings/
 
 # MemoryCaptures
 /[Mm]emory[Cc]aptures/
 
 # IDE 支持
-*.csproj
+*.csproj/
 *.unityproj
 *.sln
 *.suo
