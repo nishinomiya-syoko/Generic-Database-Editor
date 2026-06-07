@@ -12,6 +12,8 @@
 /Assets/GUI PRO Kit - Casual Game/Scenes
 /HybridCLRData/StrippedAOTDllsTempProj
 /BuildApp_BurstDebugInformation_DoNotShip
+
+
 /AB/BuildReport
 /AB/Full
 /AB/Package
@@ -23,4 +25,11 @@
 /Tools/LocalizationTextsScannerOutput.txt
 /HybridCLRData
 /Assets/Resources/AotDlls
-Assets/AddressableAssetsData
+/Assets/AddressableAssetsData
+
+*.csproj
+*.csproj.user
+*.unityproj
+*.sln
+*.idea
+*.log
