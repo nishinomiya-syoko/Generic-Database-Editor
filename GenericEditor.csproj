@@ -19,7 +19,7 @@
     <RootNamespace></RootNamespace>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>GenericEditor</AssemblyName>
     <TargetFramework>netstandard2.1</TargetFramework>
     <BaseDirectory>.</BaseDirectory>
   </PropertyGroup>
@@ -54,7 +54,7 @@
     <UnityProjectGenerator>Package</UnityProjectGenerator>
     <UnityProjectGeneratorVersion>2.0.22</UnityProjectGeneratorVersion>
     <UnityProjectGeneratorStyle>SDK</UnityProjectGeneratorStyle>
-    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityProjectType>Editor:5</UnityProjectType>
     <UnityBuildTarget>StandaloneOSX:2</UnityBuildTarget>
     <UnityVersion>2022.3.61f1c1</UnityVersion>
   </PropertyGroup>
@@ -64,90 +64,14 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/2022.3.61f1c1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/Sample/SkillData.cs" />
-    <Compile Include="Assets/Sample/LevelData.cs" />
     <Compile Include="Assets/Runtime/Json/GenericDataPersistance.cs" />
     <Compile Include="Assets/Runtime/Json/EditableAttribute.cs" />
-    <Compile Include="Assets/Sample/QuestData.cs" />
-    <Compile Include="Assets/Sample/EquipmentData.cs" />
     <Compile Include="Assets/Runtime/DataTable/VisibleDataAttribute.cs" />
     <Compile Include="Assets/Runtime/DataTable/CSharpTypeToString.cs" />
     <Compile Include="Assets/Runtime/Extension/Constant.cs" />
-    <Compile Include="Assets/Sample/AchievementData.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets/Packages/Microsoft.Extensions.Configuration.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.dll" />
-    <None Include="Assets/Packages/Newtonsoft.Json.13.0.4/lib/netstandard2.0/Newtonsoft.Json.xml" />
-    <None Include="Assets/Packages/EPPlus.4.5.3.3/readme.txt" />
-    <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/useSharedDesignerContext.txt" />
-    <None Include="Assets/Packages/Microsoft.Extensions.Configuration.Abstractions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.xml" />
-    <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/THIRD-PARTY-NOTICES.TXT" />
-    <None Include="Assets/Packages/Microsoft.Extensions.Configuration.Json.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.Json.xml" />
-    <None Include="Assets/Packages/System.Text.Json.4.7.0/useSharedDesignerContext.txt" />
-    <None Include="Assets/Packages/System.Text.Json.4.7.0/lib/netstandard2.0/System.Text.Json.xml" />
-    <None Include="Assets/Packages/System.Drawing.Common.4.7.0/useSharedDesignerContext.txt" />
-    <None Include="Assets/Packages/Newtonsoft.Json.13.0.4/lib/netstandard2.0/Newtonsoft.Json.dll" />
-    <None Include="Assets/Packages/Microsoft.Extensions.FileSystemGlobbing.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll" />
-    <None Include="Assets/Packages/System.Drawing.Common.4.7.0/LICENSE.TXT" />
-    <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/version.txt" />
-    <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/useSharedDesignerContext.txt" />
-    <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll" />
-    <None Include="Assets/Packages/Microsoft.Extensions.Configuration.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.xml" />
-    <None Include="Assets/Packages/System.Runtime.CompilerServices.Unsafe.4.7.0/lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll" />
-    <None Include="Assets/Packages/System.Runtime.CompilerServices.Unsafe.4.7.0/version.txt" />
-    <None Include="Assets/Packages/System.Runtime.CompilerServices.Unsafe.4.7.0/lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.xml" />
-    <None Include="Assets/Packages/System.Drawing.Common.4.7.0/version.txt" />
-    <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/THIRD-PARTY-NOTICES.TXT" />
-    <None Include="Assets/Packages/Microsoft.Extensions.FileProviders.Abstractions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.xml" />
-    <None Include="Assets/Packages/System.Text.Encoding.CodePages.4.7.0/useSharedDesignerContext.txt" />
-    <None Include="Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/useSharedDesignerContext.txt" />
-    <None Include="Assets/Packages/Microsoft.Extensions.Primitives.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Primitives.xml" />
-    <None Include="Assets/Packages/System.Text.Json.4.7.0/version.txt" />
-    <None Include="Assets/Packages/System.Text.Encoding.CodePages.4.7.0/LICENSE.TXT" />
-    <None Include="Assets/Packages/Microsoft.Extensions.Configuration.Abstractions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll" />
-    <None Include="Assets/Packages/Microsoft.Extensions.FileProviders.Abstractions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.dll" />
-    <None Include="Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Pkcs.xml" />
-    <None Include="Assets/Packages/EPPlus.4.5.3.3/lib/netstandard2.1/EPPlus.dll" />
-    <None Include="Assets/Packages/Microsoft.Extensions.Configuration.FileExtensions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.FileExtensions.xml" />
-    <None Include="Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/version.txt" />
-    <None Include="Assets/Packages/System.Xml.XPath.XmlDocument.4.3.0/ThirdPartyNotices.txt" />
-    <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/LICENSE.TXT" />
-    <None Include="Assets/Packages/System.Drawing.Common.4.7.0/lib/netstandard2.0/System.Drawing.Common.dll" />
-    <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/lib/netstandard2.1/System.Text.Encodings.Web.dll" />
-    <None Include="Assets/Packages/System.Text.Encoding.CodePages.4.7.0/lib/netstandard2.0/System.Text.Encoding.CodePages.dll" />
-    <None Include="Assets/Packages/System.Text.Encoding.CodePages.4.7.0/version.txt" />
-    <None Include="Assets/Packages/Microsoft.Extensions.Configuration.FileExtensions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.FileExtensions.dll" />
-    <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/version.txt" />
-    <None Include="Assets/Packages/System.Runtime.CompilerServices.Unsafe.4.7.0/useSharedDesignerContext.txt" />
-    <None Include="Assets/Packages/Microsoft.Extensions.Primitives.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Primitives.dll" />
-    <None Include="Assets/Packages/System.Xml.XPath.XmlDocument.4.3.0/lib/netstandard1.3/System.Xml.XPath.XmlDocument.dll" />
-    <None Include="Assets/Packages/System.Text.Encoding.CodePages.4.7.0/lib/netstandard2.0/System.Text.Encoding.CodePages.xml" />
-    <None Include="Assets/Packages/System.Text.Json.4.7.0/THIRD-PARTY-NOTICES.TXT" />
-    <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/lib/netstandard2.1/System.Text.Encodings.Web.xml" />
-    <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Cng.dll" />
-    <None Include="Assets/Packages/System.Text.Encoding.CodePages.4.7.0/THIRD-PARTY-NOTICES.TXT" />
-    <None Include="Assets/Packages/Microsoft.Extensions.FileProviders.Physical.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileProviders.Physical.dll" />
-    <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Cng.xml" />
-    <None Include="Assets/Packages/Microsoft.Extensions.Configuration.Json.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.Json.dll" />
-    <None Include="Assets/Packages/Microsoft.Extensions.FileSystemGlobbing.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.xml" />
-    <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.xml" />
-    <None Include="Assets/Packages/System.Text.Json.4.7.0/lib/netstandard2.0/System.Text.Json.dll" />
-    <None Include="Assets/Packages/System.Runtime.CompilerServices.Unsafe.4.7.0/THIRD-PARTY-NOTICES.TXT" />
-    <None Include="Assets/Packages/System.Text.Json.4.7.0/LICENSE.TXT" />
-    <None Include="Assets/Packages/Microsoft.Extensions.FileProviders.Physical.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileProviders.Physical.xml" />
-    <None Include="Assets/Packages/System.Drawing.Common.4.7.0/THIRD-PARTY-NOTICES.TXT" />
-    <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/THIRD-PARTY-NOTICES.TXT" />
-    <None Include="Assets/Packages/System.Text.Encodings.Web.4.7.0/LICENSE.TXT" />
-    <None Include="Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Pkcs.dll" />
-    <None Include="Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/LICENSE.TXT" />
-    <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/LICENSE.TXT" />
-    <None Include="Assets/Packages/System.Runtime.CompilerServices.Unsafe.4.7.0/LICENSE.TXT" />
-    <None Include="Assets/Packages/Microsoft.Bcl.AsyncInterfaces.1.1.0/useSharedDesignerContext.txt" />
-    <None Include="Assets/Packages/EPPlus.4.5.3.3/lgpl-3.0.txt" />
-    <None Include="Assets/Packages/System.Security.Cryptography.Cng.4.7.0/version.txt" />
-    <None Include="Assets/Packages/EPPlus.4.5.3.3/lib/netstandard2.1/EPPlus.xml" />
-    <None Include="Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/THIRD-PARTY-NOTICES.TXT" />
-    <None Include="Assets/Packages/System.Xml.XPath.XmlDocument.4.3.0/dotnet_library_license.txt" />
+    <None Include="Assets/Runtime/GenericEditor.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -482,8 +406,20 @@
       <HintPath>/Applications/Unity/Hub/Editor/2022.3.61f1c1/Unity.app/Contents/Managed/UnityEngine/UnityEditor.UnityConnectModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEditor.Graphs">
+      <HintPath>/Applications/Unity/Hub/Editor/2022.3.61f1c1/Unity.app/Contents/Managed/UnityEditor.Graphs.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor.OSXStandalone.Extensions">
+      <HintPath>/Applications/Unity/Hub/Editor/2022.3.61f1c1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Configuration">
       <HintPath>Assets/Packages/Microsoft.Extensions.Configuration.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.YamlDotNet">
+      <HintPath>Library/PackageCache/com.unity.visualscripting@1.9.4/Editor/VisualScripting.Core/Dependencies/YamlDotNet/Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -506,12 +442,20 @@
       <HintPath>Assets/Packages/System.Runtime.CompilerServices.Unsafe.4.7.0/lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Plastic.Antlr3.Runtime">
+      <HintPath>Library/PackageCache/com.unity.collab-proxy@2.11.4/Lib/Editor/Unity.Plastic.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
       <HintPath>Assets/Packages/Microsoft.Extensions.Configuration.Abstractions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Extensions.FileProviders.Abstractions">
       <HintPath>Assets/Packages/Microsoft.Extensions.FileProviders.Abstractions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Plastic.Newtonsoft.Json">
+      <HintPath>Library/PackageCache/com.unity.collab-proxy@2.11.4/Lib/Editor/Unity.Plastic.Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Drawing.Common">
@@ -526,12 +470,24 @@
       <HintPath>Assets/Packages/System.Text.Encoding.CodePages.4.7.0/lib/netstandard2.0/System.Text.Encoding.CodePages.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="log4netPlastic">
+      <HintPath>Library/PackageCache/com.unity.collab-proxy@2.11.4/Lib/Editor/log4netPlastic.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Configuration.FileExtensions">
       <HintPath>Assets/Packages/Microsoft.Extensions.Configuration.FileExtensions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Configuration.FileExtensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.VisualScripting.IonicZip">
+      <HintPath>Library/PackageCache/com.unity.visualscripting@1.9.4/Editor/VisualScripting.Core/Dependencies/DotNetZip/Unity.VisualScripting.IonicZip.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Primitives">
       <HintPath>Assets/Packages/Microsoft.Extensions.Primitives.3.1.0/lib/netstandard2.0/Microsoft.Extensions.Primitives.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="unityplastic">
+      <HintPath>Library/PackageCache/com.unity.collab-proxy@2.11.4/Lib/Editor/unityplastic.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Xml.XPath.XmlDocument">
@@ -562,8 +518,20 @@
       <HintPath>Assets/Packages/EPPlus.4.5.3.3/lib/netstandard2.1/EPPlus.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="NuGetForUnity.PluginAPI">
+      <HintPath>Assets/NuGet/Editor/NuGetForUnity.PluginAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Security.Cryptography.Pkcs">
       <HintPath>Assets/Packages/System.Security.Cryptography.Pkcs.4.7.0/lib/netstandard2.1/System.Security.Cryptography.Pkcs.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.TextureAssets">
+      <HintPath>Library/PackageCache/com.unity.visualscripting@1.9.4/Editor/VisualScripting.Core/EditorAssetResources/Unity.VisualScripting.TextureAssets.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NugetForUnity">
+      <HintPath>Assets/NuGet/Editor/NugetForUnity.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
@@ -1058,156 +1026,12 @@
       <HintPath>/Applications/Unity/Hub/Editor/2022.3.61f1c1/Unity.app/Contents/NetStandard/compat/2.1.0/shims/netfx/mscorlib.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.VisualEffectGraph.Runtime">
-      <HintPath>Library/ScriptAssemblies/Unity.VisualEffectGraph.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.Runtime">
-      <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Burst.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Rider.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.Core.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualEffectGraph.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.VisualEffectGraph.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Flow">
-      <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.Flow.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Mathematics.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.Mathematics.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection">
-      <HintPath>Library/ScriptAssemblies/Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.HighDefinition.Config.Runtime">
-      <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.HighDefinition.Config.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Performance.Profile-Analyzer.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.Performance.Profile-Analyzer.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
-      <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.TestTools.CodeCoverage.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.TestTools.CodeCoverage.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.PlasticSCM.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.PlasticSCM.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VSCode.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.HighDefinition.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.HighDefinition.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-      <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.EditorCoroutines.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.EditorCoroutines.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Burst">
-      <HintPath>Library/ScriptAssemblies/Unity.Burst.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Timeline.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Shared.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.Shared.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.ShaderGraph.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualStudio.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.VisualStudio.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.VisualScripting.Core">
-      <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Core.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.Core.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Flow.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.Flow.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Timeline">
-      <HintPath>Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Model">
-      <HintPath>Library/ScriptAssemblies/Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.State.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.State.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Mathematics">
-      <HintPath>Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Searcher.Editor">
-      <HintPath>Library/ScriptAssemblies/Unity.Searcher.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.State">
-      <HintPath>Library/ScriptAssemblies/Unity.VisualScripting.State.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.HighDefinition.Runtime">
-      <HintPath>Library/ScriptAssemblies/Unity.RenderPipelines.HighDefinition.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
