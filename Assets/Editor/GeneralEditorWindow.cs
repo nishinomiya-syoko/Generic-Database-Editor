@@ -38,7 +38,7 @@ namespace Top
         private const float MID_BUTTON_WIDTH = 80f;
         private const float LARGE_BUTTON_WIDTH = 100f;
         private const float BUTTON_HEIGHT = 30f;
-        private const float TYPE_SCROLL_HEIGHT = 60f;
+        private const float TYPE_SCROLL_HEIGHT = 100f;
         private const int TYPE_BUTTONS_PER_ROW = 3;
         private const int MAX_RECURSION_DEPTH = 8;
 
@@ -942,7 +942,7 @@ namespace Top
                 EditorGUILayout.BeginVertical("box");
 
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField($"索引 [{i}]", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField($"索引 [{i}]", EditorStyles.miniBoldLabel);
 
                 if (GUILayout.Button("删除", GUILayout.Width(SMALL_BUTTON_WIDTH)))
                 {
