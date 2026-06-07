@@ -4,6 +4,9 @@
 
 通用数据编辑器是一个 Unity Editor 工具，用于可视化编辑和管理游戏配置数据。支持数据的增删改查、Excel 导入导出等功能。
 
+## 安装
+在 Unity PackageManager 中添加url: https://github.com/nishinomiya-syoko/Generic-Database-Editor.git
+
 ## 如何创建可编辑数据类
 
 ### 1. 添加 `[EditableData]` 特性
