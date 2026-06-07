@@ -454,6 +454,10 @@
       <HintPath>Assets/Packages/Microsoft.Extensions.FileProviders.Abstractions.3.1.0/lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="EPPlus">
+      <HintPath>Assets/Packages/EPPlus.4.5.3.3/lib/netstandard2.1/EPPlus.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Plastic.Newtonsoft.Json">
       <HintPath>Library/PackageCache/com.unity.collab-proxy@2.11.4/Lib/Editor/Unity.Plastic.Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
@@ -512,10 +516,6 @@
     </Reference>
     <Reference Include="System.Text.Json">
       <HintPath>Assets/Packages/System.Text.Json.4.7.0/lib/netstandard2.0/System.Text.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="EPPlus">
-      <HintPath>Assets/Packages/EPPlus.4.5.3.3/lib/netstandard2.1/EPPlus.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NuGetForUnity.PluginAPI">

@@ -210,52 +210,6 @@ namespace Top
         }
 
         /// <summary>
-        /// 获取友好的类型名称（支持泛型、数组、List、Dictionary）
-        /// </summary>
-        // private static string GetFriendlyTypeName(Type type)
-        // {
-        //     // 处理可空类型
-        //     if (Nullable.GetUnderlyingType(type) != null)
-        //         return $"{GetFriendlyTypeName(Nullable.GetUnderlyingType(type))}?";
-
-        //     // 处理数组
-        //     if (type.IsArray)
-        //     {
-        //         Type elemType = type.GetElementType();
-        //         return $"{GetFriendlyTypeName(elemType)}[]";
-        //     }
-
-        //     // 处理泛型类型（List、Dictionary）
-        //     if (type.IsGenericType)
-        //     {
-        //         string genericName = type.GetGenericTypeDefinition().Name;
-        //         // 去掉泛型后缀（如 List`1 → List）
-        //         genericName = genericName.Substring(0, genericName.IndexOf('`'));
-        //         // 获取泛型参数
-        //         Type[] genericArgs = type.GetGenericArguments();
-        //         string argsStr = string.Join(",", genericArgs.Select(GetFriendlyTypeName));
-        //         return $"{genericName}<{argsStr}>";
-        //     }
-
-        //     // 基础类型映射
-        //     return type.Name switch
-        //     {
-        //         "String" => "string",
-        //         "Int32" => "int",
-        //         "Single" => "float",
-        //         "Boolean" => "bool",
-        //         "Double" => "double",
-        //         "Int64" => "long",
-        //         "Vector2" => "Vector2",
-        //         "Vector3" => "Vector3",
-        //         "Vector4" => "Vector4",
-        //         "Color" => "Color",
-        //         _ => type.Name
-        //     };
-        // }
-
-
-        /// <summary>
         /// 获取友好的类型名称（支持泛型、数组、List、Dictionary，用户自定义类型自动拼接namespace）
         /// </summary>
         private static string GetFriendlyTypeName(Type type)

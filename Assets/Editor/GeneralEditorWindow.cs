@@ -65,6 +65,10 @@ namespace Top
         // 脏标记
         private bool _isDirty = false;
 
+        // IMGUI 会先 Layout 再 Repaint。不要让顶部脏标记横幅在同一轮 Layout/Repaint 中忽隐忽现，
+        // 否则 GUILayout 缓存的 control 数量会不一致，触发 “Getting control ... position”。
+        private bool _drawDirtyBannerForCurrentLayout = false;
+
         [MenuItem("Tools/Generic Database/General Editor Window")]
         public static void OpenWindow()
         {
@@ -140,7 +144,13 @@ namespace Top
                 Init(false);
             }
 
-            DrawDirtyBanner();
+            // Latch once per Layout event so the control tree is identical for the matching Repaint.
+            if (Event.current.type == EventType.Layout)
+            {
+                _drawDirtyBannerForCurrentLayout = _isDirty;
+            }
+
+            DrawDirtyBanner(_drawDirtyBannerForCurrentLayout);
 
             EditorGUILayout.BeginVertical("Box");
 
@@ -189,9 +199,9 @@ namespace Top
 
         #region 顶部提示
 
-        private void DrawDirtyBanner()
+        private void DrawDirtyBanner(bool shouldDraw)
         {
-            if (!_isDirty) return;
+            if (!shouldDraw) return;
 
             EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
             EditorGUILayout.LabelField("当前实例有未保存修改", EditorStyles.boldLabel);
@@ -340,50 +350,52 @@ namespace Top
             GUILayout.Label("新实例名", GUILayout.Width(60));
             _newInstanceName = EditorGUILayout.TextField(_newInstanceName ?? string.Empty);
 
-            if (GUILayout.Button("新建", GUILayout.Width(SMALL_BUTTON_WIDTH)))
-            {
-                string newName = (_newInstanceName ?? string.Empty).Trim();
-                if (string.IsNullOrEmpty(newName))
-                {
-                    Debug.LogWarning("实例名不能为空");
-                    return;
-                }
-
-                if (_selectedDataType == null)
-                {
-                    Debug.LogWarning("请先选择数据类型");
-                    return;
-                }
-
-                if (!TryHandleUnsavedChangesBeforeSwitch())
-                    return;
-
-                try
-                {
-                    _instanceName = newName;
-                    _currentDataInstance = Activator.CreateInstance(_selectedDataType);
-                    _isDirty = true;
-
-                    bool saveSuccess = SaveCurrentInstance();
-                    if (saveSuccess)
-                    {
-                        _isDirty = false;
-                        Debug.Log($"已创建并保存新实例：{newName}");
-                        _newInstanceName = "NewInstance";
-                    }
-                    else
-                    {
-                        Debug.LogError("创建新实例失败：保存失败");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"创建新实例失败：{e}");
-                }
-            }
+            bool createClicked = GUILayout.Button("新建", GUILayout.Width(SMALL_BUTTON_WIDTH));
 
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space(5);
+
+            if (!createClicked)
+                return;
+
+            string newName = (_newInstanceName ?? string.Empty).Trim();
+            if (string.IsNullOrEmpty(newName))
+            {
+                Debug.LogWarning("实例名不能为空");
+                return;
+            }
+
+            if (_selectedDataType == null)
+            {
+                Debug.LogWarning("请先选择数据类型");
+                return;
+            }
+
+            if (!TryHandleUnsavedChangesBeforeSwitch())
+                return;
+
+            try
+            {
+                _instanceName = newName;
+                _currentDataInstance = Activator.CreateInstance(_selectedDataType);
+                _isDirty = true;
+
+                bool saveSuccess = SaveCurrentInstance();
+                if (saveSuccess)
+                {
+                    _isDirty = false;
+                    Debug.Log($"已创建并保存新实例：{newName}");
+                    _newInstanceName = "NewInstance";
+                }
+                else
+                {
+                    Debug.LogError("创建新实例失败：保存失败");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"创建新实例失败：{e}");
+            }
         }
 
         private void DrawInstanceSearchBar()
