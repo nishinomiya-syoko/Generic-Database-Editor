@@ -1,0 +1,53 @@
+
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/ProjectSettings/
+/Assets/NuGet/
+/Assets/Packages/
+/Packages/
+#meta
+packages.config
+packages.config.meta
+packages.meta
+NuGet.config
+NuGet.config.meta
+NuGet.meta
+
+# MemoryCaptures
+/[Mm]emory[Cc]aptures/
+
+# IDE 支持
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# VS
+.vs/
+*.vscode
+.vscode/
+
+# Rider
+.idea/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
