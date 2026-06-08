@@ -3,7 +3,7 @@ using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
 
-namespace Top
+namespace NiShiMiYa.GenericEditor
 {
     /// <summary>
     /// 通用数据序列化/反序列化工具

@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Text;
 
-namespace Top
+namespace NiShiMiYa.GenericEditor
 {
     /// <summary>
     /// Excel 工具：同一类所有数据 → 同一个 Sheet，一行 = 一条实例
@@ -51,25 +51,29 @@ namespace Top
                     // 只建一个 Sheet，用类名命名
                     var ws = package.Workbook.Worksheets.Add(dataType.Name);
 
+                    // ========== 0. 类注释 ==========
+                    ws.Cells[1, 1].Value = $"#{fields[0].DeclaringType.FullName}"; // 字段所属类型（支持继承字段）
+                   
+
                     // ========== 1. 表头行：实例名 | 字段名1 | 字段名2 ... ==========
-                    ws.Cells[1, 1].Value = "#实例名";
+                    ws.Cells[2, 1].Value = "#实例名";
                     for (int c = 0; c < fields.Count; c++)
                     {
-                        ws.Cells[1, 2 + c].Value = fields[c].Name;
+                        ws.Cells[2, 2 + c].Value = fields[c].Name;
                     }
 
                     // ========== 2. 类型行 ==========
-                    ws.Cells[2, 1].Value = "#类型";
+                    ws.Cells[3, 1].Value = "#类型";
                     for (int c = 0; c < fields.Count; c++)
                     {
-                        ws.Cells[2, 2 + c].Value = GetFriendlyTypeName(fields[c].FieldType);
+                        ws.Cells[3, 2 + c].Value = GetFriendlyTypeName(fields[c].FieldType);
                     }
 
                     // ========== 3. 注释行 ==========
-                    ws.Cells[3, 1].Value = "#注释";
+                    ws.Cells[4, 1].Value = "#注释";
                     for (int c = 0; c < fields.Count; c++)
                     {
-                        ws.Cells[3, 2 + c].Value = fields[c].GetCustomAttribute<HeaderAttribute>()?.header ?? "";
+                        ws.Cells[4, 2 + c].Value = fields[c].GetCustomAttribute<HeaderAttribute>()?.header ?? "";
                     }
 
                     // ========== 4. 数据行：一行 = 一个实例 ==========
@@ -79,13 +83,13 @@ namespace Top
                         var data = GenericDataPersistence.LoadData<T>(instName);
 
                         // 第1列：实例名
-                        ws.Cells[4 + rowIdx, 1].Value = instName;
+                        ws.Cells[5 + rowIdx, 1].Value = instName;
 
                         // 第2列开始：字段值
                         for (int colIdx = 0; colIdx < fields.Count; colIdx++)
                         {
                             object value = fields[colIdx].GetValue(data);
-                            ws.Cells[4 + rowIdx, 2 + colIdx].Value = ConvertValueToExcelCompatible(value);
+                            ws.Cells[5 + rowIdx, 2 + colIdx].Value = ConvertValueToExcelCompatible(value);
                         }
                     }
 
@@ -132,11 +136,11 @@ namespace Top
                         return false;
                     }
 
-                    // 读取表头：第1行是字段名
+                    // 读取表头：第1行是类型说明，第2行是字段名
                     Dictionary<string, int> fieldNameToCol = new Dictionary<string, int>();
                     for (int c = 1; c <= ws.Dimension.End.Column; c++)
                     {
-                        string name = ws.Cells[1, c].Text.Trim();
+                        string name = ws.Cells[2, c].Text.Trim();
                         if (!string.IsNullOrEmpty(name))
                             fieldNameToCol[name] = c;
                     }
@@ -154,8 +158,8 @@ namespace Top
                         return false;
                     }
 
-                    // 从第4行开始读数据
-                    int dataStartRow = 4;
+                    // 从第5行开始读数据
+                    int dataStartRow = 5;
                     int rowCount = ws.Dimension.End.Row;
 
                     for (int r = dataStartRow; r <= rowCount; r++)

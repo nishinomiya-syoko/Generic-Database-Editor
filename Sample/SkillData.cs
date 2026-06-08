@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using NiShiMiYa.GenericEditor;
 /// <summary>
 /// 技能数据配置（ScriptableObject）
 /// </summary>

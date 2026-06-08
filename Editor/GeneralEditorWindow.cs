@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 
-namespace Top
+namespace NiShiMiYa.GenericEditor
 {
     /// <summary>
     /// 通用数据编辑器窗口（增强版）
