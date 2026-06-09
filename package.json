@@ -1,6 +1,6 @@
 {
     "name":"com.yoaha.genericeditor",
-    "version":"0.1.0",
+    "version":"0.1.1",
     "displayName":"Generic Editor",
     "description":"A generic editor for Unity",
     "unity":"2022.3",
