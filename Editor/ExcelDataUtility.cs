@@ -30,7 +30,7 @@ namespace NiShiMiYa.GenericEditor
         }
 
         #region 核心：导出一个类的所有实例 → 同一个Sheet，一行一条数据
-        public static bool ExportAllInstancesToExcel<T>(string excelPath) where T : class, new()
+        public static bool ExportAllInstancesToExcel<T>(string excelPath, string displayName = null) where T : class, new()
         {
             try
             {
@@ -50,9 +50,10 @@ namespace NiShiMiYa.GenericEditor
                 {
                     // 只建一个 Sheet，用类名命名
                     var ws = package.Workbook.Worksheets.Add(dataType.Name);
+                    string _displayName = string.IsNullOrEmpty(displayName) ? dataType.Name : displayName;
 
                     // ========== 0. 类注释 ==========
-                    ws.Cells[1, 1].Value = $"#{fields[0].DeclaringType.FullName}"; // 字段所属类型（支持继承字段）
+                    ws.Cells[1, 1].Value = $"#{_displayName}"; // 字段所属类型（支持继承字段）
                    
 
                     // ========== 1. 表头行：实例名 | 字段名1 | 字段名2 ... ==========

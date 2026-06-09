@@ -617,6 +617,7 @@ namespace NiShiMiYa.GenericEditor
             {
                 string fileName = $"{_selectedDataType.Name}.xlsx";
                 string excelPath = Path.Combine(EXCEL_PATH, fileName);
+                string displayName = GetDataTypeDisplayName();
 
                 MethodInfo exportMethod = GetGenericStaticMethod(typeof(ExcelDataUtility), "ExportAllInstancesToExcel", _selectedDataType);
                 if (exportMethod == null)
@@ -625,7 +626,7 @@ namespace NiShiMiYa.GenericEditor
                     return;
                 }
 
-                bool success = (bool)exportMethod.Invoke(null, new object[] { excelPath });
+                bool success = (bool)exportMethod.Invoke(null, new object[] { excelPath, displayName});
                 Debug.Log(success
                     ? $"[{GetDataTypeDisplayName()}] 所有实例导出到Excel成功\n路径：{excelPath}"
                     : "导出失败");
