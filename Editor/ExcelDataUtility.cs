@@ -94,7 +94,10 @@ namespace NiShiMiYa.GenericEditor
                         }
                     }
 
-                    // 自动适配列宽（可选，提升可读性）
+                    // ========== 5. 为枚举类型列添加数据验证（下拉选项） ==========
+                    AddEnumDataValidation(ws, fields, instanceNames.Length);
+
+                    // 自动适配列宽（可选，提升可读性，macos不可用）
                     // ws.Cells.AutoFitColumns();
 
                     // 保存
@@ -203,6 +206,38 @@ namespace NiShiMiYa.GenericEditor
         #endregion
 
         #region 通用工具
+        /// <summary>
+        /// 为枚举类型列添加数据验证（下拉选项）
+        /// </summary>
+        private static void AddEnumDataValidation(ExcelWorksheet ws, List<FieldInfo> fields, int dataRowCount)
+        {
+            for (int colIdx = 0; colIdx < fields.Count; colIdx++)
+            {
+                Type fieldType = fields[colIdx].FieldType;
+                
+                // 处理可空枚举
+                Type underlyingType = Nullable.GetUnderlyingType(fieldType) ?? fieldType;
+                
+                if (underlyingType.IsEnum)
+                {
+                    // 获取枚举所有值的字符串表示
+                    string[] enumValues = Enum.GetNames(underlyingType);
+                    string validationList = string.Join(",", enumValues);
+                    
+                    // 数据列范围：从第5行开始到最后一行数据
+                    int startRow = 5;
+                    int endRow = startRow + dataRowCount - 1;
+                    int col = 2 + colIdx; // 第2列开始是字段值
+                    
+                    // 添加数据验证
+                    var validation = ws.DataValidations.AddListValidation(ws.Cells[startRow, col, endRow, col].Address);
+                    validation.Formula.ExcelFormula = $"\"{validationList}\"";
+                    validation.ShowErrorMessage = true;
+                    validation.ErrorTitle = "无效的枚举值";
+                    validation.Error = $"请从下拉列表中选择有效的值:\n{string.Join("\n", enumValues)}";
+                }
+            }
+        }
         /// <summary>
         /// 获取可序列化的字段（公开字段 或 带SerializeField的私有字段）
         /// </summary>
