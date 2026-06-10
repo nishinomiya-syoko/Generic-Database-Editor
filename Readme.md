@@ -1,5 +1,17 @@
 # 通用数据编辑器 (General Editor)
 
+Version: 0.1.3
+增加了资源路径导出功能
+
+Version: 0.1.2
+枚举类支持导出为 Excel 数据验证
+
+Version: 0.1.1
+修改 Excel 导出格式为 4 行，兼容 GameFramework
+
+Version: 0.1.0
+首次发布
+
 ## 概述
 
 通用数据编辑器是一个 Unity Editor 工具，用于可视化编辑和管理游戏配置数据。支持数据的增删改查、Excel 导入导出等功能。
