@@ -663,8 +663,9 @@ namespace NiShiMiYa.GenericEditor
                         ws.Cells[5 + i, 3].Value = item.assetPath;
                         ws.Cells[5 + i, 4].Value = item.assetName;
                     }
-
-                    ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                    
+                    //mac不可用
+                    // ws.Cells[ws.Dimension.Address].AutoFitColumns();
                     package.SaveAs(new FileInfo(excelPath));
                 }
 
