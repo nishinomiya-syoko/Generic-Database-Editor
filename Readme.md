@@ -1,5 +1,9 @@
 # 通用数据编辑器 (General Editor)
 
+
+Version: 0.1.4  
+增加 List 转 Array，兼容 GameFramework
+
 Version: 0.1.3
 增加了资源路径导出功能
 
