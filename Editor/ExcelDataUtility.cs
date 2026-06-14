@@ -23,6 +23,13 @@ namespace NiShiMiYa.GenericEditor
     {
         public static readonly string EXCEL_SEPARATOR = Constant.EXCEL_SEPARATOR;
 
+        /// <summary>
+        /// 当开启时，Excel 中的 List&lt;T&gt; 字段会被处理为 T[] 类型，
+        /// Dictionary&lt;K,V&gt; 会被处理为 KeyValuePair&lt;K,V&gt;[] 类型，以便与其它 Excel 框架兼容。
+        /// 对 C# 类本身的字段类型无影响，仅在导入/导出的转换过程中生效。
+        /// </summary>
+        public static bool ConvertListDictionaryToArray = false;
+
         // 初始化EPPlus授权上下文（必须配置，否则报错）
         static ExcelDataUtility()
         {
@@ -273,6 +280,36 @@ namespace NiShiMiYa.GenericEditor
                 genericName = genericName.Substring(0, genericName.IndexOf('`'));
                 // 获取泛型参数（递归处理泛型参数中的自定义类型）
                 Type[] genericArgs = type.GetGenericArguments();
+
+                // ─── List/Dictionary → Array 兼容处理 ───
+                if (ConvertListDictionaryToArray)
+                {
+                    // List<T> → T[]
+                    if (type.GetGenericTypeDefinition() == typeof(List<>))
+                    {
+                        return $"{GetFriendlyTypeName(genericArgs[0])}[]";
+                    }
+                    // HashSet<T> → T[]
+                    if (type.GetGenericTypeDefinition() == typeof(HashSet<>))
+                    {
+                        return $"{GetFriendlyTypeName(genericArgs[0])}[]";
+                    }
+                    // Dictionary<K,V> → KeyValuePair<K,V>[]
+                    if (type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+                    {
+                        string kName = GetFriendlyTypeName(genericArgs[0]);
+                        string vName = GetFriendlyTypeName(genericArgs[1]);
+                        return $"KeyValuePair<{kName},{vName}>[]";
+                    }
+                    // SortedDictionary<K,V> → KeyValuePair<K,V>[]
+                    if (type.GetGenericTypeDefinition() == typeof(SortedDictionary<,>))
+                    {
+                        string kName = GetFriendlyTypeName(genericArgs[0]);
+                        string vName = GetFriendlyTypeName(genericArgs[1]);
+                        return $"KeyValuePair<{kName},{vName}>[]";
+                    }
+                }
+
                 string argsStr = string.Join(",", genericArgs.Select(GetFriendlyTypeName));
                 return $"{genericName}<{argsStr}>";
             }
@@ -447,7 +484,7 @@ namespace NiShiMiYa.GenericEditor
                     return list;
                 }
 
-                // 处理Dictionary<K,V>
+                // 处理Dictionary<K,V>：同时支持原生格式 k=v 与 KeyValuePair<K,V> 格式
                 if (underlyingType.IsGenericType && underlyingType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
                 {
                     Type[] dictArgs = underlyingType.GetGenericArguments();
@@ -457,14 +494,24 @@ namespace NiShiMiYa.GenericEditor
                     var dict = (System.Collections.IDictionary)Activator.CreateInstance(underlyingType);
                     string[] kvPairs = text.Split(EXCEL_SEPARATOR, StringSplitOptions.RemoveEmptyEntries);
 
+                    // 当开启兼容开关时，优先尝试 "key=value" 格式（这也是 KeyValuePair 数组的标准表示）
+                    // 如果单元格里含有 '='，则按 key=value 解析；否则回退为仅键解析（保持向后兼容）
                     foreach (var kvText in kvPairs)
                     {
                         string[] kv = kvText.Split('=', 2); // 只分割第一个=，避免值包含=
-                        if (kv.Length != 2) continue;
-
-                        object key = ConvertExcelValueToType(kv[0].Trim(), keyType);
-                        object val = ConvertExcelValueToType(kv[1].Trim(), valType);
-                        dict[key] = val;
+                        if (kv.Length == 2)
+                        {
+                            object key = ConvertExcelValueToType(kv[0].Trim(), keyType);
+                            object val = ConvertExcelValueToType(kv[1].Trim(), valType);
+                            dict[key] = val;
+                        }
+                        else
+                        {
+                            // 回退：仅将整个文本作为 key（用于遗留兼容性场景）
+                            object key = ConvertExcelValueToType(kvText.Trim(), keyType);
+                            if (!dict.Contains(key))
+                                dict[key] = Activator.CreateInstance(valType);
+                        }
                     }
                     return dict;
                 }

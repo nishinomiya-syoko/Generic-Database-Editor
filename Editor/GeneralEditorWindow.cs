@@ -65,6 +65,9 @@ namespace NiShiMiYa.GenericEditor
         // 脏标记
         private bool _isDirty = false;
 
+        // Excel 兼容：List/Dictionary → Array
+        private bool _convertListDictionaryToArray = false;
+
         // IMGUI 会先 Layout 再 Repaint。不要让顶部脏标记横幅在同一轮 Layout/Repaint 中忽隐忽现，
         // 否则 GUILayout 缓存的 control 数量会不一致，触发 “Getting control ... position”。
         private bool _drawDirtyBannerForCurrentLayout = false;
@@ -80,6 +83,9 @@ namespace NiShiMiYa.GenericEditor
 
         private void OnEnable()
         {
+            // 从编辑器偏好中恢复状态（跨会话）
+            _convertListDictionaryToArray = EditorPrefs.GetBool("GenericEditor_ConvertListDictionaryToArray", false);
+            ExcelDataUtility.ConvertListDictionaryToArray = _convertListDictionaryToArray;
             Init(false);
         }
 
@@ -340,6 +346,22 @@ namespace NiShiMiYa.GenericEditor
                 ImportAllInstancesFromExcel();
             }
 
+            EditorGUILayout.EndHorizontal();
+
+            // ─── Excel 兼容选项 ───
+            EditorGUILayout.BeginHorizontal();
+            EditorGUI.BeginChangeCheck();
+            bool newToggle = EditorGUILayout.ToggleLeft(
+                new GUIContent("List/Dictionary 转换为数组 (Excel 兼容)", "开启后，Excel 中的 List<T>/Dictionary<K,V> 会以 T[]/KeyValuePair<K,V>[] 形式读写，便于与其他 Excel 框架共享数据。"),
+                _convertListDictionaryToArray,
+                GUILayout.Height(BUTTON_HEIGHT),
+                GUILayout.Width(420));
+            if (EditorGUI.EndChangeCheck())
+            {
+                _convertListDictionaryToArray = newToggle;
+                ExcelDataUtility.ConvertListDictionaryToArray = newToggle;
+                EditorPrefs.SetBool("GenericEditor_ConvertListDictionaryToArray", newToggle);
+            }
             EditorGUILayout.EndHorizontal();
         }
 
